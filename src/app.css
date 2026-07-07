@@ -8273,3 +8273,11 @@ body.col-resizing * { cursor: col-resize !important; }
   padding: 5px 4px 1px;
   text-align: center;
 }
+
+/* Category suggestion chips (wizard step 2) */
+.iiif-cat-suggest {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: baseline;
+}

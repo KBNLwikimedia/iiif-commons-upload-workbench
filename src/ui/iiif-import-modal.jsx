@@ -22,11 +22,28 @@ import { fetchManifest, parseManifestFile } from '../api/iiif.js';
 import { mapManifest } from '../api/iiif-map.js';
 import { findManuscriptItems } from '../api/wikidata.js';
 import { runIiifImport } from '../api/iiif-pipeline.js';
-import { categoryExists, createCategoryPage } from '../api/commons.js';
+import { categoryExists, createCategoryPage, searchCategories } from '../api/commons.js';
 import { KB_PARENT_CATEGORY } from '../api/iiif-map.js';
 import { DEMO_MODE } from '../config.js';
 
 const Icon = window.Icon;
+
+// Commons-style category suggestions: prefix-search the current name, and
+// when the full proposal has no matches, progressively trim trailing words
+// and retry — so a proposed "Handboek voor een biechtvader - KW 70 H 19"
+// still surfaces the existing "Handboek voor een biechtvader…" categories.
+// Bounded at 8 shrink steps; opensearch results come from the apiCache.
+async function suggestCategories(name) {
+  let q = String(name || '').replace(/^\s*Category\s*:\s*/i, '').trim();
+  for (let i = 0; i < 8 && q.length >= 2; i++) {
+    const hits = await searchCategories(q);
+    if (hits.length) return hits;
+    const shorter = q.replace(/[\s\-–—]*\S+$/, '').trim();
+    if (shorter === q) break;
+    q = shorter;
+  }
+  return [];
+}
 
 const STEP_TITLES = {
   input: 'Import IIIF manifest',
@@ -50,7 +67,24 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   const [title, setTitle] = React.useState('');
   const [category, setCategory] = React.useState('');
   const [createCat, setCreateCat] = React.useState(true);
-  const [catExists, setCatExists] = React.useState(null); // null = unknown
+  const [catExists, setCatExists] = React.useState(null); // null = checking/unknown
+  const [catSuggestions, setCatSuggestions] = React.useState(null); // null = loading
+
+  // Live category check + suggestions, debounced on every edit of the field.
+  React.useEffect(() => {
+    const cat = category.replace(/^\s*Category\s*:\s*/i, '').trim();
+    if (!cat) { setCatExists(null); setCatSuggestions(null); return undefined; }
+    let alive = true;
+    setCatExists(null);
+    setCatSuggestions(null);
+    const t = setTimeout(() => {
+      categoryExists(cat).then((v) => { if (alive) setCatExists(v); }).catch(() => {});
+      suggestCategories(cat)
+        .then((hits) => { if (alive) setCatSuggestions(hits.filter((h) => h !== cat).slice(0, 6)); })
+        .catch(() => { if (alive) setCatSuggestions([]); });
+    }, 350);
+    return () => { alive = false; clearTimeout(t); };
+  }, [category]);
   const [qid, setQid] = React.useState('');
   const [qidCandidates, setQidCandidates] = React.useState(null); // null = loading
 
@@ -98,7 +132,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
         if (hits.length === 1) setQid(hits[0].qid);
       })
       .catch(() => setQidCandidates([]));
-    categoryExists(manuscript.categoryName).then(setCatExists).catch(() => {});
+    // category existence + suggestions run in the debounced effect above
   };
 
   const loadUrl = async () => {
@@ -308,17 +342,30 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                     <input id="iiif-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
 
                     <label className="iiif-label" htmlFor="iiif-cat">Commons category for this manuscript</label>
-                    <input id="iiif-cat" type="text" value={category} onChange={(e) => { setCategory(e.target.value); setCatExists(null); }} />
+                    <input id="iiif-cat" type="text" value={category} onChange={(e) => setCategory(e.target.value)} />
                     <p className="iiif-hint">
-                      {catExists === true
-                        ? 'This category already exists on Commons — files will be added to it.'
-                        : (
+                      {catExists === null && category.trim() && 'Checking Commons…'}
+                      {catExists === true && '✔ This category already exists on Commons — files will be added to it.'}
+                      {catExists === false && (
+                        <>
+                          ✚ This category does not exist yet.{' '}
                           <label className="iiif-check">
                             <input type="checkbox" checked={createCat} onChange={(e) => setCreateCat(e.target.checked)} />
-                            {' '}Create this category (under “{KB_PARENT_CATEGORY}”) when the import starts
+                            {' '}Create it (under “{KB_PARENT_CATEGORY}”) when the import starts
                           </label>
-                        )}
+                        </>
+                      )}
                     </p>
+                    {catSuggestions && catSuggestions.length > 0 && (
+                      <p className="iiif-hint iiif-cat-suggest">
+                        Existing categories like this:{' '}
+                        {catSuggestions.map((s) => (
+                          <button key={s} className="btn btn--quiet iiif-qid-pick" onClick={() => setCategory(s)} title={`Use Category:${s}`}>
+                            {s}
+                          </button>
+                        ))}
+                      </p>
+                    )}
 
                     <label className="iiif-label" htmlFor="iiif-qid">Wikidata item of the manuscript (feeds “digital representation of” + depicts)</label>
                     <input id="iiif-qid" type="text" placeholder="Q…" value={qid} onChange={(e) => setQid(e.target.value)} />
