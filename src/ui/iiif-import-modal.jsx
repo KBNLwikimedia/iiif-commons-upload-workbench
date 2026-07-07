@@ -28,6 +28,16 @@ import { DEMO_MODE } from '../config.js';
 
 const Icon = window.Icon;
 
+// Render URLs inside manifest metadata values (Beeldlicentie, Datalicentie,
+// BNM/DBNL links, …) as clickable links opening in a new tab.
+function linkifyValue(text) {
+  return String(text).split(/(https?:\/\/[^\s<>"']+)/g).map((part, i) => (
+    /^https?:\/\//.test(part)
+      ? <a key={i} href={part} target="_blank" rel="noopener noreferrer">{part}</a>
+      : part
+  ));
+}
+
 // Commons-style category suggestions: prefix-search the current name, and
 // when the full proposal has no matches, progressively trim trailing words
 // and retry — so a proposed "Handboek voor een biechtvader - KW 70 H 19"
@@ -333,7 +343,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       {manifest.metadata.filter((m) => !m.placeholder && m.value).map((m, i) => (
                         <tr key={i}>
                           <th>{m.label}</th>
-                          <td>{m.value.length > 220 ? `${m.value.slice(0, 220)}…` : m.value}</td>
+                          <td>{linkifyValue(m.value.length > 220 ? `${m.value.slice(0, 220)}…` : m.value)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -350,6 +360,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                         id="iiif-cat"
                         type="text"
                         value={category}
+                        className={catExists === null && category.trim() ? 'iiif-input--checking' : ''}
                         role="combobox"
                         aria-expanded={catOpen && !!catSuggestions?.length}
                         aria-autocomplete="list"

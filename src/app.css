@@ -8322,3 +8322,11 @@ body.col-resizing * { cursor: col-resize !important; }
   background: var(--background-color-progressive-subtle, #eaf3ff);
   color: var(--color-progressive, #36c);
 }
+
+/* Category input while the existence check is in flight: visibly grayed
+   (typing stays possible — only the visual state signals "checking"). */
+.iiif-settings input.iiif-input--checking {
+  background: var(--background-color-neutral-subtle, #eaecf0);
+  color: var(--color-subtle);
+  transition: background 0.15s ease;
+}
