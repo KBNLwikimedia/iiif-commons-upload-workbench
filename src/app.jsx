@@ -1822,7 +1822,7 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
             // (stash has files but the search/filter hides them all) keeps
             // the small inline hint — different message, different intent.
             stashItems.length === 0 ?
-            <EmptyHero /> :
+            <EmptyHero onImportIiif={() => setIiifImportOpen(true)} /> :
             <EmptyRow
               icon="folder"
               text="No stashed files match your filters." /> :

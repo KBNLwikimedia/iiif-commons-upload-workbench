@@ -20,7 +20,9 @@ import { openFilePicker } from './dropzone.jsx';
 
 const Icon = window.Icon;
 
-export function EmptyHero() {
+// `onImportIiif` opens the "Import IIIF manifest" wizard (passed down from
+// App so the hero and the topbar button share one open-the-modal path).
+export function EmptyHero({ onImportIiif }) {
   return (
     <div className="empty-hero" role="region" aria-label="Drop files to start uploading">
       <div className="empty-hero__icon" aria-hidden="true">
@@ -28,17 +30,29 @@ export function EmptyHero() {
       </div>
       <h2 className="empty-hero__title">Drop files here to start uploading</h2>
       <p className="empty-hero__subtitle">
-        Drag photos onto the page, or browse from your device. Files land in
-        your stash so you can edit titles, descriptions, categories and
-        licenses in the table view before publishing to Wikimedia Commons.
+        Drag photos onto the page, or browse from your device — or import all
+        pages of a IIIF manifest. Files land in your stash so you can edit
+        titles, descriptions, categories and licenses in the table view
+        before publishing to Wikimedia Commons.
       </p>
-      <button
-        type="button"
-        className="btn btn--progressive empty-hero__browse"
-        onClick={openFilePicker}
-      >
-        <Icon name="upload" size={16} /> Browse files
-      </button>
+      <div className="empty-hero__actions">
+        <button
+          type="button"
+          className="btn btn--progressive empty-hero__browse"
+          onClick={openFilePicker}
+        >
+          <Icon name="upload" size={16} /> Browse files
+        </button>
+        {onImportIiif && (
+          <button
+            type="button"
+            className="btn empty-hero__iiif"
+            onClick={onImportIiif}
+          >
+            <Icon name="upload" size={16} /> Import IIIF manifest
+          </button>
+        )}
+      </div>
       <p className="empty-hero__hint">
         You can drop files anywhere on this window.
       </p>

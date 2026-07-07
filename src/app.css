@@ -8191,3 +8191,11 @@ body.col-resizing * { cursor: col-resize !important; }
   padding-top: 10px;
   margin-top: 12px;
 }
+
+/* Empty-hero action row (Browse files + Import IIIF manifest) */
+.empty-hero__actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
