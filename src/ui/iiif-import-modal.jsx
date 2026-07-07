@@ -364,20 +364,31 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 )}
               </div>
               <div className="iiif-gallery">
-                {manifest.canvases.map((c) => (
-                  <label key={c.index} className={`iiif-canvas${selected.has(c.index) ? ' iiif-canvas--on' : ''}`}>
-                    <input
-                      type="checkbox"
-                      checked={selected.has(c.index)}
-                      onChange={() => toggleOne(c.index)}
-                    />
-                    <img src={c.thumbUrl} alt={c.label || `canvas ${c.index + 1}`} loading="lazy" />
-                    <span className="iiif-canvas__label">
-                      {c.label || `#${c.index + 1}`}
-                      {c.downscaled && <em className="iiif-canvas__badge">25 MP</em>}
-                    </span>
-                  </label>
-                ))}
+                {manifest.canvases.map((c) => {
+                  // Full-detail native tooltip: labels are ellipsized in the
+                  // tile, so hovering must reveal the whole story — canvas
+                  // label + the Commons filename this page would get.
+                  const target = effectiveItems.find((it) => it.iiif.canvasIndex === c.index);
+                  const tooltip = [
+                    c.label || `canvas ${c.index + 1}`,
+                    target ? `→ File:${target.iiif.targetFilename}` : null,
+                    c.downscaled ? `Delivered downscaled to ~${target?.iiif.expectedWidth || c.expectedWidth}×${target?.iiif.expectedHeight || c.expectedHeight}px (25 MP cap)` : null,
+                  ].filter(Boolean).join('\n');
+                  return (
+                    <label key={c.index} className={`iiif-canvas${selected.has(c.index) ? ' iiif-canvas--on' : ''}`} title={tooltip}>
+                      <input
+                        type="checkbox"
+                        checked={selected.has(c.index)}
+                        onChange={() => toggleOne(c.index)}
+                      />
+                      <img src={c.thumbUrl} alt={c.label || `canvas ${c.index + 1}`} loading="lazy" />
+                      <span className="iiif-canvas__label">
+                        {c.label || `#${c.index + 1}`}
+                        {c.downscaled && <em className="iiif-canvas__badge">25 MP</em>}
+                      </span>
+                    </label>
+                  );
+                })}
               </div>
             </div>
           )}
