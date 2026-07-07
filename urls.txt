@@ -7,4 +7,5 @@ https://upload-workbench.toolforge.org/ --> live tool
 https://gitlab.wikimedia.org/daanvr/upload-workbench --> code
 
 # KB IIIF (verified 2026-07-07)
-https://presentation-api.dlc.services/32 --> collection index of KB manuscript manifests
+https://iiif.bibliotheken.nl/<signatuur> --> canonical manifest base since June 2026 (e.g. /kw-129-a-24)
+https://presentation-api.dlc.services/32 --> legacy collection index, still works in parallel
