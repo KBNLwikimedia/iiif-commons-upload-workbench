@@ -134,6 +134,7 @@ The IIIF import wizard is an explicit user gesture *after* bootstrap — it must
 OAuth 2.0 with PKCE (Authorization Code flow, public client), authorization server `meta.wikimedia.org`. Token storage prefix `uwb_`.
 
 - **Local dev (current mode):** set `VITE_OWNER_ACCESS_TOKEN` in `.env.local` to short-circuit the PKCE flow entirely (owner-only consumer token). Without any `VITE_OAUTH_CLIENT_ID`, the app boots in `DEMO_MODE` against `SAMPLE_UPLOADS`.
+- **Owner-only consumers cannot serve the "Log in with Wikimedia" (PKCE) flow** — the authorize endpoint rejects them with *"Client authentication failed (unknown client / unsupported authentication method)"* (verified 2026-07-07). The interactive login needs a **public** consumer ("for use only by [owner]" **unchecked**), which requires Wikimedia admin review (days–2 weeks). Until one is approved, local dev uses the owner token.
 - **Required grants** (for a future fork-specific consumer): `editpage`, `editmyuserjs` (user-store JSON pages — MediaWiki specially protects `User:<self>/*.json`), `createeditmovepage` (also needed for the category creation of design decision Q8), `uploadfile`, `uploadeditmovefile`. See `docs/oauth-registration.md`.
 
 ### Key API endpoints
