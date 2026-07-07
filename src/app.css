@@ -8281,3 +8281,8 @@ body.col-resizing * { cursor: col-resize !important; }
   gap: 4px 8px;
   align-items: baseline;
 }
+
+.iiif-cat-exists {
+  color: var(--color-success, #14866d);
+  font-weight: 700;
+}

@@ -345,7 +345,9 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                     <input id="iiif-cat" type="text" value={category} onChange={(e) => setCategory(e.target.value)} />
                     <p className="iiif-hint">
                       {catExists === null && category.trim() && 'Checking Commons…'}
-                      {catExists === true && '✔ This category already exists on Commons — files will be added to it.'}
+                      {catExists === true && (
+                        <span className="iiif-cat-exists">✔ This category already exists on Commons — files will be added to it.</span>
+                      )}
                       {catExists === false && (
                         <>
                           ✚ This category does not exist yet.{' '}
