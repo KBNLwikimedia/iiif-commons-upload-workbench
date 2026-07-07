@@ -47,6 +47,10 @@ Without `VITE_OAUTH_CLIENT_ID`, the app boots in `DEMO_MODE` against sample data
 
 Sample IIIF manifests (25 real KB manuscripts) are checked in under [`__inputs/manifests/`](__inputs/manifests/).
 
+### Troubleshooting
+
+- **Every page of a IIIF import fails with `Failed to fetch`** — a browser content blocker (NoScript, uBlock, strict tracking protection) is blocking the cross-origin image downloads from the IIIF image server. Allow the image host (e.g. `dlc.services`) or disable the blocker for this app's origin. The import report lists the exact error per page.
+
 ## License
 
 MIT
