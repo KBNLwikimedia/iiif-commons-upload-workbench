@@ -404,6 +404,7 @@ const DRAFT_FIELDS = [
   'license',
   'author',
   'source',
+  'institution',
   'categories',
   'depicts',
   'dateTaken',

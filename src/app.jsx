@@ -80,11 +80,20 @@ const DEFAULT_FIELD_ORDER = [
 { key: "license", label: "License", required: true, visible: true },
 { key: "author", label: "Author", required: true, visible: true },
 { key: "source", label: "Source", required: false, visible: true },
+{ key: "institution", label: "Institution", required: false, visible: false },
 { key: "dateTaken", label: "Date & time", required: false, visible: true },
 { key: "location", label: "Location", required: false, visible: true },
 { key: "technical", label: "Technical", required: false, visible: true }];
 
 window.DEFAULT_FIELD_ORDER = DEFAULT_FIELD_ORDER;
+
+// Chooser options for the {{Artwork}} |institution= field. One value for now
+// (the KB); more institution templates can be added later — see
+// https://commons.wikimedia.org/wiki/Category:Institution_templates
+const INSTITUTION_OPTIONS = [
+  { value: "{{Institution:Koninklijke Bibliotheek, Den Haag}}", label: "Koninklijke Bibliotheek, Den Haag" },
+];
+window.INSTITUTION_OPTIONS = INSTITUTION_OPTIONS;
 
 // Some fields cannot be made optional — they're hard requirements for Commons.
 const ALWAYS_REQUIRED = new Set(["title", "license", "author", "filename"]);

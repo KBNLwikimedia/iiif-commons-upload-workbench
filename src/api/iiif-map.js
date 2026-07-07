@@ -38,7 +38,7 @@ const FORBIDDEN_TITLE_CHARS = /[#<>[\]|{}/\\:]/g;
 export const KB_LICENSE_ID = 'PD-Art-PD-old-100-expired';
 export const KB_LICENSE_WIKITEXT = '{{PD-Art|PD-old-100-expired}}';
 export const KB_PARENT_CATEGORY = 'Medieval manuscripts from Koninklijke Bibliotheek';
-export const KB_INSTITUTION_WIKITEXT = '{{Institution:Koninklijke Bibliotheek}}';
+export const KB_INSTITUTION_WIKITEXT = '{{Institution:Koninklijke Bibliotheek, Den Haag}}';
 export const KB_COLLECTION_QID = 'Q1526131'; // Koninklijke Bibliotheek
 // SDC constants per the mined conventions (commons-best-practices.md §3):
 export const SDC_PUBLIC_DOMAIN_QID = 'Q19652';
@@ -264,6 +264,7 @@ export function mapCanvases(manuscript, manifest) {
       author: manuscript.author,
       source: manuscript.source,
       license: manuscript.license,
+      institution: KB_INSTITUTION_WIKITEXT,
       categories: [manuscript.categoryName],
       depicts: manuscript.wikidataQid ? [{ qid: manuscript.wikidataQid, label: manuscript.signature }] : [],
       // --- IIIF extras (session-only; consumed by the pipeline + Phase 5) ---

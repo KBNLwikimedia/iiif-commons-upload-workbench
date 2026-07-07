@@ -427,6 +427,50 @@ function FieldContent({ field, isMissing, item, update, addCategory, removeCateg
         </>
       );
     }
+    case "institution": {
+      // Chooser for the {{Artwork}} |institution= value. Curated list of
+      // {{Institution:…}} templates (one for now — the KB). Custom lets the
+      // user paste any other institution template.
+      const options = window.INSTITUTION_OPTIONS || [];
+      const cur = item.institution || "";
+      const isCustom = !!cur && !options.some((o) => o.value === cur);
+      const CUSTOM = "__custom__";
+      return (
+        <>
+          {labelEl}
+          <select
+            className="select"
+            style={{ width: "100%" }}
+            value={isCustom ? CUSTOM : cur}
+            onChange={(e) => {
+              const v = e.target.value;
+              update("institution", v === CUSTOM ? (isCustom ? cur : "") : v);
+            }}
+          >
+            <option value="">— None —</option>
+            {options.map((o) => (
+              <option key={o.value} value={o.value} title={o.value}>{o.label}</option>
+            ))}
+            <option value={CUSTOM}>Custom institution template…</option>
+          </select>
+          {isCustom && (
+            <input
+              className="field__input"
+              style={{ marginTop: 6 }}
+              value={cur}
+              onChange={(e) => update("institution", e.target.value)}
+              placeholder="{{Institution:…}}"
+            />
+          )}
+          <div className="field__hint">
+            Used for the <code>{"{{Artwork}}"}</code> <code>|institution=</code> parameter.{" "}
+            <a href="https://commons.wikimedia.org/wiki/Category:Institution_templates" target="_blank" rel="noopener noreferrer">
+              Institution templates <Icon name="external" size={11} />
+            </a>
+          </div>
+        </>
+      );
+    }
     case "dateTaken":
       return (
         <>

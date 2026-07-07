@@ -126,7 +126,7 @@ export const BUILTIN_TEMPLATES = {
       { param: 'date',               key: 'dateTaken',      required: false, hint: 'When the work was created. ISO 8601 or {{other date|circa|1850}}.' },
       { param: 'medium',             key: null,             required: false, hint: 'Material/technique (e.g. "oil on canvas").' },
       { param: 'dimensions',         key: null,             required: false, hint: 'Use {{Size|height|width|unit}} for structured values.' },
-      { param: 'institution',        key: null,             required: false, hint: 'Holding institution ({{Institution:…}}).' },
+      { param: 'institution',        key: 'institution',    required: false, hint: 'Holding institution ({{Institution:…}}).' },
       { param: 'department',         key: null,             required: false, hint: 'Sub-collection within the institution.' },
       { param: 'location',           key: 'objectLocation', required: false, hint: 'Gallery / room within the institution.' },
       { param: 'references',         key: null,             required: false, hint: 'External references / catalogue raisonné entries.' },

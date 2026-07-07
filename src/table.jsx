@@ -118,6 +118,10 @@ const TABLE_COLUMNS = [
   { key: "license",     label: "License",      group: "standard",   sortable: true,  defaultWidth: 130, minWidth: 100, copyable: true,  editable: true },
   { key: "author",      label: "Author",       group: "standard",   sortable: true,  defaultWidth: 140, minWidth: 100, copyable: true,  editable: true,  truncate: "fade" },
   { key: "source",      label: "Source",       group: "standard",   sortable: true,  defaultWidth: 160, minWidth: 100, copyable: true,  editable: true,  truncate: "fade" },
+  // Institution: the {{Artwork}} |institution= value (e.g.
+  // {{Institution:Koninklijke Bibliotheek, Den Haag}}). Chosen in the detail
+  // panel from a curated list; the grid cell is read-only (editable: false).
+  { key: "institution", label: "Institution",  group: "standard",   sortable: true,  defaultWidth: 200, minWidth: 120, copyable: true,  editable: false, truncate: "fade", mono: true },
   // Caption (SDC label). Multi-language by spec on Commons; the workbench
   // surfaces one Caption column per language the user wants to edit, with
   // a no-duplicate-language guard. The bare "description" key is the
@@ -2229,6 +2233,12 @@ function CellView({ col, item, isMissing, hasTitleWarning, onCopy, setPillInfo, 
   // line). The full content is reachable via the click-to-open modal.
   if (col.key === 'wikitext') {
     return <WikitextPreviewCell item={item} templateConfig={templateConfig} />;
+  }
+
+  // Institution — read-only in the grid; chosen in the detail panel.
+  if (col.key === 'institution') {
+    if (!item.institution) return <span className="tbl__td-placeholder">—</span>;
+    return <span className="tbl__td-text" title={item.institution}>{item.institution}</span>;
   }
 
   // Caption columns (English `description` and per-language `description:<lang>`).

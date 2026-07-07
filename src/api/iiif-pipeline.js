@@ -59,6 +59,7 @@ function placeholderFromMapped(mapped) {
     author: mapped.author,
     source: mapped.source,
     license: mapped.license,
+    institution: mapped.institution || null,
     categories: mapped.categories,
     depicts: mapped.depicts,
     // session-only extras for Phase 5 (SDC/template wiring):
@@ -169,6 +170,7 @@ export async function runIiifImport(mappedItems, {
         thumburl: mapped.iiif.thumbUrl || real.thumburl,
         iiifThumbUrl: mapped.iiif.thumbUrl || null,
         iiifPendingCategory: mapped.iiifPendingCategory || null,
+        institution: mapped.institution || null,
         iiif: mapped.iiif,
         ...(existsOnCommons ? { existsOnCommons, issues: [...(real.issues || []), 'exists-on-commons'] } : {}),
       };
