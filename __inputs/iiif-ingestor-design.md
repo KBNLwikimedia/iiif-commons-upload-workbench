@@ -15,7 +15,7 @@
 | Q1 | Manifest entry via **URL and .json file drop** |
 | Q2 | **IIIF Presentation 3.0 only** in v1 (defensive parsing; other institutions later, KB first) |
 | Q3 | **{{Artwork}}** template (field-level analysis beat the {{Book}} exemplars) |
-| Q4 | **PD-Art-style combo license** (exact template settled in Phase 0.3 research) |
+| Q4 | **License `{{PD-Art|PD-old-100-expired}}`** (revised 2026-07-07 — supersedes the Phase 0.3 `Licensed-PD-Art|…|Cc-zero` recommendation) |
 | Q5 | **Core SDC statements** + captions (P6243, P180, P195+P217, P6216, P275, P7482) |
 | Q6 | Wikidata item: **auto-lookup by signature (P217 SPARQL) + manual override** |
 | Q7 | Filenames = **manifest Title + per-canvas label, verbatim** (sanitized only for forbidden chars; positional fallback; preview before upload) |
@@ -222,7 +222,7 @@ Mark with `[x]`, add notes inline. ★ = my recommendation.
 - [ ] `{{CC-zero}}` — follow the manifest's `rights` field verbatim
 - [ ] `{{PD-old-70}}` — what the Mandeville exemplar uses (author died >70 y ago)
 - [x] ★ `{{PD-Art|PD-old-100-expired}}`-style / `{{Licensed-PD-Art|…|Cc-zero}}` combo — states both "work is PD" and "reproduction released CC0" (I'll confirm the exact best-practice template in Phase 0.3)
-- Notes: **DECIDED 2026-07-07**. Phase 0.3 research settled the exact call: **`{{Licensed-PD-Art|PD-old-100-expired|Cc-zero}}`** — KB IIIF images are photographs (EXIF: Canon EOS 5D II) so the PD-Art family applies (not PD-scan); `Licensed-PD-Art` records the KB's CC0 grant on the reproduction for jurisdictions that don't follow Bridgeman; `PD-old-100-expired` covers author-death + US status. See `commons-best-practices.md` §4.
+- Notes: **DECIDED 2026-07-07**, then **REVISED same day by Olaf: `{{PD-Art|PD-old-100-expired}}`** (plain PD-Art, no `Licensed-PD-Art` wrapper — the KB's CC0 grant on the reproduction is not separately asserted in the license block). Phase 0.3 research context: KB IIIF images are photographs (EXIF: Canon EOS 5D II) so the PD-Art family applies (not PD-scan); `PD-old-100-expired` covers author-death + US status. The research's `Licensed-PD-Art|…|Cc-zero` recommendation (see `commons-best-practices.md` §4) is superseded by this choice.
 
 ### Q5. Structured-data scope for v1
 - [ ] Captions (nl/en) only — reuse what exists, zero new SDC code

@@ -27,7 +27,10 @@
 // Same forbidden set as FORBIDDEN_TITLE_CHARS in publish.js — keep in sync.
 const FORBIDDEN_TITLE_CHARS = /[#<>[\]|{}/\\:]/g;
 
-export const KB_LICENSE_WIKITEXT = '{{Licensed-PD-Art|PD-old-100-expired|Cc-zero}}';
+// Q4 (revised 2026-07-07 by Olaf): plain PD-Art — the work is PD because
+// the author died >100 years ago + US-expired; the KB's CC0 grant on the
+// reproduction is not separately asserted in the license block.
+export const KB_LICENSE_WIKITEXT = '{{PD-Art|PD-old-100-expired}}';
 export const KB_PARENT_CATEGORY = 'Medieval manuscripts from Koninklijke Bibliotheek';
 export const KB_INSTITUTION_WIKITEXT = '{{Institution:Koninklijke Bibliotheek}}';
 export const KB_COLLECTION_QID = 'Q1526131'; // Koninklijke Bibliotheek

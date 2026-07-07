@@ -19,7 +19,7 @@ Maintainer of this fork: **Olaf Janssen** (KB, national library of the Netherlan
 Design highlights:
 
 - Manifest entry via **URL or dropped .json**; **IIIF Presentation 3.0 only** in v1.
-- Wikitext template: **`{{Artwork}}`** (best field-level match for the KB manifest metadata). License: PD-Art-style combo (exact template settled in Phase 0.3 research).
+- Wikitext template: **`{{Artwork}}`** (best field-level match for the KB manifest metadata). License: **`{{PD-Art|PD-old-100-expired}}`** (Q4, revised by Olaf 2026-07-07).
 - SDC: captions (nl + machine-drafted en, reviewed before publish) + core statements P6243 / P180 / P195(+P217) / P6216 / P275 / P7482. Manuscript Wikidata item auto-found by signature (P217 SPARQL) with manual override.
 - Filenames: **manifest Title + per-canvas label, verbatim** (sanitized only for forbidden chars; positional fallback). Canvas labels are authoritative — canvas *position* can disagree with label numbering (seen in real KB manifests).
 - Per-manuscript category: tool suggests a name, user accepts/edits, tool **creates the subcategory** under `Category:Medieval manuscripts from Koninklijke Bibliotheek`.
