@@ -1708,31 +1708,33 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
               <h1 className="section-head__title section-head__title--limbo">
                 Upload stash
               </h1>
-              <span className="section-head__sub">
-                {filteredStash.length} of {stashItems.length} · in limbo
-                {stashItems.length > 0 && (() => {
-                  const now = Date.now();
-                  const minMs = stashItems.reduce((min, i) => {
-                    if (!i.expiresAt) return min;
-                    const ms = new Date(i.expiresAt) - now;
-                    return ms < min ? ms : min;
-                  }, Infinity);
-                  if (minMs === Infinity || minMs <= 0) return null;
-                  const hrs = Math.floor(minMs / (1000 * 60 * 60));
-                  const mins = Math.floor(minMs % (1000 * 60 * 60) / (1000 * 60));
-                  const label = hrs > 0 ? `${hrs}h` : `${mins}m`;
-                  return <span className="section-head__expiry" title="Least time remaining before earliest file expires"> · expires in {label}</span>;
-                })()}
+              <span className="section-head__right">
+                <span className="section-head__sub">
+                  {filteredStash.length} of {stashItems.length} · in limbo
+                  {stashItems.length > 0 && (() => {
+                    const now = Date.now();
+                    const minMs = stashItems.reduce((min, i) => {
+                      if (!i.expiresAt) return min;
+                      const ms = new Date(i.expiresAt) - now;
+                      return ms < min ? ms : min;
+                    }, Infinity);
+                    if (minMs === Infinity || minMs <= 0) return null;
+                    const hrs = Math.floor(minMs / (1000 * 60 * 60));
+                    const mins = Math.floor(minMs % (1000 * 60 * 60) / (1000 * 60));
+                    const label = hrs > 0 ? `${hrs}h` : `${mins}m`;
+                    return <span className="section-head__expiry" title="Least time remaining before earliest file expires"> · expires in {label}</span>;
+                  })()}
+                </span>
+                {stashItems.length > 0 && (
+                  <button
+                    className="btn btn--quiet section-head__clear"
+                    onClick={() => setClearStashOpen(true)}
+                    title="Clear the stash: via Special:UploadStash (server-side) or by hiding all rows here"
+                  >
+                    Clear entire stash
+                  </button>
+                )}
               </span>
-              {stashItems.length > 0 && (
-                <button
-                  className="btn btn--quiet section-head__clear"
-                  onClick={() => setClearStashOpen(true)}
-                  title="Hide all stash rows from the workbench (undoable; files auto-expire server-side within 48h)"
-                >
-                  Clear stash…
-                </button>
-              )}
             </div>
 
             {loadErrors?.stash && (
