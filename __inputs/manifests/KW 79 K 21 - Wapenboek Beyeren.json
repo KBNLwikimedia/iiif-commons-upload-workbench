@@ -1,0 +1,82 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://presentation-api.dlc.services/32/kw-79-k-21",
+  "type": "Manifest",
+  "label": {"en":["KW 79 K 21 (Wapenboek Beyeren)"]},
+  "summary": {"en":["KW 79 K 21"]},
+  "metadata": [
+    {
+      "label": {"nl":["Signatuur"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Collectiebeheerder"]},
+      "value": {"nl":["KB, Nationale Bibliotheek van Nederland"]}
+    },
+    {
+      "label": {"nl":["Plaats van origine"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Datum van origine"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Kopiist"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Illuminator"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Materiaal"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Aantal folia"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Afmetingen (in mm)"]},
+      "value": {"nl":["h x b"]}
+    },
+    {
+      "label": {"nl":["Schrift"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Taal"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Herkomst"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Link naar BNM"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Link naar DBNL"]},
+      "value": {"nl":["Lorem ipsum"]}
+    },
+    {
+      "label": {"nl":["Beeldlicentie"]},
+      "value": {
+        "nl": [
+          "http://creativecommons.org/publicdomain/zero/1.0/"
+        ]
+      }
+    },
+    {
+      "label": {"nl":["Datalicentie"]},
+      "value": {
+        "nl": [
+          "http://creativecommons.org/publicdomain/zero/1.0/"
+        ]
+      }
+    }
+  ],
+  "rights": "http://creativecommons.org/publicdomain/zero/1.0/"
+}

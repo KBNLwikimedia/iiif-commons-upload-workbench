@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+.DS_Store
+*.log
+.claude/
+
+# IDE / tooling
+.idea/
+.vite/
+.prompt-page/
+
+# Large derivable binaries (re-download via the IIIF Image API)
+__inputs/sample_images/

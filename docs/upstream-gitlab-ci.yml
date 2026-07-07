@@ -1,0 +1,91 @@
+# ARCHIVED UPSTREAM REFERENCE — NOT ACTIVE.
+# This is upload-workbench's GitLab CI config, kept for reference when this fork
+# sets up its own deployment. Do NOT resurrect as-is: it rsyncs to Daanvr's
+# Toolforge project (upload-workbench). Moved out of the repo root 2026-07-07.
+
+stages:
+  - deploy
+
+# Each deploy job builds the app itself (with a job-specific VITE_BASE_PATH),
+# rather than depending on a shared build artifact. That's because the MR
+# preview and the /v<X.Y.Z>/ archive build need different `base` paths than
+# the root build, so we can't reuse a single dist/.
+
+.deploy_setup: &deploy_setup
+  image: node:22
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq rsync openssh-client
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$TOOLFORGE_SSH_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan -H login.toolforge.org >> ~/.ssh/known_hosts
+    - npm ci
+
+# Production deploy on every push to main:
+#   1) Build with base=/ and rsync to the webroot — this is what users at
+#      https://upload-workbench.toolforge.org/ see. The --exclude flags keep
+#      sibling /v*/ archives and /mr-*/ previews intact under --delete.
+#   2) Re-build with base=/v<X.Y.Z>/ and rsync to a permanent archive at
+#      that URL, so users can roll back to any prior release from inside
+#      the app's info modal.
+deploy:main:
+  <<: *deploy_setup
+  stage: deploy
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  script:
+    - VERSION=$(node -p "require('./package.json').version")
+    - echo "Deploying upload-workbench v${VERSION} to root + /v${VERSION}/"
+    # 1) Live root
+    - VITE_BASE_PATH=/ VITE_DEPLOY_TARGET=main npm run build
+    - rsync --rsync-path="become upload-workbench rsync" -rlptDvz --delete
+        --exclude='/v*/' --exclude='/mr-*/'
+        dist/ daanvr@login.toolforge.org:/data/project/upload-workbench/www/static/
+    # 2) Permanent archive at /v<X.Y.Z>/
+    - VITE_BASE_PATH="/v${VERSION}/" VITE_DEPLOY_TARGET="v${VERSION}" npm run build
+    - rsync --rsync-path="become upload-workbench rsync" -rlptDvz
+        dist/ "daanvr@login.toolforge.org:/data/project/upload-workbench/www/static/v${VERSION}/"
+
+# Per-merge-request preview deploys. GitLab runs this on every MR pipeline
+# (creation + every push to the source branch). The `environment` block
+# registers the preview URL on the MR page and tells GitLab to invoke
+# cleanup:mr automatically when the MR is merged or closed.
+deploy:mr:
+  <<: *deploy_setup
+  stage: deploy
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  environment:
+    name: mr/$CI_MERGE_REQUEST_IID
+    url: https://upload-workbench.toolforge.org/mr-$CI_MERGE_REQUEST_IID/
+    on_stop: cleanup:mr
+    auto_stop_in: 60 days
+  script:
+    - echo "Deploying MR !${CI_MERGE_REQUEST_IID} preview to /mr-${CI_MERGE_REQUEST_IID}/"
+    - VITE_BASE_PATH="/mr-${CI_MERGE_REQUEST_IID}/" VITE_DEPLOY_TARGET="mr-${CI_MERGE_REQUEST_IID}" npm run build
+    - rsync --rsync-path="become upload-workbench rsync" -rlptDvz --delete
+        dist/ "daanvr@login.toolforge.org:/data/project/upload-workbench/www/static/mr-${CI_MERGE_REQUEST_IID}/"
+
+# Triggered by GitLab when the MR is closed/merged (via deploy:mr's on_stop)
+# or after auto_stop_in elapses. Removes the preview directory.
+cleanup:mr:
+  stage: deploy
+  image: alpine:latest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+      allow_failure: true
+  environment:
+    name: mr/$CI_MERGE_REQUEST_IID
+    action: stop
+  before_script:
+    - apk add --no-cache openssh-client
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$TOOLFORGE_SSH_KEY" | tr -d '\r' > ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan -H login.toolforge.org >> ~/.ssh/known_hosts
+  script:
+    - echo "Removing MR !${CI_MERGE_REQUEST_IID} preview"
+    - ssh daanvr@login.toolforge.org "become upload-workbench rm -rf /data/project/upload-workbench/www/static/mr-${CI_MERGE_REQUEST_IID}"

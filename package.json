@@ -1,0 +1,24 @@
+{
+  "name": "iiif-commons-upload-workbench",
+  "private": true,
+  "version": "0.39.0",
+  "type": "module",
+  "description": "Ingest IIIF manifests and publish them to Wikimedia Commons with prefilled wikitext and structured data — a fork of upload-workbench with a IIIF ingestion funnel",
+  "scripts": {
+    "dev": "vite",
+    "check:undefs": "node scripts/check-undefined-refs.mjs",
+    "build": "npm run check:undefs && vite build",
+    "build:nocheck": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@babel/parser": "^7.27.0",
+    "@babel/traverse": "^7.27.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.7"
+  }
+}
