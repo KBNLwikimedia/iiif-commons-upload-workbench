@@ -387,6 +387,52 @@ export async function categoryExists(name) {
   return !page.missing && typeof page.pageid === 'number';
 }
 
+// Create a category page on Commons (IIIF ingestor, design Q8 / OI-04).
+//
+// The T425950 publish check blocks rows whose categories don't exist; the
+// IIIF import wizard therefore creates the per-manuscript home category
+// (after the user confirmed/edited its name) before any publish happens.
+// `createonly` makes the call a no-op-with-error when the page already
+// exists — we treat that as success (the category being there is the goal).
+//
+// NOTE: this bypasses categoryExists' 5-min apiCache — callers should
+// re-check existence with { noCache } semantics in mind, or simply trust
+// the successful return.
+export async function createCategoryPage(name, wikitext) {
+  const bare = String(name || '').replace(/^\s*Category\s*:\s*/i, '').trim();
+  if (!bare) throw new Error('Empty category name');
+  if (DEMO_MODE) {
+    await new Promise((r) => setTimeout(r, 200));
+    return { created: true, demo: true };
+  }
+
+  const token = await getAccessToken();
+  if (!token) throw new Error('Not authenticated');
+  const csrf = await fetchCSRFToken();
+
+  const fd = new FormData();
+  fd.append('action', 'edit');
+  fd.append('title', `Category:${bare}`);
+  fd.append('text', wikitext);
+  fd.append('createonly', '1');
+  fd.append('summary', `Create category for IIIF manuscript import${attributionSuffix()}`);
+  fd.append('token', csrf);
+  fd.append('format', 'json');
+  fd.append('formatversion', '2');
+
+  const response = await fetch(`${COMMONS_API}?crossorigin=`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}`, 'Api-User-Agent': APP_USER_AGENT },
+    body: fd,
+  });
+  const data = await response.json();
+  if (data.error) {
+    if (data.error.code === 'articleexists') return { created: false, existed: true };
+    throw new Error(`${data.error.code}: ${data.error.info}`);
+  }
+  return { created: true };
+}
+
 // --- Category info (for the pill info popover) ---
 //
 // Fetches existence + a one-line summary for a Commons category.

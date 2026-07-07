@@ -10,6 +10,7 @@ import InfoModal from './ui/info-modal.jsx';
 import VersionChip from './ui/version-chip.jsx';
 import PilingMode from './ui/piling-mode.jsx';
 import { Cc0Modal, CC0_ACK_VERSION, shouldShowCc0Modal } from './ui/cc0-modal.jsx';
+import { IiifImportModal } from './ui/iiif-import-modal.jsx';
 import { DEMO_MODE } from './config.js';
 import {
   setDraft,
@@ -1148,6 +1149,10 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
   // counter via the latest filekey winning, and refreshes file-derived
   // metadata (EXIF/dimensions) via the latest entry. User-edit fields in the
   // saved draft survive because the draft is keyed by sha1.
+  // "Import IIIF manifest" wizard (design Phase 2) — feeds the same
+  // add/update/replace callbacks as the drag-drop uploader below.
+  const [iiifImportOpen, setIiifImportOpen] = React.useState(false);
+
   const addUploadItems = (newItems) =>
     setItems((prev) => [...newItems, ...prev]);
   const updateUploadItem = (id, partial) =>
@@ -1584,6 +1589,9 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
           About
         </button>
         <SaveStatus />
+        <button className="btn" onClick={() => setIiifImportOpen(true)} title="Import all pages of a IIIF manifest into your stash">
+          <Icon name="upload" size={16} /> Import IIIF manifest
+        </button>
         <button className="btn btn--progressive" onClick={openFilePicker}>
           <Icon name="upload" size={16} /> Upload
         </button>
@@ -2100,6 +2108,16 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
         onAddItems={addUploadItems}
         onUpdateItem={updateUploadItem}
         onReplaceItem={replaceUploadItem} />
+
+      {/* IIIF manifest import wizard */}
+      {iiifImportOpen && (
+        <IiifImportModal
+          onClose={() => setIiifImportOpen(false)}
+          onAddItems={addUploadItems}
+          onUpdateItem={updateUploadItem}
+          onReplaceItem={replaceUploadItem}
+        />
+      )}
 
       {/* Publish modal */}
       {publishingItemId && (

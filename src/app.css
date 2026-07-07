@@ -7936,3 +7936,221 @@ body.col-resizing * { cursor: col-resize !important; }
   border: 1px solid var(--border-color-progressive);
   color: var(--color-progressive);
 }
+
+/* ============================================================
+   IIIF import wizard (src/ui/iiif-import-modal.jsx)
+   ============================================================ */
+
+.iiif-modal {
+  width: min(860px, 94vw);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.iiif-modal__body {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 180px;
+}
+
+.iiif-modal__foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.iiif-label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  margin: 14px 0 4px;
+}
+
+.iiif-url-row {
+  display: flex;
+  gap: 8px;
+}
+
+.iiif-url-row input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border-color-base);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.iiif-or {
+  text-align: center;
+  color: var(--color-subtle);
+  margin: 14px 0;
+}
+
+.iiif-file-btn {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.iiif-error {
+  margin-top: 12px;
+  color: var(--color-destructive, #b32424);
+  font-size: 13px;
+}
+
+.iiif-report {
+  border: 1px solid var(--border-color-base);
+  border-radius: 6px;
+  padding: 8px 12px;
+  margin-bottom: 14px;
+  background: var(--background-color-neutral-subtle, #f8f9fa);
+}
+
+.iiif-report__line {
+  margin: 4px 0;
+  font-size: 13px;
+}
+
+.iiif-report__line--error { color: var(--color-destructive, #b32424); font-weight: 600; }
+.iiif-report__line--warning { color: #8a6d1f; }
+
+.iiif-passport {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.iiif-passport th {
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+  padding: 3px 14px 3px 0;
+  color: var(--color-subtle);
+  font-weight: 600;
+  width: 1%;
+}
+
+.iiif-passport td {
+  padding: 3px 0;
+}
+
+.iiif-settings input[type="text"],
+.iiif-settings input[type="url"] {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--border-color-base);
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.iiif-hint {
+  font-size: 12.5px;
+  color: var(--color-subtle);
+  margin: 6px 0 0;
+}
+
+.iiif-check { cursor: pointer; }
+
+.iiif-qid-pick {
+  font-size: 12.5px;
+  text-decoration: underline;
+  padding: 0 4px;
+}
+
+.iiif-select-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.iiif-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.iiif-canvas {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--border-color-base);
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  opacity: 0.55;
+}
+
+.iiif-canvas--on {
+  border-color: var(--border-color-progressive, #36c);
+  opacity: 1;
+}
+
+.iiif-canvas input[type="checkbox"] {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 1;
+}
+
+.iiif-canvas img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  background: var(--background-color-neutral-subtle, #f0f0f0);
+}
+
+.iiif-canvas__label {
+  font-size: 11px;
+  padding: 4px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.iiif-canvas__badge {
+  font-style: normal;
+  font-size: 10px;
+  background: #fef6e7;
+  border: 1px solid #edab00;
+  border-radius: 3px;
+  padding: 0 3px;
+  margin-left: 4px;
+}
+
+.iiif-recap {
+  list-style: none;
+  padding: 0;
+  font-size: 13px;
+}
+
+.iiif-recap li { margin: 6px 0; }
+
+.iiif-recap code {
+  background: var(--background-color-neutral-subtle, #f8f9fa);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.iiif-progressbar {
+  height: 10px;
+  border-radius: 5px;
+  background: var(--background-color-neutral-subtle, #eaecf0);
+  overflow: hidden;
+  margin: 18px 0 8px;
+}
+
+.iiif-progressbar__fill {
+  height: 100%;
+  background: var(--background-color-progressive, #36c);
+  transition: width 0.3s ease;
+}
+
+.iiif-summary {
+  margin-top: 14px;
+  font-size: 14px;
+}
+
+.iiif-summary p { margin: 6px 0; }

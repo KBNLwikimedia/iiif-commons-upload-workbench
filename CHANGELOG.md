@@ -12,6 +12,9 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 - **IIIF manifest parser** (`src/api/iiif.js`) — fetch/validate/parse for IIIF Presentation 3.0 with a three-level validation report; corpus harness `scripts/test-iiif-parser.mjs` (24/25 KB manifests parse clean, the zero-canvas one is correctly rejected).
 - **IIIF → workbench metadata mapper** (`src/api/iiif-map.js`) — manuscript- and canvas-level mapping to draft fields: derived short titles, `Title - KW sig - canvas-label` filenames (collision-safe), per-manuscript category proposal, `{{Licensed-PD-Art|PD-old-100-expired|Cc-zero}}` license, `{{other date|…}}` date conversion, `{{Size}}` dimensions, `{{unknown|author}}` handling, compact nl captions, and SDC statement inputs under `item.iiif`. Corpus harness `scripts/test-iiif-map.mjs`.
 - **Wikidata signature lookup** (`src/api/wikidata.js`) — finds the manuscript's Q-id by shelfmark (P217 SPARQL, cached), returning candidates for user confirmation.
+- **"Import IIIF manifest" wizard** (`src/ui/iiif-import-modal.jsx` + topbar button) — five steps: URL/file entry, validation report + manuscript passport + editable title/category/Wikidata settings, canvas gallery with IIIF thumbnails and selection, confirm recap, sequential import run with progress/abort/report.
+- **IIIF import pipeline** (`src/api/iiif-pipeline.js`) — per selected canvas: download full-res → browser SHA-1 → Commons duplicate check (stash anyway + flag) → stash upload → normalized table row with all prefills persisted as sha1-keyed drafts. Imported rows show real previews via the public IIIF thumbnails. Idempotent re-imports (same sha1 coalesces).
+- **Category creation** (`createCategoryPage()` in `src/api/commons.js`) — the wizard creates the per-manuscript home category under *Medieval manuscripts from Koninklijke Bibliotheek* after user confirmation, unblocking the categories-must-exist publish check.
 
 ### Changed
 

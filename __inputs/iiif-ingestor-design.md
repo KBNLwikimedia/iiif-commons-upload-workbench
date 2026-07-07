@@ -131,7 +131,9 @@ Shipped as `src/api/iiif.js` (pure ESM: `fetchManifest`, `parseManifestFile`, `p
 | 1.4 | Extract canvases: label, dimensions, thumbnail URL, ImageService id + `maxArea` → compute `fullResUrl` (`{service}/full/max/0/default.jpg`) and the *expected* delivered pixel size (native, or maxArea-fitted) | 1.2 |
 | 1.5 | Validation report object (errors / warnings / info) for display in the wizard — e.g. "metadata field X missing", "canvas 5 exceeds 25 MP, will be delivered downscaled", "Lorem ipsum placeholder detected" | 1.3, 1.4 |
 
-### Phase 2 — Import wizard UI (`src/ui/iiif-import-modal.jsx`)
+### Phase 2 — Import wizard UI (`src/ui/iiif-import-modal.jsx`) — ✅ **implemented 2026-07-07**
+
+Shipped as `src/ui/iiif-import-modal.jsx` (5-step wizard: URL/file entry → validation report + passport + editable title/category/Q-id with Wikidata auto-lookup → canvas gallery with IIIF thumbnails and selection → confirm recap (filenames, license, 48 h warning) → sequential run with progress/abort/report) + topbar "Import IIIF manifest" button in `app.jsx` + styles in `app.css`. E2E-verified in the browser against the live `iiif.bibliotheken.nl/kw-129-a-24` manifest with a real single-page import into the maintainer's stash.
 | # | Task | Depends on |
 |---|---|---|
 | 2.1 | Entry point: topbar button "Import IIIF manifest" (+ optionally: dropzone recognises a `.json` that parses as a manifest — Q1) | Phase 1 |
@@ -152,7 +154,9 @@ Shipped as `src/api/iiif-map.js` (`mapManuscript` / `mapCanvases` / `mapManifest
 | 3.4 | Wikidata Q-id lookup by signature (P217 SPARQL, `apiCache`d, manual override field in wizard) → feeds P6243/P180 + `|Wikidata=` param | 3.1 |
 | 3.5 | Captions: nl caption from description (and en if provided/translated — Q13) via the existing per-language caption columns | 3.1 |
 
-### Phase 4 — Pipeline engine (in-modal; reuses `dropzone.jsx` patterns)
+### Phase 4 — Pipeline engine — ✅ **implemented 2026-07-07** (`src/api/iiif-pipeline.js`)
+
+Sequential download → WebCrypto SHA-1 → `findCommonsFileBySha1` dup-check (Q10: stash anyway + flag) → stash upload → normalize → replace-in-table, reusing the dropzone's add/update/replace callbacks so imported pages are ordinary stash rows. Prefills persist as sha1-keyed drafts via the debounced user-store writer (Q11). IIIF thumbnails ride `item.thumburl` so imported rows show real previews (OI-12 partial fix). Abort between items; blobs released per item. Category creation via new `createCategoryPage()` in `commons.js` (Q8, `createonly`, treats `articleexists` as success). E2E-verified: real import ran twice — second run coalesced by sha1 into the same row (idempotent re-import confirmed).
 | # | Task | Depends on |
 |---|---|---|
 | 4.1 | Sequential download→sha1→dup-check→stash loop with progress callbacks, per-item retry, abort between items | Phases 1–3 |
