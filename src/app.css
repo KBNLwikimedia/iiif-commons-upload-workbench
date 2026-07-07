@@ -8237,3 +8237,10 @@ body.col-resizing * { cursor: col-resize !important; }
   line-height: 1.7;
   white-space: nowrap;
 }
+
+/* Stash section head: counter + Clear button sit next to the title
+   (left-aligned) instead of being pushed to the far right. */
+.section-head--inline {
+  justify-content: flex-start;
+  gap: 16px;
+}

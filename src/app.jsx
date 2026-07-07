@@ -1704,7 +1704,7 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
 
           {/* Section 1 — Upload stash */}
           <section className="stream">
-            <div className="section-head">
+            <div className="section-head section-head--inline">
               <h1 className="section-head__title section-head__title--limbo">
                 Upload stash
               </h1>
