@@ -23,7 +23,7 @@ import { mapManifest } from '../api/iiif-map.js';
 import { findManuscriptItems } from '../api/wikidata.js';
 import { runIiifImport } from '../api/iiif-pipeline.js';
 import { categoryExists, searchCategories } from '../api/commons.js';
-import { KB_PARENT_CATEGORY } from '../api/iiif-map.js';
+import { KB_PARENT_CATEGORY, KB_LICENSE_WIKITEXT } from '../api/iiif-map.js';
 import { DEMO_MODE } from '../config.js';
 
 const Icon = window.Icon;
@@ -64,7 +64,7 @@ const STEP_TITLES = {
   done: 'Import finished',
 };
 
-export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceItem }) {
+export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceItem, onEnsureArtworkTemplate }) {
   const [step, setStep] = React.useState('input');
   const [url, setUrl] = React.useState('');
   const [busy, setBusy] = React.useState(false);
@@ -210,6 +210,10 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   // --- step 4 → 5: run ------------------------------------------------------
 
   const start = async () => {
+    // Design Q3: manuscript pages publish with {{Artwork}}. The wikitext
+    // template is an app-global setting; switch it to Artwork now so the
+    // imported rows (and their wikitext preview) use it.
+    onEnsureArtworkTemplate?.();
     setStep('running');
     setSummary(null);
     abortRef.current = { current: false };
@@ -549,7 +553,8 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                     </span>
                   )}
                 </li>
-                <li><strong>License:</strong> <code>{mapping?.manuscript.license}</code></li>
+                <li><strong>License:</strong> <code>{KB_LICENSE_WIKITEXT}</code></li>
+                <li><strong>Template:</strong> <code>{'{{Artwork}}'}</code></li>
                 <li><strong>Author:</strong> <code>{mapping?.manuscript.author}</code></li>
                 <li><strong>Wikidata:</strong> {qid.trim() || '— none —'}</li>
                 <li><strong>Date:</strong> <code>{mapping?.manuscript.dateWikitext || '—'}</code></li>

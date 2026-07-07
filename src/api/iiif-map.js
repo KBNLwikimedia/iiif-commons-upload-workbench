@@ -30,6 +30,12 @@ const FORBIDDEN_TITLE_CHARS = /[#<>[\]|{}/\\:]/g;
 // Q4 (revised 2026-07-07 by Olaf): plain PD-Art — the work is PD because
 // the author died >100 years ago + US-expired; the KB's CC0 grant on the
 // reproduction is not separately asserted in the license block.
+//
+// The row's `license` field must carry the *catalog id* (so the licence
+// dropdown recognises it, doesn't flag "missing", and renders the wikitext
+// via the catalog `template()` at publish) — NOT the raw wikitext. The id
+// below duplicates the catalog entry id in src/licenses.js — keep in sync.
+export const KB_LICENSE_ID = 'PD-Art-PD-old-100-expired';
 export const KB_LICENSE_WIKITEXT = '{{PD-Art|PD-old-100-expired}}';
 export const KB_PARENT_CATEGORY = 'Medieval manuscripts from Koninklijke Bibliotheek';
 export const KB_INSTITUTION_WIKITEXT = '{{Institution:Koninklijke Bibliotheek}}';
@@ -168,7 +174,7 @@ export function mapManuscript(manifest) {
     signature,
     categoryName: sanitizeTitlePart(title ? `${title} - ${signature}` : signature),
     parentCategory: KB_PARENT_CATEGORY,
-    license: KB_LICENSE_WIKITEXT,
+    license: KB_LICENSE_ID,
     author: deriveAuthor(f),
     source: deriveSource(manifest),
     descriptionNl: String(f.inhoud || manifest.summary || '').replace(/\s+/g, ' ').trim(),

@@ -2137,6 +2137,7 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
           onAddItems={addUploadItems}
           onUpdateItem={updateUploadItem}
           onReplaceItem={replaceUploadItem}
+          onEnsureArtworkTemplate={() => setWikitextTemplate((prev) => (prev?.id === 'Artwork' ? prev : { id: 'Artwork' }))}
         />
       )}
 

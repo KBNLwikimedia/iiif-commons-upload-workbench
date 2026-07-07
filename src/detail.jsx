@@ -579,14 +579,26 @@ function LicenseField({ value, onChange, isMissing }) {
           )}
         </div>
       )}
-      <a
-        className="lic-field__pick"
-        href={window.LICENSE_HELP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Help me pick a licence <Icon name="external" size={11} />
-      </a>
+      <div className="lic-field__actions">
+        {window.IIIF_DEFAULT_LICENSE_ID && value !== window.IIIF_DEFAULT_LICENSE_ID && (
+          <button
+            type="button"
+            className="lic-field__reset"
+            onClick={() => onChange(window.IIIF_DEFAULT_LICENSE_ID)}
+            title={`Reset to the IIIF manuscript default (${window.licenseShortLabel?.(window.IIIF_DEFAULT_LICENSE_ID) || 'PD-Art'})`}
+          >
+            Reset to default
+          </button>
+        )}
+        <a
+          className="lic-field__pick"
+          href={window.LICENSE_HELP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Help me pick a licence <Icon name="external" size={11} />
+        </a>
+      </div>
     </>
   );
 }

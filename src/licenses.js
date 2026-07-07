@@ -37,6 +37,10 @@ export const LICENSE_HELP_URL =
 // picks this; the resulting `item.license` is the raw wikitext.
 export const CUSTOM_LICENSE_ID = '__custom__';
 
+// Default licence for IIIF manuscript imports (design Q4). The "Reset to
+// default" affordance in the detail-panel licence field resets to this.
+export const IIIF_DEFAULT_LICENSE_ID = 'PD-Art-PD-old-100-expired';
+
 // Source-of-work category. `own` = user is the copyright holder; `other` =
 // someone else made the work; the PD options are listed under `other` to
 // match Upload Wizard's grouping.
@@ -115,6 +119,19 @@ export const LICENSES = [
   },
 
   // ===== Someone else's work — public-domain claims =====
+  {
+    // KB IIIF manuscript default (design Q4, revised 2026-07-07). Faithful
+    // photographic reproduction of a 2-D public-domain work whose author died
+    // >100 years ago. The id string is duplicated as KB_LICENSE_ID in
+    // src/api/iiif-map.js — keep the two in sync.
+    id: 'PD-Art-PD-old-100-expired',
+    short: 'PD-Art (PD-old-100)',
+    title: 'Faithful reproduction of a public-domain work (author died >100 years ago)',
+    group: 'other',
+    info: 'For a faithful photographic reproduction of a 2-D public-domain artwork or manuscript whose author has been dead for more than 100 years. Commons treats the reproduction itself as public domain. This is the default for IIIF manuscript imports.',
+    moreUrl: 'https://commons.wikimedia.org/wiki/Template:PD-Art',
+    template: () => '{{PD-Art|PD-old-100-expired}}',
+  },
   {
     id: 'PD-old-70',
     short: 'PD-old-70',
@@ -224,6 +241,7 @@ if (typeof window !== 'undefined') {
   window.LICENSE_GROUPS = LICENSE_GROUPS;
   window.LICENSE_HELP_URL = LICENSE_HELP_URL;
   window.CUSTOM_LICENSE_ID = CUSTOM_LICENSE_ID;
+  window.IIIF_DEFAULT_LICENSE_ID = IIIF_DEFAULT_LICENSE_ID;
   window.getLicense = getLicense;
   window.renderLicenseTemplate = renderLicenseTemplate;
   window.licenseShortLabel = licenseShortLabel;
