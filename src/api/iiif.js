@@ -84,12 +84,19 @@ function paintingBody(canvas) {
   for (const page of canvas?.items || []) {
     for (const anno of page?.items || []) {
       const motivation = anno?.motivation;
-      const isPainting = motivation === 'painting'
+      // Treat a missing motivation as painting: some real v3 manifests omit
+      // it on the sole image annotation. A non-painting motivation (e.g.
+      // "supplementing" for OCR/text) is still excluded. (OI-34)
+      const isPainting = motivation == null
+        || motivation === 'painting'
         || (Array.isArray(motivation) && motivation.includes('painting'));
       if (!isPainting) continue;
-      // body can be a single object or (rarely) an array/Choice — take the
-      // first Image-typed body we find.
-      const bodies = Array.isArray(anno.body) ? anno.body : [anno.body];
+      // body can be a single object, an array, or a Choice wrapper
+      // ({ type:'Choice', items:[imageBody, …] } — alternate image versions).
+      // Flatten the Choice's items before the Image test, or the whole canvas
+      // is skipped for a spec-valid manifest. (OI-34)
+      const rawBodies = Array.isArray(anno.body) ? anno.body : [anno.body];
+      const bodies = rawBodies.flatMap((b) => (b?.type === 'Choice' ? (b.items || []) : [b]));
       for (const b of bodies) {
         if (b && (b.type === 'Image' || b.format?.startsWith?.('image/'))) return b;
       }

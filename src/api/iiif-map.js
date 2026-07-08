@@ -237,16 +237,20 @@ const MAX_BASE_LENGTH = 220;
 // Q-id in the wizard — derivation is cheap and stateless.
 export function mapCanvases(manuscript, manifest) {
   const canvases = manifest.canvases || [];
-  const used = new Map(); // base name → count, for collision suffixes
+  const used = new Map(); // set of final (post-suffix) names already taken
   return canvases.map((canvas) => {
     const pagePart = derivePagePart(canvas.label, canvas.index, canvases.length);
     const stem = manuscript.title
       ? `${manuscript.title} - ${manuscript.signature}`
       : manuscript.signature;
-    let base = sanitizeTitlePart(`${stem} - ${pagePart}`).slice(0, MAX_BASE_LENGTH).trim();
-    const n = (used.get(base) || 0) + 1;
-    used.set(base, n);
-    if (n > 1) base = `${base} (${n})`;
+    const stemBase = sanitizeTitlePart(`${stem} - ${pagePart}`).slice(0, MAX_BASE_LENGTH).trim();
+    // Ensure the FINAL name is unique: register the suffixed result, not just
+    // the pre-suffix base. Keying `used` by the bare base let labels like
+    // ["p1","p1","p1 (2)"] emit two identical "p1 (2)" filenames. (OI-35)
+    let base = stemBase;
+    let n = 1;
+    while (used.has(base)) { n += 1; base = `${stemBase} (${n})`; }
+    used.set(base, true);
 
     // Captions double as the {{Artwork}} |description= — keep them compact.
     // Long manifest summaries (the Atlas has a 500-char Latin incipit) fall
