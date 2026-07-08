@@ -22,7 +22,7 @@ const OAUTH_DOCS = `${GITHUB_REPO}/blob/main/docs/oauth-registration.md`;
 const UPSTREAM = 'https://gitlab.wikimedia.org/daanvr/upload-workbench';
 // Hidden tracking category appended to every published file by publish.js.
 // Linking it lets the user browse all the files uploaded with the tool.
-const COMMONS_CATEGORY = 'https://commons.wikimedia.org/wiki/Category:Uploaded_with_Upload_Workbench';
+const COMMONS_CATEGORY = 'https://commons.wikimedia.org/wiki/Category:Uploaded_with_IIIF_Manifest_Upload_Workbench';
 
 function deployLabel(target) {
   if (target === 'main') return 'Production (main)';

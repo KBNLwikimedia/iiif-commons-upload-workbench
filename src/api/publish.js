@@ -119,14 +119,14 @@ function formatLicense(item) {
 // previous `templateColumns` option here is gone.
 //
 // Hidden tracking category on Commons that collects every file published via
-// this tool — see https://commons.wikimedia.org/wiki/Category:Uploaded_with_Upload_Workbench
+// this tool — see https://commons.wikimedia.org/wiki/Category:Uploaded_with_IIIF_Manifest_Upload_Workbench
 // (the page itself carries `__HIDDENCAT__`; the wikitext we emit is just an
 // ordinary [[Category:…]] link). Auto-appended at the end of buildWikitext so
 // it sits alongside the user's other categories. Idempotent — if the user
 // already typed it into their categories list (or it survives in a hand-edit
 // roundtrip) we don't double-add. The user can still strip it by hand-editing
 // the wikitext in the publish modal; we don't re-inject after that.
-const TRACKING_CATEGORY = 'Uploaded with Upload Workbench';
+const TRACKING_CATEGORY = 'Uploaded with IIIF Manifest Upload Workbench';
 
 function isTrackingCategory(name) {
   return String(name || '').trim().toLowerCase() === TRACKING_CATEGORY.toLowerCase();
