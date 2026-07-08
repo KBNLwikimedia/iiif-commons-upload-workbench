@@ -20,13 +20,12 @@ const GITHUB_ISSUES = `${GITHUB_REPO}/issues`;
 const GITHUB_CHANGELOG = `${GITHUB_REPO}/blob/main/CHANGELOG.md`;
 const OAUTH_DOCS = `${GITHUB_REPO}/blob/main/docs/oauth-registration.md`;
 const UPSTREAM = 'https://gitlab.wikimedia.org/daanvr/upload-workbench';
-// The tool's homepage on Commons (Commons: project namespace).
+// On-wiki presence on Commons:
+//   - homepage/documentation: Commons:IIIF Manifest Upload Workbench
+//   - files uploaded with the tool: the hidden tracking category that
+//     publish.js tags every published file with.
 const COMMONS_HOMEPAGE = 'https://commons.wikimedia.org/wiki/Commons:IIIF_Manifest_Upload_Workbench';
-// The tool's project category on Commons — the parent of the hidden
-// "Uploaded with IIIF Manifest Upload Workbench" tracking subcategory that
-// publish.js tags each file with. Links here so the user can browse the
-// whole project (and reach the uploaded-files subcat from it).
-const COMMONS_CATEGORY = 'https://commons.wikimedia.org/wiki/Category:IIIF_Manifest_Upload_Workbench';
+const COMMONS_FILES = 'https://commons.wikimedia.org/wiki/Category:Uploaded_with_IIIF_Manifest_Upload_Workbench';
 
 function deployLabel(target) {
   if (target === 'main') return 'Production (main)';
@@ -99,11 +98,15 @@ export default function InfoModal({ onClose }) {
 
           <Section title="Links">
             <ul className="info-modal__links">
-              <li><a href={COMMONS_HOMEPAGE} target="_blank" rel="noopener noreferrer"><Icon name="globe" size={14} /> Homepage on Wikimedia Commons</a></li>
+              <li>
+                <Icon name="globe" size={14} /> See the{' '}
+                <a href={COMMONS_HOMEPAGE} target="_blank" rel="noopener noreferrer">documentation of this tool on Wikimedia Commons</a>{' '}
+                and the{' '}
+                <a href={COMMONS_FILES} target="_blank" rel="noopener noreferrer">files that have been uploaded with it</a>.
+              </li>
               <li><a href={GITHUB_REPO} target="_blank" rel="noopener noreferrer"><Icon name="external" size={14} /> Source code on GitHub</a></li>
               <li><a href={GITHUB_ISSUES} target="_blank" rel="noopener noreferrer"><Icon name="warn" size={14} /> Report a bug / request a feature</a></li>
               <li><a href={GITHUB_CHANGELOG} target="_blank" rel="noopener noreferrer"><Icon name="external" size={14} /> Changelog</a></li>
-              <li><a href={COMMONS_CATEGORY} target="_blank" rel="noopener noreferrer"><Icon name="image" size={14} /> Files uploaded with this tool (on Commons)</a></li>
               <li><a href={OAUTH_DOCS} target="_blank" rel="noopener noreferrer"><Icon name="external" size={14} /> OAuth registration docs</a></li>
             </ul>
           </Section>

@@ -1,6 +1,11 @@
-# This fork (IIIF Commons Upload Workbench)
+# This fork (IIIF Manifest Upload Workbench)
 https://github.com/KBNLwikimedia/iiif-commons-upload-workbench --> code (public repo)
 (no live deployment yet — local dev only, see CLAUDE.md)
+
+# On Wikimedia Commons
+https://commons.wikimedia.org/wiki/Commons:IIIF_Manifest_Upload_Workbench --> homepage / documentation
+https://commons.wikimedia.org/wiki/Category:IIIF_Manifest_Upload_Workbench --> project category (parent)
+https://commons.wikimedia.org/wiki/Category:Uploaded_with_IIIF_Manifest_Upload_Workbench --> files uploaded with the tool (hidden tracking subcat)
 
 # Upstream (Upload Workbench by Daanvr, forked at v0.39.0)
 https://upload-workbench.toolforge.org/ --> live tool

@@ -42,6 +42,7 @@ Planned new modules (ESM, not window-globals): `src/api/iiif.js` (fetch/validate
 | Concern | Location |
 |---|---|
 | Source code | GitHub, public repo [`KBNLwikimedia/iiif-commons-upload-workbench`](https://github.com/KBNLwikimedia/iiif-commons-upload-workbench) |
+| On-wiki (Commons) | Homepage/docs: [`Commons:IIIF Manifest Upload Workbench`](https://commons.wikimedia.org/wiki/Commons:IIIF_Manifest_Upload_Workbench). Project category: [`Category:IIIF Manifest Upload Workbench`](https://commons.wikimedia.org/wiki/Category:IIIF_Manifest_Upload_Workbench). Uploaded files (hidden tracking subcat, applied by `publish.js`): [`Category:Uploaded with IIIF Manifest Upload Workbench`](https://commons.wikimedia.org/wiki/Category:Uploaded_with_IIIF_Manifest_Upload_Workbench). Edit summaries link to the homepage as a wikilink. |
 | Upstream | `gitlab.wikimedia.org/daanvr/upload-workbench` (GitLab; live at https://upload-workbench.toolforge.org/). This fork does **not** push there. |
 | Deployment | **Local dev only for now** (`npm run dev` + `VITE_OWNER_ACCESS_TOKEN`). Own Toolforge tool + own OAuth consumer registration are deferred until the ingestor works end-to-end. Upstream's `.gitlab-ci.yml` is archived at `docs/upstream-gitlab-ci.yml` for reference — do not resurrect it as-is; it rsyncs to *Daanvr's* Toolforge project. |
 | Issue tracking | GitHub issues on the fork repo (upstream uses Phabricator `#tool-upload-workbench` — that board is for upstream work only, don't file fork tasks there) |
