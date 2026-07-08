@@ -628,7 +628,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                   )}
                 </li>
                 <li><strong>License:</strong> <code>{KB_LICENSE_WIKITEXT}</code></li>
-                <li><strong>Template:</strong> <code>{'{{Artwork}}'}</code></li>
+                <li><strong>Template:</strong> <a href="https://commons.wikimedia.org/wiki/Template:Artwork" target="_blank" rel="noopener noreferrer"><code>{'{{Artwork}}'}</code></a></li>
                 <li><strong>Author:</strong> <code>{mapping?.manuscript.author}</code></li>
                 <li>
                   <strong>Wikidata:</strong>{' '}
