@@ -464,7 +464,12 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       )}
                     </p>
 
-                    <label className="iiif-label" htmlFor="iiif-qid">Wikidata item of the manuscript (feeds “digital representation of” + depicts)</label>
+                    <label className="iiif-label" htmlFor="iiif-qid">
+                      Wikidata item of the manuscript (feeds{' '}
+                      <a href="https://www.wikidata.org/wiki/Property:P6243" target="_blank" rel="noopener noreferrer">digital representation of (P6243)</a>{' '}
+                      +{' '}
+                      <a href="https://www.wikidata.org/wiki/Property:P180" target="_blank" rel="noopener noreferrer">depicts (P180)</a>)
+                    </label>
                     <input id="iiif-qid" type="text" placeholder="Q…" value={qid} onChange={(e) => setQid(e.target.value)} />
                     <p className="iiif-hint">
                       {qidCandidates === null && 'Searching Wikidata by signature…'}
