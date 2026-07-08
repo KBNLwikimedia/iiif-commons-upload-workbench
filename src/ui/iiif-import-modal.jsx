@@ -295,7 +295,11 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
               {step === 'input' && 'Paste a IIIF Presentation 3.0 manifest URL, or pick a downloaded manifest .json file.'}
               {step === 'review' && (manifest ? `${manifest.label || 'Untitled manifest'} — ${manifest.canvasCount} pages` : 'The manifest could not be used.')}
               {step === 'select' && `${selected.size} of ${manifest?.canvasCount ?? 0} pages selected`}
-              {step === 'confirm' && `${chosen.length} pages will be downloaded and stashed (~${totalMB} MB through your browser).`}
+              {step === 'confirm' && (
+                <>
+                  {chosen.length} pages will be downloaded from the IIIF server and stashed on Wikimedia Commons. An <strong>estimate of ~{totalMB} MB</strong> will be transferred through your browser.
+                </>
+              )}
               {step === 'running' && `${progress.done} / ${progress.total} pages processed — keep this tab open.`}
               {step === 'done' && 'The imported pages are now rows in your stash — review and publish from the table.'}
             </p>
