@@ -74,14 +74,6 @@ function placeholderFromMapped(mapped) {
   };
 }
 
-// True while a batch import is actively downloading/uploading canvases.
-// Read by the tab-close guard (OI-65) so leaving mid-import warns the user —
-// in-flight canvases aren't yet stashed and would be lost.
-let importRunning = false;
-export function isIiifImportRunning() {
-  return importRunning;
-}
-
 // runIiifImport(mappedItems, { onAddItems, onUpdateItem, onReplaceItem,
 //   onItemDone, abortRef }) → summary { uploaded, duplicates, failed,
 //   aborted, results: [{ mapped, state, item?, error?, existsOnCommons? }] }
@@ -148,7 +140,6 @@ export async function runIiifImport(mappedItems, {
   // turned a 500-page import into ~500 Metadata.json edits. resumeSaves() in
   // the finally does the final write and un-suspends, even on an early exit.
   if (!DEMO_MODE) suspendSaves();
-  importRunning = true;
   try {
   for (let i = 0; i < mappedItems.length; i++) {
     if (abortRef.current) {
@@ -263,7 +254,6 @@ export async function runIiifImport(mappedItems, {
     }
   }
   } finally {
-    importRunning = false;
     if (!DEMO_MODE) await resumeSaves();
   }
 
