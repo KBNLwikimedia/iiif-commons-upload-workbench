@@ -32,6 +32,13 @@ let username = null;
 
 const SAVE_DEBOUNCE_MS = 3000;
 
+// OI-38: MediaWiki rejects page content over $wgMaxArticleSize (2 MiB =
+// 2,097,152 bytes on Wikimedia wikis) with `contenttoobig`. Fail fast just
+// under it with an actionable message instead of letting the API error be
+// logged-and-swallowed — otherwise draft saves fail silently forever once
+// the store is full. Margin below the hard cap is deliberate headroom.
+const MAX_STORE_BYTES = 2_000_000;
+
 const STORES = {
   preferences: {
     title: 'IIIFManifestUploadWorkbench/Preferences.json',
@@ -51,6 +58,16 @@ const STORES = {
       schemaVersion: 2,
       filenames: {},
       drafts: {},
+      // sharedDrafts (OI-38): batch-shared draft fields stored ONCE per
+      // import (keyed by manifest, e.g. "iiif:<manifestUrl>") instead of
+      // duplicated into every canvas's draft. A draft opts in by carrying
+      // `_shared: <key>`; reads overlay the draft's own fields on top of
+      // the shared record (the draft wins), and setDraft strips any written
+      // field that merely equals the shared value. Keeps a 500-canvas
+      // import's Metadata.json footprint ~3-4x smaller — headroom under
+      // MediaWiki's 2 MB page cap ($wgMaxArticleSize). Orphaned records
+      // (no draft references them anymore) are pruned on deleteDraft/load.
+      sharedDrafts: {},
       // Soft-delete state. Two lists during the migration window:
       //   hiddenSha1s   — canonical. Sha1 is content-defined and stable
       //                   across stash regeneration / re-upload, so soft-
@@ -297,6 +314,10 @@ export async function loadStores(user) {
   }
   if (migrated > 0) scheduleSave('metadata');
 
+  // OI-38 hygiene: drop shared draft records nothing references anymore
+  // (left behind by e.g. an import that failed before persisting any draft).
+  if (pruneSharedDrafts()) scheduleSave('metadata');
+
   return { prefs: STORES.preferences.state, metadata: STORES.metadata.state };
 }
 
@@ -353,10 +374,22 @@ async function saveOne(storeKey) {
     const csrf = await fetchCSRFToken();
     if (!csrf) throw new Error('Could not get CSRF token');
 
+    // OI-38 size guard: refuse to send a page the wiki would reject anyway.
+    // The error lands in lastError → the topbar SaveStatus chip, so the user
+    // learns *why* saves stopped and what to do about it.
+    const text = JSON.stringify(s.state, null, 2);
+    const bytes = new TextEncoder().encode(text).length;
+    if (bytes > MAX_STORE_BYTES) {
+      throw new Error(
+        `${pageTitle(storeKey)} is ${(bytes / 1024 / 1024).toFixed(2)} MB — over the 2 MB wiki page limit. ` +
+        'Publish or discard some imported drafts to shrink it; edits keep working locally but cannot be saved until then.',
+      );
+    }
+
     const fd = new FormData();
     fd.append('action', 'edit');
     fd.append('title', pageTitle(storeKey));
-    fd.append('text', JSON.stringify(s.state, null, 2));
+    fd.append('text', text);
     // T425978: every Commons write self-identifies in its edit summary.
     fd.append('summary', `Update ${storeKey}${attributionSuffix()}`);
     fd.append('token', csrf);
@@ -474,23 +507,83 @@ export function pickDraftFields(item) {
   return out;
 }
 
+// --- Shared draft records (OI-38) ---
+// A bulk import persists the manuscript-level fields (author, source,
+// license, categories, …) once under sharedDrafts[<key>]; each canvas draft
+// stores only what differs plus `_shared: <key>`. Reads overlay draft fields
+// on top of the shared record (draft wins); setDraft strips redundant
+// writes, so app.jsx's full-row writeback on user edits keeps producing
+// deltas without knowing about any of this.
+
+export function setSharedDraft(sharedKey, fields) {
+  if (!sharedKey || !fields) return;
+  const state = STORES.metadata.state;
+  state.sharedDrafts = state.sharedDrafts || {};
+  if (JSON.stringify(state.sharedDrafts[sharedKey]) === JSON.stringify(fields)) return;
+  state.sharedDrafts[sharedKey] = fields;
+  scheduleSave('metadata');
+}
+
+// Overlay a draft's own fields onto its shared record (if any). Returns the
+// draft itself when it has no shared pointer, so non-import drafts are
+// untouched. Meta keys (_shared, _updated) stay on the result; strip where
+// they'd leak onto items (mergeDraftsOntoItems).
+function expandDraft(d) {
+  if (!d || !d._shared) return d;
+  const shared = STORES.metadata.state.sharedDrafts?.[d._shared];
+  if (!shared) return d;
+  return { ...shared, ...d };
+}
+
+// Drop shared records no draft references anymore (e.g. after publish
+// deletes the batch's drafts one by one). Returns true if anything got
+// pruned so callers can schedule a save.
+function pruneSharedDrafts() {
+  const state = STORES.metadata.state;
+  if (!state.sharedDrafts) return false;
+  const referenced = new Set(
+    Object.values(state.drafts || {}).map((d) => d?._shared).filter(Boolean),
+  );
+  let pruned = false;
+  for (const k of Object.keys(state.sharedDrafts)) {
+    if (!referenced.has(k)) {
+      delete state.sharedDrafts[k];
+      pruned = true;
+    }
+  }
+  return pruned;
+}
+
 export function getDraft(key) {
   if (!key) return null;
-  return STORES.metadata.state.drafts?.[key] || null;
+  const d = STORES.metadata.state.drafts?.[key];
+  return d ? expandDraft(d) : null;
 }
 
 export function setDraft(key, partial) {
   if (!key || !partial) return;
   STORES.metadata.state.drafts = STORES.metadata.state.drafts || {};
   const prev = STORES.metadata.state.drafts[key] || {};
+  // OI-38: fields that merely repeat the shared record are not stored — and
+  // an existing delta whose value returns to the shared one is removed (so
+  // the expansion doesn't shadow the shared value with a stale delta).
+  const sharedKey = partial._shared || prev._shared;
+  const shared = (sharedKey && STORES.metadata.state.sharedDrafts?.[sharedKey]) || null;
   // Skip the write if nothing actually changed (avoids spurious wiki edits
   // when a user just clicks-without-changing).
-  const next = { ...prev, ...partial };
+  const next = { ...prev };
   let changed = false;
   for (const k of Object.keys(partial)) {
-    if (JSON.stringify(prev[k]) !== JSON.stringify(partial[k])) {
+    const redundant = shared && k in shared
+      && JSON.stringify(shared[k]) === JSON.stringify(partial[k]);
+    if (redundant) {
+      if (k in next) {
+        delete next[k];
+        changed = true;
+      }
+    } else if (JSON.stringify(next[k]) !== JSON.stringify(partial[k])) {
+      next[k] = partial[k];
       changed = true;
-      break;
     }
   }
   if (!changed) return;
@@ -503,6 +596,7 @@ export function deleteDraft(key) {
   if (!key) return;
   if (STORES.metadata.state.drafts?.[key]) {
     delete STORES.metadata.state.drafts[key];
+    pruneSharedDrafts(); // OI-38: drop the batch record with its last draft
     scheduleSave('metadata');
   }
 }
@@ -528,11 +622,13 @@ export function rekeyDraft(fromKey, toKey) {
   merged._updated = new Date().toISOString();
   drafts[toKey] = merged;
   delete drafts[fromKey];
+  pruneSharedDrafts(); // OI-38: dst's _shared may have been overwritten by src's
   scheduleSave('metadata');
 }
 
 // Apply drafts onto an array of items. Draft fields override item fields
-// (the user's saved edits trump whatever the API returned).
+// (the user's saved edits trump whatever the API returned). Drafts with a
+// `_shared` pointer are expanded from their batch record first (OI-38).
 export function mergeDraftsOntoItems(items) {
   const drafts = STORES.metadata.state.drafts || {};
   return items.map((item) => {
@@ -540,8 +636,9 @@ export function mergeDraftsOntoItems(items) {
     if (!key) return item;
     const d = drafts[key];
     if (!d) return item;
-    const overlay = { ...d };
+    const overlay = { ...expandDraft(d) };
     delete overlay._updated;
+    delete overlay._shared;
     return { ...item, ...overlay };
   });
 }

@@ -21,7 +21,7 @@ import { fetchCSRFToken, fetchStashFileInfo, findCommonsFileBySha1 } from './com
 import { uploadFile } from './upload.js';
 import { normalizeStashItem, thumbColors } from './normalize.js';
 import { setStashedFilename } from './local-store.js';
-import { setDraft, pickDraftFields, setStashedFilename as setStashedFilenameWiki, suspendSaves, resumeSaves, flushAll } from './user-store.js';
+import { setDraft, setSharedDraft, pickDraftFields, setStashedFilename as setStashedFilenameWiki, suspendSaves, resumeSaves, flushAll } from './user-store.js';
 
 // OI-25: how often to flush accumulated drafts to Metadata.json mid-import.
 // A single end-of-run write would mean a crash loses every draft; flushing
@@ -89,6 +89,30 @@ export async function runIiifImport(mappedItems, {
 } = {}) {
   const placeholders = mappedItems.map(placeholderFromMapped);
   onAddItems?.(placeholders);
+
+  // OI-38: manuscript-level fields (author, source, license, categories, …)
+  // are identical on every canvas — persist them ONCE as a shared record
+  // instead of duplicating ~1 KB into all 500 drafts. Computed dynamically
+  // (any field whose value matches across the whole batch), so future field
+  // additions dedupe automatically. setDraft() strips fields that repeat the
+  // shared record, so the per-canvas call below can stay dumb. The record is
+  // written lazily with the first successful item — a fully failed import
+  // leaves nothing behind.
+  let sharedKey = null;
+  let sharedFields = null;
+  if (!DEMO_MODE && placeholders.length > 1) {
+    const perItem = placeholders.map((p) => pickDraftFields(p));
+    const candidate = {};
+    for (const k of Object.keys(perItem[0])) {
+      const v = JSON.stringify(perItem[0][k]);
+      if (perItem.every((df) => JSON.stringify(df[k]) === v)) candidate[k] = perItem[0][k];
+    }
+    if (Object.keys(candidate).length > 0) {
+      sharedFields = candidate;
+      sharedKey = `iiif:${mappedItems[0].iiif.manifestUrl || mappedItems[0].iiif.targetFilename}`;
+    }
+  }
+  let sharedWritten = false;
 
   // CSRF once for the whole batch (uploadFile ignores it in DEMO_MODE).
   let csrf = 'demo';
@@ -192,9 +216,19 @@ export async function runIiifImport(mappedItems, {
 
       // 6) Persist the prefills as a normal draft keyed by sha1 (design
       //    Q11) — the same debounced Metadata.json write path as hand-typed
-      //    edits, so the whole batch coalesces into few wiki edits.
+      //    edits, so the whole batch coalesces into few wiki edits. With a
+      //    shared record (OI-38) the draft stores only per-canvas deltas
+      //    (title, caption, thumb URL) — setDraft strips the rest.
       const key = real.sha1 || real.filekey;
-      if (key && !DEMO_MODE) setDraft(key, pickDraftFields(temp));
+      if (key && !DEMO_MODE) {
+        if (sharedKey && !sharedWritten) {
+          setSharedDraft(sharedKey, sharedFields);
+          sharedWritten = true;
+        }
+        setDraft(key, sharedKey
+          ? { ...pickDraftFields(temp), _shared: sharedKey }
+          : pickDraftFields(temp));
+      }
 
       uploaded += 1;
       const r = { mapped, state: 'ok', item: real, existsOnCommons };
