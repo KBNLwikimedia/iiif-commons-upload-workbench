@@ -19,33 +19,28 @@ export const OAUTH_PROFILE_URL = 'https://meta.wikimedia.org/w/rest.php/oauth2/r
 export const REDIRECT_URI = window.location.origin + '/';
 
 export const STASH_EXPIRY_HOURS = 48;
-export const APP_USER_AGENT = 'UploadWorkbench/0.39 (https://gitlab.wikimedia.org/daanvr/upload-workbench)';
+export const APP_USER_AGENT = 'IIIFManifestUploadWorkbench/0.39 (https://github.com/KBNLwikimedia/iiif-commons-upload-workbench)';
 
 // Edit-summary attribution suffix (T425978).
 //
 // Every write to Commons (action=upload publish, action=edit on File:/User:
 // pages, action=wbeditentity for SDC) appends this so a human reading the page
-// history can click straight through to the tool and see the exact version
-// that wrote the edit. The version is the full SemVer from package.json
-// (`__APP_VERSION__` is a Vite compile-time define, see vite.config.js) — not
-// the truncated APP_USER_AGENT MAJOR.MINOR — so post-hoc debugging can pinpoint
-// behavior precisely.
+// history can see which tool + exact version wrote the edit. The version is
+// the full SemVer from package.json (`__APP_VERSION__` is a Vite compile-time
+// define, see vite.config.js) — not the truncated APP_USER_AGENT MAJOR.MINOR —
+// so post-hoc debugging can pinpoint behavior precisely.
 //
-// MediaWiki edit summaries don't support external URLs (a raw URL or `[URL
-// text]` renders as plain text, and `[[URL|text]]` is parsed as an internal
-// page-title link to the literal URL string and renders as a redlink). Use the
-// `toolforge:` interwiki prefix instead — it renders as a clickable extiw
-// link, and `iw.toolforge.org/upload-workbench` 301-redirects to the live tool
-// for free. Always points at the live root (not a version-pinned /v<X.Y.Z>/
-// archive) so a curious editor reading a page history clicks straight through
-// to the current tool.
+// MediaWiki edit summaries don't render external URLs as clickable links
+// (a raw URL or `[URL text]` shows as plain text, `[[URL|text]]` becomes a
+// redlink). This fork has no Toolforge interwiki prefix (unlike upstream), so
+// the GitHub URL is included as plain — readable and copyable — text.
 //
 // Helper, not a constant, so the build-time `__APP_VERSION__` resolves at the
 // call site. Returns the suffix already prefixed with a space so callers can
 // just concatenate to whatever summary they already had (or use it standalone
 // for writes that have no per-call summary).
 export function attributionSuffix() {
-  return ` [[:toolforge:upload-workbench|with Upload Workbench]] v${__APP_VERSION__}`;
+  return ` with IIIF Manifest Upload Workbench v${__APP_VERSION__} (github.com/KBNLwikimedia/iiif-commons-upload-workbench)`;
 }
 
 // When no client_id is configured, the app runs against SAMPLE_UPLOADS in data.js

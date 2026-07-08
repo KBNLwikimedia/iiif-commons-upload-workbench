@@ -1,10 +1,11 @@
 // Feedback modal — opens from the always-visible <FeedbackButton/> pill
 // pinned to the top-centre of the viewport.
 //
-// Sibling of src/ui/error-report-modal.jsx: same `window.open` plumbing,
-// same two destinations (a pre-filled Phabricator task or the User talk
-// page edit form on Commons), no new OAuth scopes. Differences from the
-// error flow:
+// Sibling of src/ui/error-report-modal.jsx: same `window.open` plumbing.
+// Destination is a pre-filled GitHub issue on the fork repo
+// (KBNLwikimedia/iiif-commons-upload-workbench), no OAuth scopes.
+// (error-report-modal.jsx still points at upstream Phabricator/GitLab —
+// repoint it too when convenient.) Differences from the error flow:
 //
 //   - No error context (no error message / stack trace). Instead we capture
 //     a wider environment snapshot (version, deploy target, URL, user
@@ -29,9 +30,11 @@ import React from 'react';
 const Icon = window.Icon;
 const { useState, useEffect, useMemo, useRef } = React;
 
-const PHAB_CREATE_URL = 'https://phabricator.wikimedia.org/maniphest/task/edit/form/default/';
-const COMMONS_TALK_URL = 'https://commons.wikimedia.org/w/index.php';
-const TALK_TARGET = 'User talk:Daanvr';
+const GITHUB_ISSUES_NEW_URL = 'https://github.com/KBNLwikimedia/iiif-commons-upload-workbench/issues/new';
+// Map feedback type → an existing repo label (unknown labels would make
+// GitHub show a warning). Only 'bug' and 'enhancement' exist; question /
+// praise get no label.
+const GITHUB_LABEL = { bug: 'bug', suggestion: 'enhancement' };
 
 // Feedback-type definitions. The label is what we show on the chip; the
 // `prompts` are the inspirational scaffolds the user can click to seed
@@ -204,27 +207,15 @@ function buildFeedbackBody({ heading, comment, ctx }) {
     }
   }
   lines.push('');
-  lines.push('_Submitted via the Upload Workbench Feedback button._');
+  lines.push('_Submitted via the IIIF Manifest Upload Workbench Feedback button._');
   return lines.join('\n');
 }
 
-function buildPhabUrl({ title, body }) {
-  const params = new URLSearchParams({
-    projects: 'tool-upload-workbench',
-    title,
-    description: body,
-  });
-  return `${PHAB_CREATE_URL}?${params.toString()}`;
-}
-
-function buildTalkUrl({ sectionTitle }) {
-  const params = new URLSearchParams({
-    title: TALK_TARGET,
-    action: 'edit',
-    section: 'new',
-    preloadtitle: sectionTitle,
-  });
-  return `${COMMONS_TALK_URL}?${params.toString()}`;
+function buildGithubIssueUrl({ title, body, typeId }) {
+  const params = new URLSearchParams({ title, body });
+  const label = GITHUB_LABEL[typeId];
+  if (label) params.set('labels', label);
+  return `${GITHUB_ISSUES_NEW_URL}?${params.toString()}`;
 }
 
 export default function FeedbackModal({ onClose }) {
@@ -259,7 +250,7 @@ export default function FeedbackModal({ onClose }) {
       .split('\n')
       .map((l) => l.replace(/^[\s*#>_-]+/, '').trim())
       .find((l) => l.length > 0)
-      || `Feedback on Upload Workbench`;
+      || `Feedback on IIIF Manifest Upload Workbench`;
     const cleaned = firstLine.replace(/\s+/g, ' ').trim();
     const truncated = cleaned.length > 80 ? cleaned.slice(0, 77) + '…' : cleaned;
     return `[${type.label}] ${truncated}`;
@@ -307,11 +298,7 @@ export default function FeedbackModal({ onClose }) {
     };
   }, [onClose]);
 
-  const phabUrl = useMemo(() => buildPhabUrl({ title, body }), [title, body]);
-  const talkUrl = useMemo(
-    () => buildTalkUrl({ sectionTitle: title }),
-    [title],
-  );
+  const githubUrl = useMemo(() => buildGithubIssueUrl({ title, body, typeId }), [title, body, typeId]);
 
   const copyToClipboard = async () => {
     try {
@@ -332,17 +319,8 @@ export default function FeedbackModal({ onClose }) {
     }
   };
 
-  const openPhab = () => {
-    window.open(phabUrl, '_blank', 'noopener,noreferrer');
-  };
-
-  const openTalk = () => {
-    // Copy first so the body is on the clipboard when the edit form loads.
-    // Best-effort: even if the clipboard write is denied, still open the
-    // tab — the user can re-copy from this modal manually.
-    copyToClipboard().finally(() => {
-      window.open(talkUrl, '_blank', 'noopener,noreferrer');
-    });
+  const openGithub = () => {
+    window.open(githubUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -361,7 +339,7 @@ export default function FeedbackModal({ onClose }) {
               <span className="chip chip--info feedback-modal__beta">Beta</span>
             </h2>
             <p className="modal__sub">
-              Upload Workbench is in beta — your feedback is unusually valuable. Bug reports, half-formed ideas, "I wish it did X", "this label confused me", praise — all welcome. The note below is signed by you; review and edit before sending.
+              IIIF Manifest Upload Workbench is in beta — your feedback is unusually valuable. Bug reports, half-formed ideas, "I wish it did X", "this label confused me", praise — all welcome. The note below opens a pre-filled GitHub issue; review and edit before sending.
             </p>
           </div>
           <button className="btn btn--quiet btn--icon-only" onClick={onClose} aria-label="Close">
@@ -476,20 +454,12 @@ export default function FeedbackModal({ onClose }) {
               <Icon name="copy" size={14} /> Copy text
             </button>
             <button
-              className="btn"
-              onClick={openTalk}
-              disabled={!hasComment}
-              title="Opens User talk:Daanvr on Commons — body is copied to your clipboard, paste it into the new section."
-            >
-              <Icon name="external" size={14} /> Post to User talk:Daanvr
-            </button>
-            <button
               className="btn btn--progressive"
-              onClick={openPhab}
+              onClick={openGithub}
               disabled={!hasComment}
-              title="Opens a pre-filled new task on Phabricator (#tool-upload-workbench). Requires a Wikimedia developer account."
+              title="Opens a pre-filled new issue on GitHub (KBNLwikimedia/iiif-commons-upload-workbench). Requires a GitHub account."
             >
-              <Icon name="external" size={14} /> Open Phabricator task
+              <Icon name="external" size={14} /> Open GitHub issue
             </button>
           </div>
         </footer>
