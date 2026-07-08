@@ -8066,7 +8066,6 @@ body.col-resizing * { cursor: col-resize !important; }
 .iiif-review-thumb {
   float: right;
   margin: 0 0 8px 14px;
-  text-align: center;
 }
 .iiif-review-thumb img {
   display: block;
@@ -8075,15 +8074,6 @@ body.col-resizing * { cursor: col-resize !important; }
   border: 1px solid var(--border-color-base);
   border-radius: 4px;
   background: var(--background-color-neutral-subtle, #f8f9fa);
-}
-.iiif-review-thumb figcaption {
-  margin-top: 3px;
-  font-size: 11px;
-  color: var(--color-subtle);
-  max-width: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* Placeholder-field flag (⚠️) + deselect toggle (✕) in the passport. */

@@ -428,7 +428,6 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                         loading="lazy"
                         referrerPolicy="no-referrer"
                       />
-                      <figcaption>{manifest.canvases[0].label || 'first page'}</figcaption>
                     </figure>
                   )}
 
