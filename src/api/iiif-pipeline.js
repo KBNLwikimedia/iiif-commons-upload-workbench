@@ -21,7 +21,14 @@ import { fetchCSRFToken, fetchStashFileInfo, findCommonsFileBySha1 } from './com
 import { uploadFile } from './upload.js';
 import { normalizeStashItem, thumbColors } from './normalize.js';
 import { setStashedFilename } from './local-store.js';
-import { setDraft, pickDraftFields, setStashedFilename as setStashedFilenameWiki } from './user-store.js';
+import { setDraft, pickDraftFields, setStashedFilename as setStashedFilenameWiki, suspendSaves, resumeSaves, flushAll } from './user-store.js';
+
+// OI-25: how often to flush accumulated drafts to Metadata.json mid-import.
+// A single end-of-run write would mean a crash loses every draft; flushing
+// every N items bounds that loss while still turning a 500-page import from
+// ~500 wiki edits into ~500/N. The stashed images survive on Commons for 48 h
+// regardless, and re-import is idempotent by sha1, so N is a comfort dial.
+const SAVE_CHECKPOINT = 25;
 
 async function sha1Hex(arrayBuffer) {
   const digest = await crypto.subtle.digest('SHA-1', arrayBuffer);
@@ -103,6 +110,13 @@ export async function runIiifImport(mappedItems, {
   let failed = 0;
   let aborted = false;
 
+  // OI-25: suspend the user-store's debounced saves for the whole batch so the
+  // per-canvas setDraft() writes coalesce (one edit per SAVE_CHECKPOINT items)
+  // instead of firing the 3 s debounce in the gap between every canvas — which
+  // turned a 500-page import into ~500 Metadata.json edits. resumeSaves() in
+  // the finally does the final write and un-suspends, even on an early exit.
+  if (!DEMO_MODE) suspendSaves();
+  try {
   for (let i = 0; i < mappedItems.length; i++) {
     if (abortRef.current) {
       aborted = true;
@@ -197,6 +211,16 @@ export async function runIiifImport(mappedItems, {
       onItemDone?.(r, i);
       if (abortRef.current) { aborted = true; break; }
     }
+
+    // OI-25 checkpoint: persist the drafts accumulated so far in one wiki edit
+    // every SAVE_CHECKPOINT items, so a mid-import crash loses at most that
+    // many (best-effort — the finally's resumeSaves retries whatever remains).
+    if (!DEMO_MODE && (i + 1) % SAVE_CHECKPOINT === 0) {
+      try { await flushAll(); } catch { /* keep importing; final flush retries */ }
+    }
+  }
+  } finally {
+    if (!DEMO_MODE) await resumeSaves();
   }
 
   return { uploaded, duplicates, failed, aborted, results };

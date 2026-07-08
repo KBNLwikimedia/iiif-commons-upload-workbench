@@ -42,6 +42,7 @@ const STORES = {
     pendingResolve: null,
     lastSavedAt: null,
     lastError: null,
+    dirty: false, // has unsaved state (OI-25: set even while saves are suspended)
   },
   metadata: {
     title: 'IIIFManifestUploadWorkbench/Metadata.json',
@@ -95,6 +96,7 @@ const STORES = {
     pendingResolve: null,
     lastSavedAt: null,
     lastError: null,
+    dirty: false, // has unsaved state (OI-25: set even while saves are suspended)
   },
 };
 
@@ -113,7 +115,7 @@ function computeStatus() {
   let lastSavedAt = null;
   for (const k of Object.keys(STORES)) {
     const s = STORES[k];
-    if (s.saveTimer) anyPending = true;
+    if (s.saveTimer || s.dirty) anyPending = true;
     if (s.saving) anySaving = true;
     if (s.lastError) lastError = s.lastError;
     if (s.lastSavedAt && (!lastSavedAt || s.lastSavedAt > lastSavedAt)) lastSavedAt = s.lastSavedAt;
@@ -300,8 +302,30 @@ export async function loadStores(user) {
 
 // --- Save (debounced) ---
 
+// OI-25: while a bulk IIIF import runs, saves are suspended so the per-canvas
+// setDraft() writes coalesce into a handful of wiki edits instead of ~500.
+// suspendSaves() bumps this counter (ref-counted for safety); scheduleSave
+// then only marks the store dirty, and resumeSaves()/flushAll() does the
+// actual write. Everything is single-threaded (the pipeline awaits each
+// step), so no locking beyond saveOne's own in-flight guard is needed.
+let savesSuspended = 0;
+
+export function suspendSaves() {
+  savesSuspended += 1;
+}
+
+export async function resumeSaves() {
+  if (savesSuspended > 0) savesSuspended -= 1;
+  if (savesSuspended === 0) await flushAll();
+}
+
 function scheduleSave(storeKey) {
   if (DEMO_MODE || !username) return;
+  STORES[storeKey].dirty = true;
+  // OI-25: don't arm the 3 s debounce while suspended — it would fire in the
+  // gap between every imported canvas. The store is marked dirty; the batch's
+  // resumeSaves() (and periodic flushAll checkpoints) writes it in one edit.
+  if (savesSuspended > 0) { notify(); return; }
   clearTimeout(STORES[storeKey].saveTimer);
   STORES[storeKey].saveTimer = setTimeout(() => saveOne(storeKey), SAVE_DEBOUNCE_MS);
   notify();
@@ -351,6 +375,10 @@ async function saveOne(storeKey) {
     }
     s.lastError = null;
     s.lastSavedAt = Date.now();
+    // OI-25: cleared only on a confirmed write. A mutation arriving during the
+    // fetch above re-sets dirty via scheduleSave (and pendingResolve below), so
+    // it isn't lost; a failed write leaves dirty=true so a later flush retries.
+    s.dirty = false;
   } catch (e) {
     s.lastError = e.message || String(e);
     console.warn(`Save ${storeKey} failed:`, s.lastError);
@@ -370,8 +398,11 @@ export async function flushAll() {
     if (STORES[k].saveTimer) {
       clearTimeout(STORES[k].saveTimer);
       STORES[k].saveTimer = null;
-      await saveOne(k);
     }
+    // OI-25: save whenever the store has unsaved state — covers both a
+    // pending debounce (timer just cleared) and a suspended batch that
+    // marked the store dirty without ever arming a timer.
+    if (STORES[k].dirty) await saveOne(k);
   }
 }
 
