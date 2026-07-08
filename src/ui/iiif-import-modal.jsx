@@ -520,9 +520,11 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                         onChange={() => toggleOne(c.index)}
                       />
                       <img src={c.thumbUrl} alt={c.label || `canvas ${c.index + 1}`} loading="lazy" />
+                      {c.downscaled && (
+                        <em className="iiif-canvas__badge" title="This page is larger than 25 megapixels, so it arrives slightly smaller (still high-res).">25 MP</em>
+                      )}
                       <span className="iiif-canvas__label">
                         {c.label || `#${c.index + 1}`}
-                        {c.downscaled && <em className="iiif-canvas__badge">25 MP</em>}
                       </span>
                     </label>
                   );
