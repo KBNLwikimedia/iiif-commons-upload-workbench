@@ -312,7 +312,7 @@ export function parseManifest(json, { sourceUrl = null } = {}) {
 
   const downscaledCount = canvases.filter((c) => c.downscaled).length;
   if (downscaledCount) {
-    report.info('downscaled-canvases', `${downscaledCount} of the ${canvases.length} pages are very large, so the library's image server will send them at a slightly smaller size (max 25 megapixels). Still high resolution — just not the full original.`);
+    report.info('downscaled-canvases', `${downscaledCount} of the ${canvases.length} pages are larger than 25 megapixels. The KB's IIIF image server caps what it delivers at 25 MP, so those pages arrive slightly smaller than the original (but still high-res) — e.g. an 8040 × 6030 page (48 MP) downloads at ~25 MP. This is a limit of the IIIF server, not of Wikimedia Commons, which accepts much larger files.`);
   }
 
   return {
