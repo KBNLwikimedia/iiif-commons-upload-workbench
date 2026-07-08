@@ -135,6 +135,19 @@ export function deriveDimensionsWikitext(dimText) {
   return t;
 }
 
+// Neutralize the five wiki structural characters in free text pulled verbatim
+// from the manifest, so a hostile value can't break out of a template
+// parameter or inject templates / wikilinks / categories once it reaches the
+// wikitext (OI-27). Applied only to values that go SOLELY to wikitext (author
+// names, the source URL) — never to values that also feed structured data
+// (e.g. the accession/inventory number → P217), and never to mapper-authored
+// template wikitext ({{unknown|author}}, {{Koninklijke Bibliotheek}}, …).
+function neutralizeWikitext(s) {
+  return String(s || '').replace(/[{}[\]|]/g, (c) => (
+    { '{': '&#123;', '}': '&#125;', '[': '&#91;', ']': '&#93;', '|': '&#124;' }[c]
+  ));
+}
+
 // Kopiist / Illuminator → |artist=. "Onbekend" (and friends) is the
 // Commons-canonical {{unknown|author}}; named people are passed through
 // with their role, both roles combined when both are known.
@@ -146,8 +159,8 @@ export function deriveAuthor(fields) {
   const parts = [];
   const kopiist = known(fields?.kopiist);
   const illuminator = known(fields?.illuminator);
-  if (kopiist) parts.push(`${kopiist} (kopiist)`);
-  if (illuminator) parts.push(`${illuminator} (illuminator)`);
+  if (kopiist) parts.push(`${neutralizeWikitext(kopiist)} (kopiist)`);
+  if (illuminator) parts.push(`${neutralizeWikitext(illuminator)} (illuminator)`);
   return parts.length ? parts.join('; ') : '{{unknown|author}}';
 }
 
@@ -156,8 +169,8 @@ export function deriveAuthor(fields) {
 // existing KB upload (mining finding §2).
 export function deriveSource(manifest) {
   const lines = [];
-  if (manifest.sourceUrl) lines.push(`* IIIF manifest: ${manifest.sourceUrl}`);
-  else if (manifest.id) lines.push(`* IIIF manifest: ${manifest.id}`);
+  const url = manifest.sourceUrl || manifest.id;
+  if (url) lines.push(`* IIIF manifest: ${neutralizeWikitext(url)}`);
   lines.push('{{Koninklijke Bibliotheek}}');
   return lines.join('\n');
 }

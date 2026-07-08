@@ -345,6 +345,18 @@ export function templateDocsUrl(tmpl, param) {
 
 // --- Sub-formatters reused across all templates ---
 
+// Neutralize the five wiki structural characters so free text placed in a
+// template parameter can't break out of it or inject templates / wikilinks /
+// categories (OI-27 — manifest-derived captions reach this renderer). Ordinary
+// caption text has none of these, so it passes through unchanged; the stored
+// caption stays raw (this only affects the rendered wikitext, not the SDC
+// caption or the editable column).
+function escapeTemplateValue(s) {
+  return String(s).replace(/[{}[\]|]/g, (c) => (
+    { '{': '&#123;', '}': '&#125;', '[': '&#91;', ']': '&#93;', '|': '&#124;' }[c]
+  ));
+}
+
 function formatDescription(item) {
   // Multi-language captions (T426422). Each non-empty language emits its own
   // `{{<lang>|1=...}}` block in insertion order. The legacy single-string
@@ -365,11 +377,11 @@ function formatDescription(item) {
     if (!text) continue;
     if (seen.has(lang)) continue;
     seen.add(lang);
-    parts.push(`{{${lang}|1=${text}}}`);
+    parts.push(`{{${lang}|1=${escapeTemplateValue(text)}}}`);
   }
   if (!seen.has('en') && item.description) {
     const text = String(item.description).trim();
-    if (text) parts.push(`{{en|1=${text}}}`);
+    if (text) parts.push(`{{en|1=${escapeTemplateValue(text)}}}`);
   }
   return parts.join('');
 }
