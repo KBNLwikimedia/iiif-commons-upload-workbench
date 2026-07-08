@@ -20,9 +20,11 @@ const GITHUB_ISSUES = `${GITHUB_REPO}/issues`;
 const GITHUB_CHANGELOG = `${GITHUB_REPO}/blob/main/CHANGELOG.md`;
 const OAUTH_DOCS = `${GITHUB_REPO}/blob/main/docs/oauth-registration.md`;
 const UPSTREAM = 'https://gitlab.wikimedia.org/daanvr/upload-workbench';
-// Hidden tracking category appended to every published file by publish.js.
-// Linking it lets the user browse all the files uploaded with the tool.
-const COMMONS_CATEGORY = 'https://commons.wikimedia.org/wiki/Category:Uploaded_with_IIIF_Manifest_Upload_Workbench';
+// The tool's project category on Commons — the parent of the hidden
+// "Uploaded with IIIF Manifest Upload Workbench" tracking subcategory that
+// publish.js tags each file with. Links here so the user can browse the
+// whole project (and reach the uploaded-files subcat from it).
+const COMMONS_CATEGORY = 'https://commons.wikimedia.org/wiki/Category:IIIF_Manifest_Upload_Workbench';
 
 function deployLabel(target) {
   if (target === 'main') return 'Production (main)';
