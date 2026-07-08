@@ -1,10 +1,12 @@
 // Cross-device persistence for the workbench.
 //
-// Two pages on Commons (both gitignored from the user's view of the wiki by
-// being under their own User: subpage tree):
+// Two pages on Commons under the user's own User: subpage tree:
 //
-//   User:<username>/UploadWorkbench/Preferences.js  — global UI config
-//   User:<username>/UploadWorkbench/Metadata.js     — per-file drafts + filename cache
+//   User:<username>/IIIFManifestUploadWorkbench/Preferences.json — global UI config
+//   User:<username>/IIIFManifestUploadWorkbench/Metadata.json    — per-file drafts + filename cache
+//
+// Data auto-migrates from the fork's previous folder (User:<username>/
+// UploadWorkbench/*.json) on first load — see loadOne + legacyTitle.
 //
 // Both files contain a single JSON object as their entire body (the .js
 // extension exists so the editmycssjs grant covers writes; MediaWiki doesn't
@@ -32,8 +34,8 @@ const SAVE_DEBOUNCE_MS = 3000;
 
 const STORES = {
   preferences: {
-    title: 'UploadWorkbench/Preferences.json',
-    legacyTitle: 'UploadWorkbench/Preferences.js', // migration source — see loadOne
+    title: 'IIIFManifestUploadWorkbench/Preferences.json',
+    legacyTitle: 'UploadWorkbench/Preferences.json', // migration source (old folder) — see loadOne
     state: { schemaVersion: 2 }, // requiredFields, columnDefaults, fieldOrder, customProps fill in on load/save
     saveTimer: null,
     saving: false,
@@ -42,8 +44,8 @@ const STORES = {
     lastError: null,
   },
   metadata: {
-    title: 'UploadWorkbench/Metadata.json',
-    legacyTitle: 'UploadWorkbench/Metadata.js',
+    title: 'IIIFManifestUploadWorkbench/Metadata.json',
+    legacyTitle: 'UploadWorkbench/Metadata.json',
     state: {
       schemaVersion: 2,
       filenames: {},
@@ -219,11 +221,11 @@ async function loadOne(storeKey) {
   if (needsMigrationSave) scheduleSave('metadata');
 
   if (migrated) {
-    console.info(`Migrating ${storeKey}: .js -> .json`);
-    scheduleSave(storeKey); // writes the .json
+    console.info(`Migrating ${storeKey}: ${pageTitle(storeKey, true)} -> ${pageTitle(storeKey)}`);
+    scheduleSave(storeKey); // writes the new page
     blankLegacyPage(storeKey).catch((e) => {
-      // Non-fatal — the .json is now authoritative. We just leave the .js page
-      // sitting there with stale content if the blank fails.
+      // Non-fatal — the new page is now authoritative. We just leave the old
+      // page sitting there with stale content if the blank fails.
       console.warn(`Could not blank legacy ${pageTitle(storeKey, true)}:`, e.message);
     });
   }
@@ -237,9 +239,15 @@ async function blankLegacyPage(storeKey) {
   if (!csrf) return;
 
   const newName = STORES[storeKey].title;
-  const body =
-    `// Migrated to ${newName} on ${new Date().toISOString().slice(0, 10)} — this page is intentionally blank.\n` +
-    `// The Upload Workbench now stores its data as proper JSON; see User:${username}/${newName}.\n`;
+  const legacy = STORES[storeKey].legacyTitle;
+  // The legacy page's content model depends on its extension: a `.json`
+  // page (old-folder migration) must be blanked with valid JSON, while a
+  // `.js` page (the original ancient migration) takes a JS comment.
+  const isJsonLegacy = /\.json$/i.test(legacy);
+  const body = isJsonLegacy
+    ? '{}'
+    : `// Migrated to ${newName} on ${new Date().toISOString().slice(0, 10)} — this page is intentionally blank.\n` +
+      `// The data now lives as proper JSON; see User:${username}/${newName}.\n`;
 
   const fd = new FormData();
   fd.append('action', 'edit');
@@ -249,7 +257,7 @@ async function blankLegacyPage(storeKey) {
   fd.append('summary', `Migrated to ${newName}${attributionSuffix()}`);
   fd.append('token', csrf);
   fd.append('format', 'json');
-  fd.append('contentmodel', 'javascript');
+  fd.append('contentmodel', isJsonLegacy ? 'json' : 'javascript');
 
   const url = `${COMMONS_API}?crossorigin=`;
   const response = await fetch(url, {

@@ -3169,8 +3169,8 @@ function UserMenu({ user, onLogout }) {
   // exist yet — Commons will offer to create them when first visited, and
   // Phase 2 will populate them programmatically from the app.
   const userPageRoot = `https://commons.wikimedia.org/wiki/User:${encodeURIComponent(username)}`;
-  const prefsUrl = `${userPageRoot}/UploadWorkbench/Preferences.json`;
-  const metadataUrl = `${userPageRoot}/UploadWorkbench/Metadata.json`;
+  const prefsUrl = `${userPageRoot}/IIIFManifestUploadWorkbench/Preferences.json`;
+  const metadataUrl = `${userPageRoot}/IIIFManifestUploadWorkbench/Metadata.json`;
   const profileUrl = userPageRoot;
 
   // Close on outside click + Escape.

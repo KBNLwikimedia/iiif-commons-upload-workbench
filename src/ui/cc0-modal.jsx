@@ -91,8 +91,8 @@ export function Cc0Modal({ username, onAcknowledge, onDismiss }) {
             related state to two pages in your own Wikimedia Commons user namespace:
           </p>
           <ul className="cc0-modal__pages">
-            <li><code>User:{username || 'You'}/UploadWorkbench/Preferences.json</code></li>
-            <li><code>User:{username || 'You'}/UploadWorkbench/Metadata.json</code></li>
+            <li><code>User:{username || 'You'}/IIIFManifestUploadWorkbench/Preferences.json</code></li>
+            <li><code>User:{username || 'You'}/IIIFManifestUploadWorkbench/Metadata.json</code></li>
           </ul>
           <p>
             These pages are <strong>public</strong>, just like every page on Commons — anyone

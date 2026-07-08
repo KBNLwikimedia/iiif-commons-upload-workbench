@@ -124,8 +124,8 @@ The IIIF import wizard is an explicit user gesture *after* bootstrap — it must
 1. **Volatile** — React state in `<App>`. Lost on reload.
 2. **`localStorage`** (per-browser) — fast-path cache that survives reload. Keys: `uwb_*` (OAuth tokens, in `oauth.js`), `uwb.localStash.v1` (filename cache, in `local-store.js`), `stashhub.required` / `stashhub.colDefaults` / `stashhub.fieldOrder` / `stashhub.columns` (UI prefs, in `app.jsx`).
 3. **Commons wiki user-subpages** (cross-device, authoritative) — managed by `user-store.js`:
-   - `User:<self>/UploadWorkbench/Preferences.json` — `requiredFields`, `columnDefaults`, `fieldOrder`, custom props
-   - `User:<self>/UploadWorkbench/Metadata.json` — `drafts` (per-file edits, keyed by sha1/filekey), `filenames` (filekey → readable name), `hiddenFilekeys`, `history` (cache: `lastSyncedAt` + `items[]`)
+   - `User:<self>/IIIFManifestUploadWorkbench/Preferences.json` — `requiredFields`, `columnDefaults`, `fieldOrder`, custom props
+   - `User:<self>/IIIFManifestUploadWorkbench/Metadata.json` — `drafts` (per-file edits, keyed by sha1/filekey), `filenames` (filekey → readable name), `hiddenFilekeys`, `history` (cache: `lastSyncedAt` + `items[]`)
    - Loaded once on bootstrap; writes are **debounced 3 s** then `action=edit`.
    - IIIF-imported drafts ride this same mechanism (design decision Q11) — batched, never one edit per draft.
 
@@ -148,8 +148,8 @@ OAuth 2.0 with PKCE (Authorization Code flow, public client), authorization serv
 | Publish from stash | `action=upload&filekey=<KEY>&filename=<NAME>&text=<WIKITEXT>` |
 | Structured data write | `action=wbeditentity` on the file's `M<pageid>` entity |
 | Edit published file description | `action=edit&title=File:<NAME>&text=<WIKITEXT>` |
-| Read user-store page | `action=query&titles=User:<U>/UploadWorkbench/Metadata.json&prop=revisions&rvprop=content&rvslots=main` |
-| Write user-store page | `action=edit&title=User:<U>/UploadWorkbench/Metadata.json&contentmodel=json` |
+| Read user-store page | `action=query&titles=User:<U>/IIIFManifestUploadWorkbench/Metadata.json&prop=revisions&rvprop=content&rvslots=main` |
+| Write user-store page | `action=edit&title=User:<U>/IIIFManifestUploadWorkbench/Metadata.json&contentmodel=json` |
 | CSRF token | `action=query&meta=tokens&type=csrf` |
 | IIIF manifest (KB) | `GET https://presentation-api.dlc.services/32/<slug>` (CORS `*`) |
 | IIIF full-res image | `GET {imageService}/full/max/0/default.jpg` (CORS `*`, 25 MP cap) |
@@ -159,7 +159,7 @@ OAuth 2.0 with PKCE (Authorization Code flow, public client), authorization serv
 
 - Edits made via `VITE_OWNER_ACCESS_TOKEN` (the current dev mode) do **not** carry an OAuth CID tag — they show up under your username with only MW's automatic tags, plus the edit-summary attribution suffix (`attributionSuffix()` in `src/config.js`).
 - The change tag **`OAuth CID: 18016`** belongs to *upstream's* production consumer — useful when studying upstream-made edits, irrelevant to this fork until it registers its own consumer.
-- A user-store page's history (`?action=history` on `User:<U>/UploadWorkbench/Metadata.json`) is a debug log of how drafts/cache evolved over time.
+- A user-store page's history (`?action=history` on `User:<U>/IIIFManifestUploadWorkbench/Metadata.json`) is a debug log of how drafts/cache evolved over time.
 
 ## Constraints
 
