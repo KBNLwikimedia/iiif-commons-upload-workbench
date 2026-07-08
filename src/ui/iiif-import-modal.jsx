@@ -45,7 +45,9 @@ function linkifyValue(text) {
 // Bounded at 8 shrink steps; opensearch results come from the apiCache.
 async function suggestCategories(name) {
   let q = String(name || '').replace(/^\s*Category\s*:\s*/i, '').trim();
-  for (let i = 0; i < 8 && q.length >= 2; i++) {
+  // Cap the progressive-trim search at 4 steps (OI-51): a match almost
+  // always appears in the first few trims, and each step is a network call.
+  for (let i = 0; i < 4 && q.length >= 2; i++) {
     const hits = await searchCategories(q);
     if (hits.length) return hits;
     const shorter = q.replace(/[\s\-–—]*\S+$/, '').trim();
@@ -85,19 +87,34 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   const [catOpen, setCatOpen] = React.useState(false);
   const [catIdx, setCatIdx] = React.useState(-1);
 
-  // Live category check + suggestions, debounced on every edit of the field.
+  // The first check after a manifest is parsed runs immediately (no debounce
+  // — the category was set programmatically, not typed); later user edits
+  // debounce. Reset to immediate in acceptParse.
+  const catImmediateRef = React.useRef(true);
+
+  // Live category check + suggestions.
   React.useEffect(() => {
     const cat = category.replace(/^\s*Category\s*:\s*/i, '').trim();
     if (!cat) { setCatExists(null); setCatSuggestions(null); return undefined; }
     let alive = true;
     setCatExists(null);
     setCatSuggestions(null);
+    const delay = catImmediateRef.current ? 0 : 300;
+    catImmediateRef.current = false;
     const t = setTimeout(() => {
-      categoryExists(cat).then((v) => { if (alive) setCatExists(v); }).catch(() => {});
+      // Race the existence check against an 8 s timeout so the "Checking
+      // Commons…" state can never hang (OI-40); on error/timeout resolve to
+      // a definite 'unknown' rather than swallowing and staying null.
+      Promise.race([
+        categoryExists(cat),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000)),
+      ])
+        .then((v) => { if (alive) setCatExists(v); })
+        .catch(() => { if (alive) setCatExists('unknown'); });
       suggestCategories(cat)
         .then((hits) => { if (alive) setCatSuggestions(hits.filter((h) => h !== cat).slice(0, 10)); })
         .catch(() => { if (alive) setCatSuggestions([]); });
-    }, 350);
+    }, delay);
     return () => { alive = false; clearTimeout(t); };
   }, [category]);
   const [qid, setQid] = React.useState('');
@@ -140,6 +157,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     if (!result.manifest) { setError(null); setStep('review'); return; }
     const { manuscript } = mapManifest(result.manifest);
     setTitle(manuscript.title);
+    catImmediateRef.current = true; // check the derived category without debounce
     setCategory(manuscript.categoryName);
     setSelected(new Set(result.manifest.canvases.map((c) => c.index)));
     setQid('');
@@ -440,6 +458,9 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       )}
                       {catExists === false && (
                         <span className="iiif-cat-missing">✚ This category does not exist yet — you will be asked to approve its creation in the final step.</span>
+                      )}
+                      {catExists === 'unknown' && (
+                        <span>⚠️ Couldn't check Commons just now (network) — it'll be treated as not yet existing.</span>
                       )}
                     </p>
 
