@@ -30,17 +30,18 @@ export const APP_USER_AGENT = 'IIIFManifestUploadWorkbench/0.39 (https://github.
 // define, see vite.config.js) — not the truncated APP_USER_AGENT MAJOR.MINOR —
 // so post-hoc debugging can pinpoint behavior precisely.
 //
-// MediaWiki edit summaries don't render external URLs as clickable links
-// (a raw URL or `[URL text]` shows as plain text, `[[URL|text]]` becomes a
-// redlink). This fork has no Toolforge interwiki prefix (unlike upstream), so
-// the GitHub URL is included as plain — readable and copyable — text.
+// The tool has an on-wiki homepage (Commons:IIIF Manifest Upload Workbench),
+// so the edit-summary attribution links to it as a normal wikilink — which
+// DOES render clickable in Commons page histories (unlike an external URL,
+// which shows as plain text). This is the on-wiki equivalent of upstream's
+// `toolforge:` interwiki.
 //
 // Helper, not a constant, so the build-time `__APP_VERSION__` resolves at the
 // call site. Returns the suffix already prefixed with a space so callers can
 // just concatenate to whatever summary they already had (or use it standalone
 // for writes that have no per-call summary).
 export function attributionSuffix() {
-  return ` with IIIF Manifest Upload Workbench v${__APP_VERSION__} (github.com/KBNLwikimedia/iiif-commons-upload-workbench)`;
+  return ` with [[Commons:IIIF Manifest Upload Workbench|IIIF Manifest Upload Workbench]] v${__APP_VERSION__}`;
 }
 
 // When no client_id is configured, the app runs against SAMPLE_UPLOADS in data.js

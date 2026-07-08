@@ -20,6 +20,8 @@ const GITHUB_ISSUES = `${GITHUB_REPO}/issues`;
 const GITHUB_CHANGELOG = `${GITHUB_REPO}/blob/main/CHANGELOG.md`;
 const OAUTH_DOCS = `${GITHUB_REPO}/blob/main/docs/oauth-registration.md`;
 const UPSTREAM = 'https://gitlab.wikimedia.org/daanvr/upload-workbench';
+// The tool's homepage on Commons (Commons: project namespace).
+const COMMONS_HOMEPAGE = 'https://commons.wikimedia.org/wiki/Commons:IIIF_Manifest_Upload_Workbench';
 // The tool's project category on Commons — the parent of the hidden
 // "Uploaded with IIIF Manifest Upload Workbench" tracking subcategory that
 // publish.js tags each file with. Links here so the user can browse the
@@ -97,6 +99,7 @@ export default function InfoModal({ onClose }) {
 
           <Section title="Links">
             <ul className="info-modal__links">
+              <li><a href={COMMONS_HOMEPAGE} target="_blank" rel="noopener noreferrer"><Icon name="globe" size={14} /> Homepage on Wikimedia Commons</a></li>
               <li><a href={GITHUB_REPO} target="_blank" rel="noopener noreferrer"><Icon name="external" size={14} /> Source code on GitHub</a></li>
               <li><a href={GITHUB_ISSUES} target="_blank" rel="noopener noreferrer"><Icon name="warn" size={14} /> Report a bug / request a feature</a></li>
               <li><a href={GITHUB_CHANGELOG} target="_blank" rel="noopener noreferrer"><Icon name="external" size={14} /> Changelog</a></li>
