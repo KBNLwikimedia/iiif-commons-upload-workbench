@@ -411,7 +411,11 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                   {reportOf('warning').map((e, i) => (
                     <p key={`w${i}`} className="iiif-report__line iiif-report__line--warning">⚠️ {e.message}</p>
                   ))}
-                  {reportOf('info').map((e, i) => (
+                  {/* The downscaled-canvases info is deliberately NOT shown
+                      here — the select step carries it (with the counts) next
+                      to the ">25 MP" badges it explains, so it isn't stated
+                      twice in a row. */}
+                  {reportOf('info').filter((e) => e.code !== 'downscaled-canvases').map((e, i) => (
                     <p key={`i${i}`} className="iiif-report__line">ℹ️ {e.message}</p>
                   ))}
                 </div>
@@ -587,7 +591,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
             <div className="iiif-step-select">
               {manifest.downscaledCount > 0 && (
                 <p className="iiif-hint iiif-downscale-note">
-                  A “&gt;25 MP” tag means the source image is larger than 25 megapixels. The KB's IIIF image server caps what it delivers at 25 MP, so those pages arrive slightly smaller than the original (but still high-res) — e.g. an 8040 × 6030 page (48 MP) downloads at ~25 MP. This is a limit of the IIIF server — not of Wikimedia Commons, which accepts much larger files.
+                  {manifest.downscaledCount} of the {manifest.canvasCount} pages are larger than 25 megapixels — they carry a “&gt;25 MP” tag below. The KB's IIIF image server caps what it delivers at 25 MP, so those pages arrive slightly smaller than the original (but still high-res) — e.g. an 8040 × 6030 page (48 MP) downloads at ~25 MP. This is a limit of the IIIF server — not of Wikimedia Commons, which accepts much larger files.
                 </p>
               )}
               <div className="iiif-select-bar">
