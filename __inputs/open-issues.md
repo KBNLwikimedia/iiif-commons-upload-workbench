@@ -4,7 +4,7 @@ Living register of everything known-but-not-yet-done: technical debt, deferred d
 
 **Conventions:** every entry gets a stable ID (`OI-nn`), the date it was raised, where it came from, and what resolves it. When an issue is resolved, don't delete it — move it to the *Closed* section at the bottom with the date and the commit/decision that closed it. New entries append to the relevant section with the next free ID.
 
-*Last updated: 2026-07-08. Section F holds a full multi-agent code review (OI-25…OI-61). Later additions: OI-62 (Institution column), OI-63 (chunked upload), OI-64 (tracking-category page). Closed: OI-18, OI-40, OI-51.*
+*Last updated: 2026-07-08. Section F holds a full multi-agent code review (OI-25…OI-61). Later additions: OI-62 (Institution column), OI-63 (chunked upload), OI-64 (tracking-category page). Closed: OI-18, OI-25, OI-40, OI-51.*
 
 ---
 
@@ -70,7 +70,7 @@ Four parallel review agents (core-logic correctness, React/UI state, security, A
 
 | ID | Issue | File:line | Failure scenario → Fix |
 |---|---|---|---|
-| OI-25 | **A 500-canvas import writes ~500 wiki edits to `Metadata.json`** `[VERIFIED]` — `setDraft` arms a 3 s debounce (`SAVE_DEBOUNCE_MS`), but each pipeline item takes far longer than 3 s (download + upload ~24 MB), so the debounce fires in the gap *between every item*. Violates Q11, CLAUDE.md ("wiki edits are the most expensive operation"), and the pipeline's own "coalesces into few wiki edits" comment. | `iiif-pipeline.js:181`, `user-store.js:295-298` | 500 edits, each rewriting the whole (growing) page → history spam + rate-limit risk. **Fix:** add `suspendSaves()`/`resumeSaves()` to user-store; the pipeline suspends before the loop and flushes in a `finally` (optionally checkpoint-flush every ~25 items). |
+| OI-25 | ✅ **Fixed 2026-07-08** (commit c455893): user-store gained ref-counted `suspendSaves()`/`resumeSaves()` + a per-store `dirty` flag (`scheduleSave` marks dirty without arming the debounce while suspended; `flushAll` writes dirty stores; `dirty` clears only on a confirmed write so failures retry). The pipeline suspends for the whole batch, resumes in a `finally`, and `flushAll`-checkpoints every 25 items → ~21 edits for 500 canvases instead of ~500. ~~**A 500-canvas import writes ~500 wiki edits to `Metadata.json`** `[VERIFIED]` — `setDraft` arms a 3 s debounce (`SAVE_DEBOUNCE_MS`), but each pipeline item takes far longer than 3 s (download + upload ~24 MB), so the debounce fires in the gap *between every item*. Violates Q11, CLAUDE.md ("wiki edits are the most expensive operation"), and the pipeline's own "coalesces into few wiki edits" comment.~~ | `iiif-pipeline.js:181`, `user-store.js:295-298` | 500 edits, each rewriting the whole (growing) page → history spam + rate-limit risk. **Fix:** add `suspendSaves()`/`resumeSaves()` to user-store; the pipeline suspends before the loop and flushes in a `finally` (optionally checkpoint-flush every ~25 items). |
 
 ### High
 
@@ -130,5 +130,6 @@ Four parallel review agents (core-logic correctness, React/UI state, security, A
 | ID | Issue | Closed | How |
 |---|---|---|---|
 | OI-18 | KW 130 E 1 had no summary/Inhoud | 2026-07-07 | Fixed upstream by the KB (live manifest now carries the full summary). |
+| OI-25 | A 500-canvas import wrote ~500 wiki edits to `Metadata.json` (Critical) | 2026-07-08 (c455893) | Ref-counted `suspendSaves()`/`resumeSaves()` + per-store `dirty` flag; pipeline suspends for the batch, resumes in a `finally`, checkpoint-flushes every 25 items (~21 edits for 500 canvases). |
 | OI-40 | `catExists` could stick at `null` ("Checking Commons…") forever | 2026-07-08 (5ffe043) | Immediate first check, 8 s timeout race, definite `unknown` state on error. |
 | OI-51 | `suggestCategories` fired up to 8 opensearch calls per tick | 2026-07-08 (5ffe043) | Progressive-trim capped at 4 steps. |

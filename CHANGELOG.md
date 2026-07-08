@@ -23,6 +23,7 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 
 ### Changed
 
+- **IIIF-only entry point (2026-07-08)** — removed the general-purpose "Browse files" upload buttons from the topbar and the empty-stash hero; "Import IIIF manifest" is now the single blue primary action in both places, and the empty-hero copy is reoriented around importing a IIIF Presentation 3.0 manifest. (Window-level drag-drop of plain images still works pending a follow-up.)
 - **Repo renamed to match the tool name (2026-07-08)** — the GitHub repository, local folder, and `package.json` `name` moved from `iiif-commons-upload-workbench` to **`iiif-manifest-upload-workbench`**, so the slug matches the tool's name *IIIF Manifest Upload Workbench* (GitHub keeps permanent redirects from the old URL). In-code GitHub URLs (`src/main.jsx`, `src/ui/feedback-modal.jsx`, `src/ui/info-modal.jsx`), the `APP_USER_AGENT` repo URL (`src/config.js`), `urls.txt`, `CLAUDE.md`, and `README.md` updated to the new slug. Historical decision-log and changelog entries keep the original slug on purpose (the fork *was* created as `iiif-commons-upload-workbench` on 2026-07-07).
 - **Repo identity updated for the fork** — `CLAUDE.md` and `README.md` rewritten (fork lineage, IIIF focus, GitHub/local-dev workflow replacing upstream's GitLab/Phabricator/Toolforge workflow); `package.json` renamed to `iiif-commons-upload-workbench`; `urls.txt` refreshed; upstream's `.gitlab-ci.yml` archived to `docs/upstream-gitlab-ci.yml` (it deploys to Daanvr's Toolforge project and must not run for this fork). In-app identity (`APP_USER_AGENT`, `index.html` title, `attributionSuffix()`) deliberately unchanged until the fork registers its own OAuth consumer — see `CLAUDE.md` → "Pending identity renames".
 - **KB IIIF endpoint update** — the canonical manifest base is now `https://iiif.bibliotheken.nl/<slug>` (June 2026); `presentation-api.dlc.services/32/<slug>` still works in parallel. The parser is base-agnostic.
@@ -33,6 +34,7 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 
 ### Fixed
 
+- **Bulk imports no longer spam `Metadata.json` with ~500 edits (OI-25, Critical)** — `setDraft`'s 3 s debounce used to fire in the gap between every imported canvas, so a 500-page manifest wrote ~500 wiki edits. The user-store now supports `suspendSaves()`/`resumeSaves()` (ref-counted, with a per-store `dirty` flag); the import pipeline suspends saves for the whole batch, flushes once in a `finally`, and checkpoints every 25 items — ~21 edits for 500 canvases instead of ~500, honouring design Q11 and CLAUDE.md's "wiki edits are the most expensive operation".
 - **IIIF previews survive reloads** — imported rows persist the public IIIF thumbnail (`iiifThumbUrl` draft field), so they don't fall back to placeholder tiles after a reload (the stash's own thumb URLs require session auth an `<img>` can't send).
 - **License no longer flags "missing" on import** — the mapper now sets the row's `license` to the PD-Art catalog id (recognised by the dropdown) instead of raw wikitext.
 
