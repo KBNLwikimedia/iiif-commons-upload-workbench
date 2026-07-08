@@ -16,6 +16,8 @@ Maintainer of this fork: **Olaf Janssen** (KB, national library of the Netherlan
 
 **Open issues, deferred decisions and known data defects are tracked in [`__inputs/open-issues.md`](__inputs/open-issues.md)** (stable `OI-nn` ids). Maintain it: add an entry the moment you defer something or spot a defect; on resolving one, move it to the *Closed* section with the commit that closed it — never silently delete. Check section A before starting any phase — it lists what that phase must absorb (e.g. OI-01 `formatDate()` truncation blocks Phase 5.2).
 
+**Status (2026-07-08):** Phases 0–4 complete — the import funnel works **end-to-end in the browser**: manifest (URL or dropped `.json`) → validate → passport + editable title/category (live Commons check + autosuggest dropdown) / Wikidata (auto-lookup by signature) → canvas gallery (selection, per-tile native dims + full-res links, `>25 MP` badges) → download → SHA-1 → dedupe → stash, landing as prefilled rows with `{{Artwork}}` + `{{PD-Art|PD-old-100-expired}}` (a real licence-catalog option) + per-manuscript category (created at *publish* time, on explicit approval). **Phase 5 remaining:** SDC statements (`buildSdcClaims` extension) + wiring the `{{Artwork}}` params `medium`/`dimensions`/`institution`/`accession number` (OI-02) + `formatDate()` truncation (OI-01). **Phase 6:** end-to-end publish verification. A full multi-agent code review is logged as OI-25…OI-63. Verification note: local dev needs `VITE_OWNER_ACCESS_TOKEN` in `.env.local`; without it the app sits on the login screen (owner-only consumers can't do the PKCE flow — OI-09).
+
 Design highlights:
 
 - Manifest entry via **URL or dropped .json**; **IIIF Presentation 3.0 only** in v1.
@@ -46,12 +48,11 @@ Planned new modules (ESM, not window-globals): `src/api/iiif.js` (fetch/validate
 | Design doc / project inputs | `__inputs/` (design doc, sample manifests, sample images, original product-vision conversation) |
 | OAuth registration docs | `docs/oauth-registration.md` (upstream's; will need a fork-specific consumer when Toolforge deployment happens) |
 
-### Pending identity renames (do together, once, in a dedicated commit)
+### Identity (fork rebrand — mostly done 2026-07-08)
 
-The code still identifies as upstream in a few places. When the fork gets its own OAuth consumer / deployment (not before — the attribution currently correctly points at the code lineage), update:
-- `src/config.js` → `APP_USER_AGENT` and `attributionSuffix()` (points at `toolforge:upload-workbench`)
-- `index.html` → `<title>`
-- `package.json` → already renamed to `iiif-commons-upload-workbench`
+The app is rebranded to **IIIF Manifest Upload Workbench** across the user-facing surfaces: `index.html` `<title>` + favicon + local logo (`public/app-logo.png`), topbar brand, login screen, About modal (`info-modal.jsx`, GitHub links, GitLab/Toolforge version+MR sections removed), Feedback modal (→ GitHub issues), `src/config.js` `APP_USER_AGENT` + `attributionSuffix()` (→ plain-text GitHub URL, no Toolforge interwiki), the user-store subpages (`User:<u>/IIIFManifestUploadWorkbench/*.json`, auto-migrating from the old `UploadWorkbench/` folder), and the publish tracking category (`Category:Uploaded with IIIF Manifest Upload Workbench` — page not yet created on Commons, see open-issues). Every modal header shows the app icon via `.modal__head::before`.
+
+**Still pointing at upstream** (tracked in OI-10): `src/ui/version-chip.jsx` (topbar build dropdown — fetches upstream GitLab MRs/changelog, links Toolforge version URLs), `src/ui/error-report-modal.jsx` ("Report this error" flow — Phabricator/GitLab), and `docs/oauth-registration.md`. The OAuth consumer registration itself waits for OI-09 (Toolforge deployment).
 
 ## Build & run
 

@@ -164,12 +164,15 @@ Sequential download → WebCrypto SHA-1 → `findCommonsFileBySha1` dup-check (Q
 | 4.3 | Memory hygiene: release each Blob before the next download (35 × 20 MB must not accumulate) | 4.1 |
 | 4.4 | Import report: uploaded / skipped-duplicate / failed, with links | 4.1 |
 
-### Phase 5 — SDC & publish extensions (`src/api/publish.js`)
+### Phase 5 — SDC & publish extensions (`src/api/publish.js`) — 🚧 **partially done 2026-07-08**
+
+Done: the license is a real catalog option (`PD-Art-PD-old-100-expired` → `{{PD-Art|PD-old-100-expired}}`) selected on imported rows; `{{Artwork}}` is auto-selected on import (5.3); the per-manuscript category is created at publish time on explicit approval (Q8). **Remaining:** 5.1 (SDC statements) and the rest of 5.2 (the unmapped `{{Artwork}}` params — see OI-01, OI-02, OI-62).
+
 | # | Task | Depends on |
 |---|---|---|
-| 5.1 | Extend `buildSdcClaims()` with opt-in item fields: P6243 digital representation of (Q-id), P195 collection (KB = Q1526131, with P217 inventory-number qualifier), P6216 copyright status + P275 license (per Q4), P7482 source of file (Q74228490 + operator/URL qualifiers) — scope per Q5 | 3.4 |
-| 5.2 | Confirm the chosen template ({{Book}} or {{Artwork}} — Q3) renders all mapped params; add missing `key:` mappings in `BUILTIN_TEMPLATES` if a param exists but is unmapped (e.g. `medium`, `dimensions`, `institution` currently have `key: null`) | 3.1 |
-| 5.3 | Auto-select the template + column set when items originate from a IIIF import (template config already flows through `publishOne/publishMany`) | 5.2 |
+| 5.1 | ⬜ Extend `buildSdcClaims()` with opt-in item fields: P6243 digital representation of (Q-id), P195 collection (KB = Q1526131, with P217 inventory-number qualifier), P6216 copyright status + P275 license (per Q4), P7482 source of file (Q74228490 + operator/URL qualifiers) — scope per Q5 | 3.4 |
+| 5.2 | 🚧 Template auto-selected as `{{Artwork}}` ✅. Still to wire the params that are `key: null` in `BUILTIN_TEMPLATES` — `medium`, `dimensions`, `institution` (OI-62), `accession number` — and fix `formatDate()` truncation (OI-01) so `{{other date|…}}` reaches `|date=` | 3.1 |
+| 5.3 | ✅ Template auto-selected on IIIF import (`onEnsureArtworkTemplate` sets `wikitextTemplate` to `{{Artwork}}`) | 5.2 |
 
 ### Phase 6 — Verification & ship
 | # | Task | Depends on |

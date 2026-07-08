@@ -4,7 +4,7 @@ Living register of everything known-but-not-yet-done: technical debt, deferred d
 
 **Conventions:** every entry gets a stable ID (`OI-nn`), the date it was raised, where it came from, and what resolves it. When an issue is resolved, don't delete it — move it to the *Closed* section at the bottom with the date and the commit/decision that closed it. New entries append to the relevant section with the next free ID.
 
-*Last updated: 2026-07-07. Section F holds a full multi-agent code review (OI-25…OI-61), severity-ranked, with per-issue fixes.*
+*Last updated: 2026-07-08. Section F holds a full multi-agent code review (OI-25…OI-61). Later additions: OI-62 (Institution column), OI-63 (chunked upload), OI-64 (tracking-category page). Closed: OI-18, OI-40, OI-51.*
 
 ---
 
@@ -58,6 +58,7 @@ Living register of everything known-but-not-yet-done: technical debt, deferred d
 | OI-24 | **Build chunk-size warning** (bundle > 500 kB) — pre-existing upstream, cosmetic; code-splitting would silence it. | every `npm run build` |
 | OI-63 | **Chunked uploading not implemented** (investigated 2026-07-08). `uploadFile()` in `src/api/upload.js` sends the whole file in ONE `action=upload` POST — its own comment says chunked upload (`action=upload&offset=…&chunk=…`, [API:Upload#Chunked_uploading](https://www.mediawiki.org/wiki/API:Upload#Chunked_uploading)) is "deferred to v2" (inherited upstream). Practical single-POST ceiling ≈ 100 MB. **Not a problem for the IIIF manuscript flow** (KB pages arrive 5–25 MB because of the image server's 25-*megapixel* delivery cap — a resolution limit on the KB side, unrelated to Commons, which happily hosts e.g. the maintainer's 58 MP / 38 MB GWToolset upload from 2017). Becomes relevant for: large user-dropped files (>100 MB TIFFs), and OI-08 (tile-stitched full-resolution natives would be much bigger files). Implement: chunk at 10 MB per [Commons:Chunked uploads](https://commons.wikimedia.org/wiki/Commons:Chunked_uploads), reuse the XHR progress plumbing, `stash=1` + `filekey` continuation. | Maintainer investigation 2026-07-08 |
 | OI-62 | **"Institution" field/column for `{{Artwork}}`** (requested 2026-07-08, agreed to build — not yet started). Add a first-class **Institution** column to the workbench (columns chooser + detail panel) whose value is an `{{Institution:…}}` template, and wire the `{{Artwork}} \|institution=` param (currently `key: null`, see OI-02) to it. The field is a **searchable autosuggest** against Commons `Category:Institution_templates` — API groundwork done: institution templates live in **namespace 106**, `action=query&list=allpages&apnamespace=106&apprefix=<q>` (prefix) and `opensearch`/`list=search&srnamespace=106` (substring) both work; add `searchInstitutionTemplates()` to `commons.js`. Default / prefilled value for KB manuscripts: **`{{Institution:Koninklijke Bibliotheek, Den Haag}}`** (verified: valid redirect to `Institution:Koninklijke Bibliotheek`). Scope note: adding a first-class column touches `src/table.jsx` (column registry + cell view/editor), `src/detail.jsx` (render case), `DRAFT_FIELDS`/`DEFAULT_FIELD_ORDER`, and the `{{Artwork}}` field map — a real multi-file feature; the mapper already sets `iiif.artwork.institution`. See https://commons.wikimedia.org/wiki/Category:Institution_templates. | Maintainer request 2026-07-08; companion to OI-02 (Phase 5.2 Artwork params) |
+| OI-64 | **Create the Commons tracking category page** — publish.js now tags every published file with `[[Category:Uploaded with IIIF Manifest Upload Workbench]]` (renamed from the upstream category 2026-07-08), but that category page does not exist on Commons yet. Create it once (ideally with `__HIDDENCAT__` so it stays a hidden maintenance category), optionally as a subcat of the upstream tracking category. | Tracking-category rename 2026-07-08 |
 
 ---
 
@@ -128,4 +129,6 @@ Four parallel review agents (core-logic correctness, React/UI state, security, A
 
 | ID | Issue | Closed | How |
 |---|---|---|---|
-| — | *(nothing closed yet)* | | |
+| OI-18 | KW 130 E 1 had no summary/Inhoud | 2026-07-07 | Fixed upstream by the KB (live manifest now carries the full summary). |
+| OI-40 | `catExists` could stick at `null` ("Checking Commons…") forever | 2026-07-08 (5ffe043) | Immediate first check, 8 s timeout race, definite `unknown` state on error. |
+| OI-51 | `suggestCategories` fired up to 8 opensearch calls per tick | 2026-07-08 (5ffe043) | Progressive-trim capped at 4 steps. |
