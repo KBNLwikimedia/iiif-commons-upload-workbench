@@ -54,7 +54,9 @@ export function EmptyHero({ onImportIiif }) {
         )}
       </div>
       <p className="empty-hero__hint">
-        You can drop files anywhere on this window.
+        You can drop files anywhere on this window — images (JPG, PNG, TIFF, GIF, WebP)
+        land in your stash, and a IIIF Presentation 3.0 manifest (<code>.json</code>) opens
+        the import wizard.
       </p>
     </div>
   );
