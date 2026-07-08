@@ -36,6 +36,7 @@ import {
 } from './api/oauth.js';
 import { fetchStashedFiles } from './api/commons.js';
 import { fetchHistoryDetailed } from './api/history.js';
+import { isIiifImportRunning } from './api/iiif-pipeline.js';
 import {
   loadStores,
   mergeDraftsOntoItems,
@@ -244,11 +245,36 @@ function Bootstrap({ tweaks, setTweak, onLogout }) {
     };
   }, []);
 
-  // Flush any pending wiki saves on tab close.
+  // Flush any pending wiki saves on tab close, and (OI-65) warn before leaving
+  // mid-import — in-flight canvases aren't stashed yet and would be lost.
   React.useEffect(() => {
-    const onBeforeUnload = () => { flushAll(); };
+    const onBeforeUnload = (e) => {
+      flushAll();
+      if (isIiifImportRunning()) {
+        e.preventDefault();
+        e.returnValue = ''; // shows the browser's generic "Leave site?" prompt
+      }
+    };
     window.addEventListener('beforeunload', onBeforeUnload);
     return () => window.removeEventListener('beforeunload', onBeforeUnload);
+  }, []);
+
+  // OI-65: trap the browser Back button at the app root. The PKCE login
+  // navigates the tab to meta.wikimedia.org, so the OAuth approval page sits in
+  // history *behind* the app; handleCallback's replaceState can only clean the
+  // app's own `?code` entry, not the cross-origin meta one. Without this,
+  // pressing Back lands on the OAuth screen — breaking the workflow and risking
+  // in-progress import work. Pushing one same-origin sentinel entry and
+  // re-pushing on every popstate keeps Back inside the app: each Back fires
+  // popstate (same document) and is re-trapped, instead of unloading to meta.
+  // (The app has no URL-based navigation, so nothing legitimate relies on Back.)
+  React.useEffect(() => {
+    window.history.pushState(null, '', window.location.href);
+    const onPopState = () => {
+      window.history.pushState(null, '', window.location.href);
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
   // Expose a tiny diagnostics snapshot for the always-visible Feedback button
