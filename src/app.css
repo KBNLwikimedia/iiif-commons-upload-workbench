@@ -7949,7 +7949,7 @@ body.col-resizing * { cursor: col-resize !important; }
   overflow-y: auto;
   flex: 1;
   min-height: 180px;
-  padding: var(--spacing-150) var(--spacing-200);
+  padding: var(--spacing-100) var(--spacing-100);
 }
 
 /* The confirm ("Ready to import") step reads better with generous spacing
@@ -8086,8 +8086,10 @@ body.col-resizing * { cursor: col-resize !important; }
 
 .iiif-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 10px;
+  /* ~100px tiles → 5 columns in a narrow (~600px window) modal, more on
+     wider windows. Responsive via auto-fill. */
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
 }
 
 .iiif-canvas {
