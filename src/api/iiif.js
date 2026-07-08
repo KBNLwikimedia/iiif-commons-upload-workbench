@@ -312,7 +312,7 @@ export function parseManifest(json, { sourceUrl = null } = {}) {
 
   const downscaledCount = canvases.filter((c) => c.downscaled).length;
   if (downscaledCount) {
-    report.info('downscaled-canvases', `${downscaledCount} of ${canvases.length} canvases exceed the image server's delivery cap and will arrive downscaled.`);
+    report.info('downscaled-canvases', `${downscaledCount} of the ${canvases.length} pages are very large, so the library's image server will send them at a slightly smaller size (max 25 megapixels). Still high resolution — just not the full original.`);
   }
 
   return {

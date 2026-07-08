@@ -472,7 +472,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 <button className="btn btn--quiet" onClick={() => toggleAll(true)}>Select all</button>
                 <button className="btn btn--quiet" onClick={() => toggleAll(false)}>Select none</button>
                 {manifest.downscaledCount > 0 && (
-                  <span className="iiif-hint">“25 MP” = delivered downscaled by the image server</span>
+                  <span className="iiif-hint">A “25 MP” tag means that page is so large it arrives slightly smaller (still high-res).</span>
                 )}
               </div>
               <div className="iiif-gallery">
