@@ -697,7 +697,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                     <fieldset className="iiif-fieldset">
                       <legend>Categories</legend>
 
-                      <label className="iiif-label" htmlFor="iiif-cat">Category for this manuscript</label>
+                      <label className="iiif-label" htmlFor="iiif-cat">Suggested category for this manuscript</label>
                       <CategoryCombobox
                         id="iiif-cat"
                         value={category}
