@@ -91,5 +91,15 @@ export async function findManuscriptItems(signature) {
     if (!cur.commonsPage && b.commonsPage?.value) cur.commonsPage = b.commonsPage.value;
     byQid.set(qid, cur);
   }
-  return [...byQid.values()];
+  // A commonswiki sitelink may point at a *category* page instead of a
+  // gallery (typical for items that have no gallery, e.g. Q114989690).
+  // Presenting that as "gallery" is wrong — reroute it to the category
+  // slot (P373, when present, already won during the merge above).
+  return [...byQid.values()].map((c) => {
+    if (c.commonsPage && /^Category:/i.test(c.commonsPage)) {
+      if (!c.commonsCategory) c.commonsCategory = c.commonsPage.replace(/^Category:/i, '');
+      c.commonsPage = null;
+    }
+    return c;
+  });
 }
