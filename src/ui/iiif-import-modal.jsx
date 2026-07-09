@@ -788,16 +788,33 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                           if (v.name !== cur && !existing.some((e) => e.name === v.name)) existing.push(v);
                         }
                         const searching = variantCats === 'searching';
-                        const srcLabel = (s) => (s === 'wikidata' ? '★ Wikidata' : s === 'naming' ? 'name match' : 'search');
+                        // Source badge: where each suggestion came from, with a
+                        // plain-language explanation in the tooltip.
+                        const SRC = {
+                          wikidata: { label: 'via Wikidata', tip: "The manuscript's Wikidata item declares this as its Commons category (property P373) — the most authoritative source." },
+                          naming: { label: 'via name match', tip: 'An existing Commons category matching the KB naming conventions for this signature.' },
+                          search: { label: 'via search', tip: 'Found by searching Commons and verified to be filed under the KB manuscripts parent category.' },
+                        };
 
                         // Case 1 — existing categories found under another name:
                         // lead with adopting one; the suggested name is the
                         // fallback (so it doesn't read as "must be created").
                         if (existing.length > 0) {
+                          const single = existing.length === 1;
                           return (
                             <div className="iiif-existing-cats">
                               <p className="iiif-existing-cats__head">
-                                <strong>This manuscript already has a category on Commons</strong> — use it instead of creating “{cur}”:
+                                <strong>This manuscript seems to already have a{single ? '' : ' category on Commons'}</strong>
+                                {single && (
+                                  <>
+                                    {' '}
+                                    <a href={commonsCatUrl(existing[0].name)} target="_blank" rel="noopener noreferrer">
+                                      <strong>Category:{existing[0].name}</strong>
+                                    </a>{' '}
+                                    <strong>on Commons</strong>
+                                  </>
+                                )}
+                                {' '}— use {single ? 'it' : 'one'} instead of creating a new category “{cur}”:
                               </p>
                               {existing.map((e) => (
                                 <div key={e.name} className="iiif-existing-cats__item">
@@ -807,7 +824,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                                     onClick={() => setCategory(e.name)}
                                   >Use this category</button>
                                   <a href={commonsCatUrl(e.name)} target="_blank" rel="noopener noreferrer">{e.name} ↗</a>
-                                  <span className="iiif-existing-cats__src">{srcLabel(e.source)}</span>
+                                  <span className="iiif-existing-cats__src" title={SRC[e.source]?.tip}>{SRC[e.source]?.label} ⓘ</span>
                                 </div>
                               ))}
                               <p className="iiif-existing-cats__foot">…or keep “{cur}” — it'll be created for you when you publish the first page.</p>
