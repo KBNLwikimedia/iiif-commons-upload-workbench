@@ -8047,7 +8047,9 @@ body.col-resizing * { cursor: col-resize !important; }
 }
 
 .iiif-file-btn {
-  display: inline-block;
+  /* keep .btn's inline-FLEX so the label text is vertically centered
+     like a real button (inline-block sat the text on the baseline) */
+  display: inline-flex;
   cursor: pointer;
 }
 
