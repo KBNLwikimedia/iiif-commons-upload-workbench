@@ -965,12 +965,6 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                           </>
                         )}
                       </p>
-                      <p className="iiif-hint iiif-qid-feeds">
-                        Feeds{' '}
-                        <a href="https://www.wikidata.org/wiki/Property:P6243" target="_blank" rel="noopener noreferrer">digital representation of (P6243)</a>{' '}
-                        +{' '}
-                        <a href="https://www.wikidata.org/wiki/Property:P180" target="_blank" rel="noopener noreferrer">depicts (P180)</a>.
-                      </p>
                     </fieldset>
                   </div>
                 </>
