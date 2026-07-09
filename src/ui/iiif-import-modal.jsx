@@ -898,73 +898,94 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                     <fieldset className="iiif-fieldset">
                       <legend>Wikidata</legend>
 
-                      <label className="iiif-label" htmlFor="iiif-qid">Item of the manuscript</label>
+                      <label className="iiif-label" htmlFor="iiif-qid">
+                        Item of the manuscript <span className="iiif-label__note">— its Q-id on Wikidata</span>
+                      </label>
                       <input id="iiif-qid" type="text" placeholder="Q…" value={qid} onChange={(e) => setQid(e.target.value)} />
                       {qidNote && qidNote.qid === qid.trim().toUpperCase() && (
                         <p className="iiif-hint">ℹ️ {qidNote.text}</p>
                       )}
-                      <p className="iiif-hint">
-                        {qidCandidates === null && 'Searching Wikidata by signature…'}
-                        {qidCandidates === 'error' && (
-                          <span>
-                            ⚠️ Couldn't reach Wikidata just now —{' '}
-                            <button
-                              type="button"
-                              className="iiif-linkbtn"
-                              onClick={() => mapping && runQidLookup(mapping.manuscript.signature)}
-                            >retry the lookup</button>
-                            {' '}or enter a Q-id manually.
-                          </span>
-                        )}
-                        {Array.isArray(qidCandidates) && qidCandidates.length === 0 && 'No Wikidata item found by signature — leave empty or enter one manually.'}
-                        {Array.isArray(qidCandidates) && qidCandidates.length > 0 && (
-                          <>
-                            Found by signature:{' '}
-                            {qidCandidates.map((c) => (
-                              <span key={c.qid} className="iiif-qid-candidate">
-                                <button
-                                  className="btn btn--quiet iiif-qid-pick"
-                                  onClick={() => setQid(c.qid)}
-                                  title="Use this item"
-                                >
-                                  {qid.trim() === c.qid ? '✓ ' : ''}{c.qid}
-                                </button>
-                                {' '}
-                                <a
-                                  href={`https://www.wikidata.org/wiki/${c.qid}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  title="Open this item on Wikidata (new tab)"
-                                >
-                                  {c.label} ↗
-                                </a>
-                                {(c.commonsGallery || c.commonsPage) && (
-                                  <>
-                                    {' · '}
-                                    <a
-                                      href={`https://commons.wikimedia.org/wiki/${encodeURIComponent((c.commonsGallery || c.commonsPage).replace(/ /g, '_'))}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      title="This item's gallery page on Commons (Wikidata P935, new tab)"
-                                    >Gallery ↗</a>
-                                  </>
+                      {qidCandidates === null && (
+                        <p className="iiif-hint">Searching Wikidata for this manuscript by its signature…</p>
+                      )}
+                      {qidCandidates === 'error' && (
+                        <p className="iiif-hint">
+                          ⚠️ Couldn't reach Wikidata just now —{' '}
+                          <button
+                            type="button"
+                            className="iiif-linkbtn"
+                            onClick={() => mapping && runQidLookup(mapping.manuscript.signature)}
+                          >retry the lookup</button>
+                          {' '}or enter a Q-id manually.
+                        </p>
+                      )}
+                      {Array.isArray(qidCandidates) && qidCandidates.length === 0 && (
+                        <p className="iiif-hint">
+                          No Wikidata item found for signature “{mapping?.manuscript?.signature || '…'}” — leave empty or enter a Q-id manually.
+                        </p>
+                      )}
+                      {Array.isArray(qidCandidates) && qidCandidates.length > 0 && (
+                        <div className="iiif-wd-found">
+                          <p className="iiif-wd-found__head">
+                            <strong>Found on Wikidata</strong>{' '}
+                            <span
+                              className="iiif-wd-found__how"
+                              title={`Wikidata items whose “inventory number” statement (P217) matches this manuscript's signature “${mapping?.manuscript?.signature || ''}”.`}
+                            >by signature ⓘ</span>:
+                          </p>
+                          {qidCandidates.map((c) => {
+                            const inUse = qid.trim().toUpperCase() === c.qid;
+                            const gallery = c.commonsGallery || c.commonsPage;
+                            return (
+                              <div key={c.qid} className="iiif-wd-item">
+                                <div className="iiif-wd-item__main">
+                                  {inUse ? (
+                                    <span className="iiif-wd-item__inuse" title="This is the Q-id filled in above.">✓ in use</span>
+                                  ) : (
+                                    <button
+                                      type="button"
+                                      className="btn btn--progressive iiif-wd-item__use"
+                                      onClick={() => setQid(c.qid)}
+                                    >Use this item</button>
+                                  )}
+                                  <a
+                                    href={`https://www.wikidata.org/wiki/${c.qid}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    title="Open this item on Wikidata (new tab)"
+                                  >
+                                    <strong>{c.qid}</strong> — {c.label} ↗
+                                  </a>
+                                </div>
+                                {(gallery || c.commonsCategory) && (
+                                  <p className="iiif-wd-item__links">
+                                    This Wikidata item also links to:{' '}
+                                    {gallery && (
+                                      <a
+                                        href={`https://commons.wikimedia.org/wiki/${encodeURIComponent(gallery.replace(/ /g, '_'))}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title={c.commonsGallery
+                                          ? 'Stated on the Wikidata item as its “Commons gallery” (P935) — opens the gallery page on Commons (new tab).'
+                                          : "The Wikidata item's Wikimedia Commons sitelink — opens the gallery page on Commons (new tab)."}
+                                      >its gallery on Commons ↗</a>
+                                    )}
+                                    {gallery && c.commonsCategory && ' · '}
+                                    {c.commonsCategory && (
+                                      <a
+                                        href={commonsCatUrl(c.commonsCategory)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        title="Stated on the Wikidata item as its “Commons category” (P373) — opens the category on Commons (new tab)."
+                                      >its category on Commons ↗</a>
+                                    )}
+                                  </p>
                                 )}
-                                {c.commonsCategory && (
-                                  <>
-                                    {' · '}
-                                    <a
-                                      href={commonsCatUrl(c.commonsCategory)}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      title="This item's category on Commons (Wikidata P373, new tab)"
-                                    >Category ↗</a>
-                                  </>
-                                )}
-                              </span>
-                            ))}
-                          </>
-                        )}
-                      </p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </fieldset>
                   </div>
                 </>

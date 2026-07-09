@@ -8424,10 +8424,49 @@ body.col-resizing * { cursor: col-resize !important; }
 
 .iiif-check { cursor: pointer; }
 
-.iiif-qid-pick {
-  font-size: 12.5px;
-  text-decoration: underline;
-  padding: 0 4px;
+/* Wikidata match panel — mirrors .iiif-existing-cats (the amber
+   category box) in structure, with a blue tint so the two panels
+   read as siblings but not the same thing. */
+.iiif-wd-found {
+  margin: 6px 0 2px;
+  padding: 7px 10px;
+  background: rgba(51, 102, 204, 0.08);
+  border-radius: 4px;
+  font-size: 13px;
+}
+.iiif-wd-found__head {
+  margin: 0 0 6px;
+  color: var(--color-base);
+}
+.iiif-wd-found__how {
+  color: var(--color-subtle);
+  font-size: 11px;
+  cursor: help;
+  border-bottom: 1px dotted var(--color-subtle);
+}
+.iiif-wd-item { margin: 4px 0; }
+.iiif-wd-item__main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.iiif-wd-item__use {
+  padding: 3px 12px;
+  font-size: 13px;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+.iiif-wd-item__inuse {
+  color: var(--color-success, #14866d);
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: help;
+}
+.iiif-wd-item__links {
+  margin: 2px 0 4px;
+  color: var(--color-subtle);
+  font-size: 12px;
 }
 
 .iiif-select-bar {
