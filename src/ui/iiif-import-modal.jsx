@@ -323,21 +323,15 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     return mapManifest({ ...m, fields }, { wikidataQid: qid.trim() || null });
   }, [parsed, qid, excludedFields]); // user-edited title/category are applied in effectiveItems below
 
-  // Review-step preview thumbs: the first page (leftmost) plus up to three
-  // random other pages. Memoized on the parse result so the random picks are
-  // stable while the user edits title/category (no reshuffle per keystroke);
-  // random-per-manifest-load is fine — it's a visual spot check.
-  const previewThumbs = React.useMemo(() => {
-    const canvases = (parsed?.manifest?.canvases || []).filter((c) => c.thumbUrl);
-    if (!canvases.length) return [];
-    const [first, ...pool] = canvases;
-    const picks = [];
-    while (picks.length < 3 && pool.length) {
-      picks.push(...pool.splice(Math.floor(Math.random() * pool.length), 1));
-    }
-    picks.sort((a, b) => a.index - b.index); // random picks in page order
-    return [first, ...picks];
-  }, [parsed]);
+  // Review-step carousel: a horizontally-scrollable strip of every canvas
+  // thumbnail so the user can eyeball the whole manuscript. Thumbs are
+  // lazy-loaded (same as the select-step gallery) so a 500-page manifest
+  // doesn't fetch every thumb up front; the nav buttons scroll the strip.
+  const carouselRef = React.useRef(null);
+  const scrollCarousel = (dir) => {
+    const el = carouselRef.current;
+    if (el) el.scrollBy({ left: dir * Math.max(el.clientWidth * 0.8, 200), behavior: 'smooth' });
+  };
 
   // Apply user-edited title/category on top of the mapped items without
   // re-deriving everything: filenames and captions substitute the derived
@@ -526,24 +520,38 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
 
               {manifest && mapping && (
                 <>
-                  {/* Preview thumbnails (public IIIF thumbs): the first page
-                      leftmost, plus up to three random other pages — a quick
-                      visual sanity check that this is the right manuscript. */}
-                  {previewThumbs.length > 0 && (
-                    <div className="iiif-review-thumbs">
-                      {previewThumbs.map((c, i) => (
-                        <figure key={c.index} className="iiif-review-thumb">
-                          <img
-                            src={c.thumbUrl}
-                            alt={i === 0
-                              ? `First page of ${manifest.label || 'the manuscript'}`
-                              : `Page ${c.label || c.index + 1} of ${manifest.label || 'the manuscript'}`}
-                            title={c.label || `canvas ${c.index + 1}`}
-                            loading="lazy"
-                            referrerPolicy="no-referrer"
-                          />
-                        </figure>
-                      ))}
+                  {/* Carousel: every canvas thumbnail (public IIIF thumbs),
+                      lazy-loaded, scroll through the whole manuscript. */}
+                  {manifest.canvases.length > 0 && (
+                    <div className="iiif-carousel">
+                      <button
+                        type="button"
+                        className="iiif-carousel__nav"
+                        onClick={() => scrollCarousel(-1)}
+                        aria-label="Scroll thumbnails left"
+                      >‹</button>
+                      <div className="iiif-carousel__strip" ref={carouselRef}>
+                        {manifest.canvases.map((c) => (
+                          <figure key={c.index} className="iiif-carousel__item" title={c.label || `canvas ${c.index + 1}`}>
+                            {c.thumbUrl
+                              ? (
+                                <img
+                                  src={c.thumbUrl}
+                                  alt={c.label || `canvas ${c.index + 1}`}
+                                  loading="lazy"
+                                  referrerPolicy="no-referrer"
+                                />
+                              )
+                              : <span className="iiif-carousel__ph">#{c.index + 1}</span>}
+                          </figure>
+                        ))}
+                      </div>
+                      <button
+                        type="button"
+                        className="iiif-carousel__nav"
+                        onClick={() => scrollCarousel(1)}
+                        aria-label="Scroll thumbnails right"
+                      >›</button>
                     </div>
                   )}
 

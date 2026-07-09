@@ -8096,23 +8096,62 @@ body.col-resizing * { cursor: col-resize !important; }
 
 /* Preview thumbnails in the review step: first page leftmost + up to three
    random other pages, in one right-floated row. */
-.iiif-review-thumbs {
-  float: right;
+/* Review-step carousel: nav buttons flanking a horizontally-scrollable strip
+   of every canvas thumbnail. */
+.iiif-carousel {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+.iiif-carousel__strip {
+  flex: 1;
+  min-width: 0;
   display: flex;
   gap: 8px;
-  align-items: flex-start;
-  margin: 0 0 8px 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding: 2px 2px 8px;
+  scrollbar-width: thin;
 }
-.iiif-review-thumb {
+.iiif-carousel__item {
+  flex: 0 0 auto;
   margin: 0;
 }
-.iiif-review-thumb img {
+.iiif-carousel__item img {
   display: block;
-  max-width: 110px;
-  max-height: 150px;
+  height: 150px;
+  width: auto;
+  max-width: 220px;
   border: 1px solid var(--border-color-base);
   border-radius: 4px;
   background: var(--background-color-neutral-subtle, #f8f9fa);
+}
+.iiif-carousel__ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 106px;
+  height: 150px;
+  border: 1px dashed var(--border-color-base);
+  border-radius: 4px;
+  color: var(--color-subtle);
+  font-size: 12px;
+}
+.iiif-carousel__nav {
+  flex: 0 0 auto;
+  width: 28px;
+  border: 1px solid var(--border-color-base);
+  border-radius: 4px;
+  background: var(--background-color-neutral-subtle, #f8f9fa);
+  color: var(--color-base);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+.iiif-carousel__nav:hover {
+  background: var(--border-color-base);
 }
 
 /* Placeholder-field flag (⚠️) + deselect toggle (✕) in the passport. */
