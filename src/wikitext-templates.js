@@ -124,10 +124,10 @@ export const BUILTIN_TEMPLATES = {
       { param: 'depicted people',    key: null,             required: false, hint: 'People depicted in the artwork.' },
       { param: 'depicted place',     key: 'objectLocation', required: false, hint: 'Place depicted (Wikidata link or free text).' },
       { param: 'date',               key: 'dateTaken',      required: false, hint: 'When the work was created. ISO 8601 or {{other date|circa|1850}}.' },
-      { param: 'medium',             key: null,             required: false, hint: 'Material/technique (e.g. "oil on canvas").' },
-      { param: 'dimensions',         key: null,             required: false, hint: 'Use {{Size|height|width|unit}} for structured values.' },
+      { param: 'medium',             key: 'medium',         required: false, hint: 'Material/technique (e.g. "oil on canvas").' },
+      { param: 'dimensions',         key: 'dimensions',     required: false, hint: 'Use {{Size|height|width|unit}} for structured values.' },
       { param: 'institution',        key: 'institution',    required: false, hint: 'Holding institution ({{Institution:…}}).' },
-      { param: 'department',         key: null,             required: false, hint: 'Sub-collection within the institution.' },
+      { param: 'department',         key: 'department',     required: false, hint: 'Sub-collection within the institution.' },
       { param: 'location',           key: 'objectLocation', required: false, hint: 'Gallery / room within the institution.' },
       { param: 'references',         key: null,             required: false, hint: 'External references / catalogue raisonné entries.' },
       { param: 'object_history',     key: null,             required: false, hint: 'Provenance trail.' },
@@ -135,7 +135,10 @@ export const BUILTIN_TEMPLATES = {
       { param: 'credit_line',        key: null,             required: false, hint: 'Standard credit-line text the institution requires.' },
       { param: 'inscriptions',       key: null,             required: false, hint: 'Inscriptions on the artwork itself.' },
       { param: 'notes',              key: null,             required: false, hint: 'Free-form notes.' },
-      { param: 'accession_number',   key: null,             required: false, hint: 'Catalogue / inventory number at the holding institution.' },
+      // NB: Commons {{Artwork}} spells this param with a space ("accession
+      // number"); the underscored form isn't a recognised alias. Harmless
+      // while key was null (the param never rendered) — fixed when wiring it.
+      { param: 'accession number',   key: 'accessionNumber', required: false, hint: 'Catalogue / inventory number at the holding institution.' },
       { param: 'source',             key: 'source',         required: true,  hint: 'Original source (URL, museum citation, or {{own}}).' },
       { param: 'permission',         key: null,             required: false, hint: 'Only when a separate permission template applies.' },
       { param: 'other_versions',     key: null,             required: false, hint: 'Gallery / list of related file versions.' },
@@ -388,8 +391,13 @@ function formatDescription(item) {
 
 function formatDate(item) {
   if (!item.dateTaken) return '';
-  // Use day precision; ignore the time portion in the date param.
-  return String(item.dateTaken).slice(0, 10);
+  const s = String(item.dateTaken).trim();
+  // ISO date(-time) → day precision (drop the time portion). Anything else —
+  // `{{other date|circa|1538}}` wikitext, plain years, Dutch period phrases —
+  // passes through untruncated. The old unconditional slice(0, 10) mangled
+  // those to garbage like "{{other da" (OI-01).
+  const iso = s.match(/^(\d{4}-\d{2}-\d{2})(?:[T ]|$)/);
+  return iso ? iso[1] : s;
 }
 
 function formatSource(item) {

@@ -74,6 +74,11 @@ function placeholderFromMapped(mapped) {
     source: mapped.source,
     license: mapped.license,
     institution: mapped.institution || null,
+    // OI-01/OI-02: {{Artwork}} params + date wikitext as draft fields.
+    medium: mapped.medium || null,
+    dimensions: mapped.dimensions || null,
+    accessionNumber: mapped.accessionNumber || null,
+    dateTaken: mapped.dateTaken || null,
     categories: mapped.categories,
     depicts: mapped.depicts,
     // session-only extras for Phase 5 (SDC/template wiring):

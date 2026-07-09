@@ -477,6 +477,13 @@ const DRAFT_FIELDS = [
   'author',
   'source',
   'institution',
+  // OI-02 (Phase 5.2): {{Artwork}} params wired from the IIIF mapper. Batch-
+  // identical values are deduped into the sharedDrafts record (OI-38), so
+  // 500 canvases store these once, not 500×.
+  'medium',
+  'dimensions',
+  'accessionNumber',
+  'department',
   'categories',
   'depicts',
   'dateTaken',

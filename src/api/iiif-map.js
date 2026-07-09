@@ -282,6 +282,15 @@ export function mapCanvases(manuscript, manifest) {
       source: manuscript.source,
       license: manuscript.license,
       institution: KB_INSTITUTION_WIKITEXT,
+      // OI-02 (Phase 5.2): {{Artwork}} params as first-class draft fields so
+      // they reach the rendered wikitext and survive reloads.
+      medium: manuscript.artwork.medium || null,
+      dimensions: manuscript.artwork.dimensions || null,
+      accessionNumber: manuscript.artwork.accessionNumber || null,
+      // OI-01: the derived date wikitext ({{other date|…}} / verbatim Dutch)
+      // now lives on the real date field — formatDate passes non-ISO values
+      // through untruncated.
+      dateTaken: manuscript.dateWikitext || null,
       categories: [manuscript.categoryName],
       depicts: manuscript.wikidataQid ? [{ qid: manuscript.wikidataQid, label: manuscript.signature }] : [],
       // --- IIIF extras (session-only; consumed by the pipeline + Phase 5) ---
