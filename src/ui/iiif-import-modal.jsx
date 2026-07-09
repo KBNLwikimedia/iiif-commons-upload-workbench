@@ -792,8 +792,8 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                         // plain-language explanation in the tooltip.
                         const SRC = {
                           wikidata: { label: 'via Wikidata', tip: "The manuscript's Wikidata item declares this as its Commons category (property P373) — the most authoritative source." },
-                          naming: { label: 'via name match', tip: 'An existing Commons category matching the KB naming conventions for this signature.' },
-                          search: { label: 'via search', tip: 'Found by searching Commons and verified to be filed under the KB manuscripts parent category.' },
+                          naming: { label: 'via name match', tip: 'An existing Commons category whose name follows a known KB naming convention for this signature (e.g. "Den Haag KB 76 E 5") — found by checking those name patterns.' },
+                          search: { label: 'via search', tip: 'Found by a full-text search of Commons category names (using the title and signature), then verified to be filed under the KB manuscripts parent category — so it is not a random name look-alike.' },
                         };
 
                         // Case 1 — existing categories found under another name:

@@ -8219,6 +8219,8 @@ body.col-resizing * { cursor: col-resize !important; }
 .iiif-existing-cats__src {
   color: var(--color-subtle);
   font-size: 11px;
+  cursor: help;
+  border-bottom: 1px dotted var(--color-subtle);
 }
 .iiif-existing-cats__foot {
   margin: 6px 0 0;
