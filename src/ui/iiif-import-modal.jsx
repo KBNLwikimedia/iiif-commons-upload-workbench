@@ -213,7 +213,8 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     return () => { alive = false; clearTimeout(t); };
   }, [category]);
   const [qid, setQid] = React.useState('');
-  const [qidCandidates, setQidCandidates] = React.useState(null); // null = loading
+  // null = loading, 'error' = lookup failed (retry-able), [] = genuine no-hit.
+  const [qidCandidates, setQidCandidates] = React.useState(null);
 
   // selection (step 3)
   const [selected, setSelected] = React.useState(() => new Set());
@@ -326,20 +327,27 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     setCatExists(null);
     setError(null);
     setStep('review');
-    // Fire the Q-id auto-lookup + category existence check (best-effort).
-    // OI-30: guard with a per-parse token so a superseded lookup (user loaded
-    // another manifest meanwhile) can't overwrite the current candidates/Q-id,
-    // and only auto-fill when the field is still empty (never clobber a value
-    // the user typed while the lookup was in flight).
+    // Fire the Q-id auto-lookup (+ the category check runs in its effect).
+    runQidLookup(manuscript.signature);
+  };
+
+  // Wikidata signature lookup, retry-able. OI-30: guarded with a per-parse
+  // token so a superseded lookup (user loaded another manifest meanwhile)
+  // can't overwrite the current candidates/Q-id, and auto-fill never clobbers
+  // a value the user typed while the lookup was in flight. A failed request
+  // sets the distinct 'error' state (NOT the empty no-hit list) so the UI can
+  // say "couldn't reach Wikidata — Retry" instead of a false "no item found"
+  // (a transient SPARQL hiccup used to read as a definitive miss).
+  const runQidLookup = (signature) => {
     const myLookup = ++qidLookupRef.current;
-    findManuscriptItems(manuscript.signature)
+    setQidCandidates(null);
+    findManuscriptItems(signature)
       .then((hits) => {
         if (qidLookupRef.current !== myLookup) return;
         setQidCandidates(hits);
         if (hits.length === 1) setQid((q) => q || hits[0].qid);
       })
-      .catch(() => { if (qidLookupRef.current === myLookup) setQidCandidates([]); });
-    // category existence + suggestions run in the debounced effect above
+      .catch(() => { if (qidLookupRef.current === myLookup) setQidCandidates('error'); });
   };
 
   const loadUrl = async () => {
@@ -734,7 +742,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                           Replaces the suggestion (single category per
                           manuscript — decided 2026-07-09). */}
                       {(() => {
-                        const cand = (qidCandidates || []).find((c) => c.qid === qid.trim());
+                        const cand = (Array.isArray(qidCandidates) ? qidCandidates : []).find((c) => c.qid === qid.trim());
                         const wdCat = cand?.commonsCategory;
                         if (!wdCat || stripCatPrefix(category) === wdCat) return null;
                         return (
@@ -810,8 +818,19 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       <input id="iiif-qid" type="text" placeholder="Q…" value={qid} onChange={(e) => setQid(e.target.value)} />
                       <p className="iiif-hint">
                         {qidCandidates === null && 'Searching Wikidata by signature…'}
-                        {qidCandidates && qidCandidates.length === 0 && 'No Wikidata item found by signature — leave empty or enter one manually.'}
-                        {qidCandidates && qidCandidates.length > 0 && (
+                        {qidCandidates === 'error' && (
+                          <span>
+                            ⚠️ Couldn't reach Wikidata just now —{' '}
+                            <button
+                              type="button"
+                              className="iiif-linkbtn"
+                              onClick={() => mapping && runQidLookup(mapping.manuscript.signature)}
+                            >retry the lookup</button>
+                            {' '}or enter a Q-id manually.
+                          </span>
+                        )}
+                        {Array.isArray(qidCandidates) && qidCandidates.length === 0 && 'No Wikidata item found by signature — leave empty or enter one manually.'}
+                        {Array.isArray(qidCandidates) && qidCandidates.length > 0 && (
                           <>
                             Found by signature:{' '}
                             {qidCandidates.map((c) => (
