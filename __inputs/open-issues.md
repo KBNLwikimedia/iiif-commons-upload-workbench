@@ -6,7 +6,7 @@ Living register of everything known-but-not-yet-done: technical debt, deferred d
 
 > **Migrated to GitHub Issues (2026-07-08).** Every entry below is now also a GitHub issue on [the tracker](https://github.com/KBNLwikimedia/iiif-manifest-upload-workbench/issues) — the `OI-NN` id links to `#NN` (they line up 1:1). GitHub Issues is the **live tracker** from here on; this file is the annotated origin/archive. When you close an item, close its GitHub issue (and, if you like, tick it here).
 
-*Last updated: 2026-07-09. Section F holds a full multi-agent code review (OI-25…OI-61). Later additions: OI-62 (Institution column), OI-63 (chunked upload), OI-67 (KB-catalogue enrichment design). Resolved items live in the **Closed** table at the bottom (per the convention above): OI-01, OI-02, OI-18, OI-25, OI-27, OI-30, OI-34, OI-35, OI-38, OI-40, OI-51, OI-64, OI-68, plus the GitHub-era finds #65 and #66. Partially-done items (OI-10, OI-12) stay in their sections until fully resolved.*
+*Last updated: 2026-07-10 (v0.40.0). Section F holds a full multi-agent code review (OI-25…OI-61). Later additions: OI-62 (Institution column), OI-63 (chunked upload), OI-67 (KB-catalogue enrichment design). Resolved items live in the **Closed** table at the bottom (per the convention above): OI-01, OI-02, OI-18, OI-25, OI-27, OI-30, OI-34, OI-35, OI-38, OI-40, OI-51, OI-64, OI-68, plus the GitHub-era finds #65 and #66. Partially-done items (OI-10, OI-12) stay in their sections until fully resolved.*
 
 ---
 
