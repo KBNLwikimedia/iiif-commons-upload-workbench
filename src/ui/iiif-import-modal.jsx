@@ -914,8 +914,19 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                                       href={`https://commons.wikimedia.org/wiki/${encodeURIComponent(c.commonsPage.replace(/ /g, '_'))}`}
                                       target="_blank"
                                       rel="noopener noreferrer"
-                                      title="This item's page/gallery on Commons (new tab)"
-                                    >Commons ↗</a>
+                                      title="This item's gallery page on Commons (new tab)"
+                                    >Gallery ↗</a>
+                                  </>
+                                )}
+                                {c.commonsCategory && (
+                                  <>
+                                    {' · '}
+                                    <a
+                                      href={commonsCatUrl(c.commonsCategory)}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      title="This item's category on Commons (Wikidata P373, new tab)"
+                                    >Category ↗</a>
                                   </>
                                 )}
                               </span>
