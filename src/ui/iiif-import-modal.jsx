@@ -598,7 +598,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                     <label className="iiif-label" htmlFor="iiif-title">Short title (used in filenames and the category)</label>
                     <input id="iiif-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
 
-                    <fieldset className="iiif-catbox">
+                    <fieldset className="iiif-fieldset">
                       <legend>Categories</legend>
 
                       <label className="iiif-label" htmlFor="iiif-cat">Category for this manuscript</label>
@@ -676,43 +676,47 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       </p>
                     </fieldset>
 
-                    <label className="iiif-label" htmlFor="iiif-qid">Wikidata item of the manuscript</label>
-                    <input id="iiif-qid" type="text" placeholder="Q…" value={qid} onChange={(e) => setQid(e.target.value)} />
-                    <p className="iiif-hint">
-                      {qidCandidates === null && 'Searching Wikidata by signature…'}
-                      {qidCandidates && qidCandidates.length === 0 && 'No Wikidata item found by signature — leave empty or enter one manually.'}
-                      {qidCandidates && qidCandidates.length > 0 && (
-                        <>
-                          Found by signature:{' '}
-                          {qidCandidates.map((c) => (
-                            <span key={c.qid} className="iiif-qid-candidate">
-                              <button
-                                className="btn btn--quiet iiif-qid-pick"
-                                onClick={() => setQid(c.qid)}
-                                title="Use this item"
-                              >
-                                {qid.trim() === c.qid ? '✓ ' : ''}{c.qid}
-                              </button>
-                              {' '}
-                              <a
-                                href={`https://www.wikidata.org/wiki/${c.qid}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                title="Open this item on Wikidata (new tab)"
-                              >
-                                {c.label} ↗
-                              </a>
-                            </span>
-                          ))}
-                        </>
-                      )}
-                    </p>
-                    <p className="iiif-hint iiif-qid-feeds">
-                      Feeds{' '}
-                      <a href="https://www.wikidata.org/wiki/Property:P6243" target="_blank" rel="noopener noreferrer">digital representation of (P6243)</a>{' '}
-                      +{' '}
-                      <a href="https://www.wikidata.org/wiki/Property:P180" target="_blank" rel="noopener noreferrer">depicts (P180)</a>.
-                    </p>
+                    <fieldset className="iiif-fieldset">
+                      <legend>Wikidata</legend>
+
+                      <label className="iiif-label" htmlFor="iiif-qid">Item of the manuscript</label>
+                      <input id="iiif-qid" type="text" placeholder="Q…" value={qid} onChange={(e) => setQid(e.target.value)} />
+                      <p className="iiif-hint">
+                        {qidCandidates === null && 'Searching Wikidata by signature…'}
+                        {qidCandidates && qidCandidates.length === 0 && 'No Wikidata item found by signature — leave empty or enter one manually.'}
+                        {qidCandidates && qidCandidates.length > 0 && (
+                          <>
+                            Found by signature:{' '}
+                            {qidCandidates.map((c) => (
+                              <span key={c.qid} className="iiif-qid-candidate">
+                                <button
+                                  className="btn btn--quiet iiif-qid-pick"
+                                  onClick={() => setQid(c.qid)}
+                                  title="Use this item"
+                                >
+                                  {qid.trim() === c.qid ? '✓ ' : ''}{c.qid}
+                                </button>
+                                {' '}
+                                <a
+                                  href={`https://www.wikidata.org/wiki/${c.qid}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title="Open this item on Wikidata (new tab)"
+                                >
+                                  {c.label} ↗
+                                </a>
+                              </span>
+                            ))}
+                          </>
+                        )}
+                      </p>
+                      <p className="iiif-hint iiif-qid-feeds">
+                        Feeds{' '}
+                        <a href="https://www.wikidata.org/wiki/Property:P6243" target="_blank" rel="noopener noreferrer">digital representation of (P6243)</a>{' '}
+                        +{' '}
+                        <a href="https://www.wikidata.org/wiki/Property:P180" target="_blank" rel="noopener noreferrer">depicts (P180)</a>.
+                      </p>
+                    </fieldset>
                   </div>
                 </>
               )}

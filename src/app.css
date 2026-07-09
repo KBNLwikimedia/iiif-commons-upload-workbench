@@ -7999,15 +7999,15 @@ body.col-resizing * { cursor: col-resize !important; }
   color: var(--color-subtle);
 }
 
-/* Grouped "Categories" section in the review step. */
-.iiif-catbox {
+/* Grouped, legended sections in the review step (Categories, Wikidata, …). */
+.iiif-fieldset {
   border: 1px solid var(--border-color-base);
   border-radius: 6px;
   padding: 2px 14px 14px;
   margin: 16px 0 4px;
   min-width: 0; /* let inner inputs shrink within the modal */
 }
-.iiif-catbox legend {
+.iiif-fieldset legend {
   font-weight: 700;
   font-size: 12px;
   text-transform: uppercase;
