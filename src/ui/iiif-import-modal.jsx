@@ -222,6 +222,14 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   const [hoverPreview, setHoverPreview] = React.useState(null);
   // Lightbox: the canvas shown enlarged (or null). Click a carousel thumb.
   const [lightbox, setLightbox] = React.useState(null);
+  // Whether the current lightbox image has finished loading (drives the
+  // spinner). Reset on every page change; the spinner itself is CSS-delayed
+  // so cached/instant loads don't flash it.
+  const [lightboxLoaded, setLightboxLoaded] = React.useState(false);
+  // Fall back to the (already-cached) thumb if the 1200px rendition fails —
+  // state-driven, not an imperative src swap, so onLoad's re-render can't
+  // reset it into an error loop.
+  const [lightboxUseThumb, setLightboxUseThumb] = React.useState(false);
 
   // pipeline (step 5)
   const abortRef = React.useRef({ current: false });
@@ -271,6 +279,8 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   // gesture), so it doesn't add background traffic to normal browsing.
   React.useEffect(() => {
     if (!lightbox) return;
+    setLightboxLoaded(false); // new page → show spinner until its img loads
+    setLightboxUseThumb(false);
     const list = parsed?.manifest?.canvases || [];
     const pos = list.findIndex((c) => c.index === lightbox.index);
     [pos - 1, pos + 1, pos - 2, pos + 2].forEach((p) => {
@@ -1021,12 +1031,21 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 aria-label="Previous page"
               >‹</button>
               <figure className="iiif-lightbox__fig" onClick={(e) => e.stopPropagation()}>
-                <img
-                  src={largeRendition(lightbox)}
-                  alt={lightbox.label || `page ${pos + 1}`}
-                  referrerPolicy="no-referrer"
-                  onError={(e) => { if (lightbox.thumbUrl && e.target.src !== lightbox.thumbUrl) e.target.src = lightbox.thumbUrl; }}
-                />
+                <div className="iiif-lightbox__imgbox">
+                  {!lightboxLoaded && <span className="iiif-lightbox__spinner" role="status" aria-label="Loading image…" />}
+                  <img
+                    key={lightbox.index}
+                    src={lightboxUseThumb && lightbox.thumbUrl ? lightbox.thumbUrl : largeRendition(lightbox)}
+                    alt={lightbox.label || `page ${pos + 1}`}
+                    referrerPolicy="no-referrer"
+                    style={{ opacity: lightboxLoaded ? 1 : 0 }}
+                    onLoad={() => setLightboxLoaded(true)}
+                    onError={() => {
+                      if (!lightboxUseThumb && lightbox.thumbUrl) setLightboxUseThumb(true);
+                      else setLightboxLoaded(true);
+                    }}
+                  />
+                </div>
                 <figcaption>
                   Page {pos + 1} of {canv.length}
                   {lightbox.label ? ` — ${lightbox.label}` : ''}
