@@ -448,9 +448,10 @@ function namingVariants(signature) {
 
 // findManuscriptCategoryVariants({ title, signature }) → existing categories
 // that are (verified) this manuscript's home on Commons, each { name, source }.
-// `source`: 'naming' (B) or 'search' (C). Sequential + apiCache-backed to
-// respect API-politeness; runs only behind the user gesture (a parsed
-// manifest whose suggested category is missing).
+// `source`: 'naming' (B) or 'search' (C). A bounded parallel read burst
+// (~7 requests + up to 8 verification reads), apiCache-backed, and only
+// behind a user gesture (a parsed manifest whose suggested category is
+// missing) — never on bootstrap, never scaling with canvas count.
 export async function findManuscriptCategoryVariants({ title, signature }) {
   if (DEMO_MODE) return [];
   const found = new Map(); // name → { name, source } (insertion order: B before C)
