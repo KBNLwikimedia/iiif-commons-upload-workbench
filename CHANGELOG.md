@@ -6,6 +6,12 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 
+### Fixed
+
+- **Esc / backdrop-click no longer destroy a loaded import wizard** (OI-31 #31, OI-70 #70) — both dismissed the whole modal on any step, silently discarding the manifest, lookups and edits. They now close only on the harmless `input`/`done` steps; once a manifest is loaded, the explicit × is the only way out (same policy as the lightbox).
+- **"Gallery" link no longer shown for a `Category:` sitelink** — a Wikidata item whose only Commons link is a category-namespace sitelink (e.g. Q114989690 / KW 70 H 19) was presented as having a gallery; the sitelink is now rerouted to the category slot.
+- **"Choose a manifest .json file" label text vertically centered** — the `.iiif-file-btn` display override dropped `.btn`'s flex centering.
+
 ### Changed
 
 - **Wizard, Wikidata section redesigned** — the cramped "Found by signature: ✓ Q… · Gallery ↗ · Category ↗" line became a structured match panel (blue-tinted sibling of the amber existing-category box): "Found on Wikidata by signature ⓘ" head (tooltip explains the P217 match), a "✓ in use" chip or a real "Use this item" button per candidate, the Q-id + label as one Wikidata link, and an explicit provenance line "This Wikidata item also links to: its gallery on Commons (P935) · its category on Commons (P373)". The no-match message now names the signature it searched for.
