@@ -579,7 +579,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
               <p className={`modal__sub iiif-modal__substep${step === 'confirm' ? ' iiif-modal__substep--confirm' : ''}`}>
                 {step === 'confirm' && (
                   <>
-                    <strong>{chosen.length}</strong> images will be downloaded from the IIIF server and stashed on Wikimedia Commons.
+                    <strong>{chosen.length} images</strong> will be downloaded from the IIIF server and stashed on Wikimedia Commons.
                     <br />
                     An <strong>estimate of ~{totalMB} MB</strong> will be transferred.
                   </>
