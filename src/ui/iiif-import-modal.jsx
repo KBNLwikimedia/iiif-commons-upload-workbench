@@ -1037,7 +1037,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 <button className="btn btn--quiet" onClick={() => toggleAll(false)}>Select none</button>
                 <button className="btn btn--quiet" onClick={invertSelection}>Invert selection</button>
                 <span className="iiif-select-bar__count">
-                  {selected.size} of {manifest.canvasCount} images selected
+                  <strong>{selected.size}</strong> of {manifest.canvasCount} images selected
                 </span>
               </div>
               <div className="iiif-gallery">
