@@ -6,6 +6,37 @@ Paste a manifest URL (or drop the JSON), review the extracted metadata and page 
 
 **Status: in development.** The approved design and build plan live in [`__inputs/iiif-ingestor-design.md`](__inputs/iiif-ingestor-design.md). Not yet deployed anywhere; local development only.
 
+## Screenshots
+
+<!--
+  Screenshot gallery. To add one:
+  1. Drop the PNG in docs/screenshots/ — name it after its place in the flow,
+     e.g. wizard-01-import.png, wizard-04-confirm.png, workbench-01-table.png
+     (the NN keeps the gallery in walkthrough order).
+  2. Copy one <details> block below and adjust the summary + path + caption.
+  Keep every block collapsed-by-default except the first, so the README stays scannable.
+-->
+
+<details open>
+<summary><strong>Check the manifest</strong> — metadata review with thumbnail carousel (KW 133 F 10, Gebedenboek)</summary>
+<br>
+
+![The "Check the manifest" step: thumbnail carousel, parsed metadata fields, raw-JSON inspector link and editable short title](docs/screenshots/wizard-02-check-the-manifest.png)
+
+*Manifest loaded from a URL: full-canvas thumbnail carousel, all parsed metadata fields, a "View manifest (JSON)" inspector, and the editable short title that drives filenames and the category.*
+
+</details>
+
+<details>
+<summary><strong>Select pages</strong> — per-page selection with native resolutions (KW 133 E 28, Gebedenboek)</summary>
+<br>
+
+![The "Select pages" step: selectable page tiles with native dimensions, full-res links and a 25 MP note](docs/screenshots/wizard-03-select-pages.png)
+
+*Every canvas as a selectable tile with its native dimensions and a full-res link; pages above the IIIF server's 25-megapixel delivery cap are flagged. Imported pages land as ordinary stash rows in the workbench behind the modal.*
+
+</details>
+
 ## What it does (when finished)
 
 1. **Ingest** a IIIF Presentation 3.0 manifest (URL or file)
