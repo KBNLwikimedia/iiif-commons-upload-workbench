@@ -91,7 +91,8 @@ export function Cc0Modal({ username, onAcknowledge, onDismiss }) {
         <div className="modal__body cc0-modal__body">
           <p>
             IIIF Manifest Upload Workbench saves your drafts, column preferences, hidden-file
-            list, and related state to two pages in your own Wikimedia Commons user namespace:
+            list, recently loaded manifests, and related state to two pages in your own
+            Wikimedia Commons user namespace:
           </p>
           <ul className="cc0-modal__pages">
             <li>
