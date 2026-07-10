@@ -26,6 +26,7 @@ import { categoryExists, searchCategories, findManuscriptCategoryVariants } from
 import { KB_PARENT_CATEGORY, KB_LICENSE_WIKITEXT } from '../api/iiif-map.js';
 import { DEMO_MODE } from '../config.js';
 import { getRecentManifests, addRecentManifest, removeRecentManifest, clearRecentManifests } from '../api/user-store.js';
+import { PROVIDERS, DEFAULT_PROVIDER_ID } from '../providers.js';
 
 const Icon = window.Icon;
 
@@ -163,6 +164,9 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   // Recently loaded manifest URLs (persisted in Preferences.json), for
   // one-click reloading.
   const [recent, setRecent] = React.useState(getRecentManifests);
+  // Provider profile (OI-78 scaffolding). Only KB is selectable for now; the
+  // eCodices card is shown disabled. Doesn't gate loading yet.
+  const [providerId, setProviderId] = React.useState(DEFAULT_PROVIDER_ID);
 
   // parse result
   const [parsed, setParsed] = React.useState(null); // { ok, report, manifest }
@@ -679,6 +683,29 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
 
           {step === 'input' && (
             <div className="iiif-step-input">
+              {/* Provider profile (OI-78). KB is the only supported collection
+                  for now; eCodices is shown disabled ("coming soon"). */}
+              <div className="iiif-providers">
+                <div className="iiif-providers__label">Collection</div>
+                <div className="iiif-providers__grid">
+                  {PROVIDERS.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      className={`iiif-provider${providerId === p.id ? ' iiif-provider--on' : ''}${p.available ? '' : ' iiif-provider--soon'}`}
+                      onClick={() => p.available && setProviderId(p.id)}
+                      disabled={!p.available}
+                      aria-pressed={providerId === p.id}
+                      title={p.available ? p.blurb : `${p.name} — support coming soon (see issue #78)`}
+                    >
+                      <img className="iiif-provider__logo" src={p.logo} alt={p.name} />
+                      <span className="iiif-provider__name">{p.name}</span>
+                      {!p.available && <span className="iiif-provider__badge">Coming soon</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <label className="iiif-label" htmlFor="iiif-url">Manifest URL</label>
               <div className="iiif-url-row">
                 <input
