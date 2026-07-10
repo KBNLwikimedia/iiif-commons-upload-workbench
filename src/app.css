@@ -8105,6 +8105,7 @@ body.col-resizing * { cursor: col-resize !important; }
 .iiif-recent__item:hover { background: var(--background-color-neutral-subtle, #f0f1f3); border-color: var(--border-color-muted); }
 .iiif-recent__item:disabled { opacity: 0.5; cursor: default; }
 .iiif-recent__title { font-size: 13px; color: var(--color-base); }
+.iiif-recent__sig { font-weight: 600; }
 .iiif-recent__url { font-size: 11px; color: var(--color-subtle); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .iiif-error {

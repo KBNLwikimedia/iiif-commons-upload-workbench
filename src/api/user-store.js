@@ -959,11 +959,16 @@ export function getRecentManifests() {
   return Array.isArray(arr) ? arr.filter((r) => r && r.url).slice(0, RECENT_MANIFESTS_MAX) : [];
 }
 
-export function addRecentManifest({ url, title } = {}) {
+export function addRecentManifest({ url, signature, title } = {}) {
   const u = String(url || '').trim();
   if (!u) return;
   const prev = getRecentManifests().filter((r) => r.url !== u);
-  const next = [{ url: u, title: String(title || '').trim() || null }, ...prev].slice(0, RECENT_MANIFESTS_MAX);
+  const entry = {
+    url: u,
+    signature: String(signature || '').trim() || null,
+    title: String(title || '').trim() || null,
+  };
+  const next = [entry, ...prev].slice(0, RECENT_MANIFESTS_MAX);
   setPref('recentManifests', next);
 }
 

@@ -420,10 +420,14 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     try {
       const result = await fetchManifest(u);
       // Remember a successfully-loaded URL for quick reloading (the file
-      // route has no reusable URL, so it's not recorded). Persisted to
-      // Preferences.json so the list follows the user across devices.
-      addRecentManifest({ url: u, title: result?.manifest?.label });
-      setRecent(getRecentManifests());
+      // route has no reusable URL, so it's not recorded). Store the derived
+      // signature + title (the raw label is sometimes just the shelfmark).
+      // Persisted to Preferences.json so the list follows across devices.
+      if (result?.manifest) {
+        const { manuscript } = mapManifest(result.manifest);
+        addRecentManifest({ url: u, signature: manuscript.signature, title: manuscript.title });
+        setRecent(getRecentManifests());
+      }
       acceptParse(result);
     } catch (e) {
       setError(e.message || String(e));
@@ -712,8 +716,13 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                           disabled={busy}
                           title={r.url}
                         >
-                          <span className="iiif-recent__title">{r.title || r.url}</span>
-                          {r.title && <span className="iiif-recent__url">{r.url}</span>}
+                          <span className="iiif-recent__title">
+                            {r.signature && <span className="iiif-recent__sig">{r.signature}</span>}
+                            {r.signature && r.title && ' — '}
+                            {r.title}
+                            {!r.signature && !r.title && r.url}
+                          </span>
+                          {(r.signature || r.title) && <span className="iiif-recent__url">{r.url}</span>}
                         </button>
                       </li>
                     ))}
