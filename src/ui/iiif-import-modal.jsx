@@ -421,7 +421,8 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     const u = String(urlOverride || '').trim() || idUrl;
     if (!u) return;
     const { manuscript } = mapManifest(result.manifest);
-    addRecentManifest({ url: u, signature: manuscript.signature, title: manuscript.title });
+    const thumb = result.manifest.canvases?.[0]?.thumbUrl || null;
+    addRecentManifest({ url: u, signature: manuscript.signature, title: manuscript.title, thumb });
     setRecent(getRecentManifests());
   };
 
@@ -728,13 +729,25 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                           disabled={busy}
                           title={r.url}
                         >
-                          <span className="iiif-recent__title">
-                            {r.signature && <span className="iiif-recent__sig">{r.signature}</span>}
-                            {r.signature && r.title && ' — '}
-                            {r.title}
-                            {!r.signature && !r.title && r.url}
+                          {r.thumb && (
+                            <img
+                              className="iiif-recent__thumb"
+                              src={r.thumb}
+                              alt=""
+                              loading="lazy"
+                              referrerPolicy="no-referrer"
+                              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            />
+                          )}
+                          <span className="iiif-recent__text">
+                            <span className="iiif-recent__title">
+                              {r.signature && <span className="iiif-recent__sig">{r.signature}</span>}
+                              {r.signature && r.title && ' — '}
+                              {r.title}
+                              {!r.signature && !r.title && r.url}
+                            </span>
+                            {(r.signature || r.title) && <span className="iiif-recent__url">{r.url}</span>}
                           </span>
-                          {(r.signature || r.title) && <span className="iiif-recent__url">{r.url}</span>}
                         </button>
                         <button
                           type="button"

@@ -959,7 +959,7 @@ export function getRecentManifests() {
   return Array.isArray(arr) ? arr.filter((r) => r && r.url).slice(0, RECENT_MANIFESTS_MAX) : [];
 }
 
-export function addRecentManifest({ url, signature, title } = {}) {
+export function addRecentManifest({ url, signature, title, thumb } = {}) {
   const u = String(url || '').trim();
   if (!u) return;
   const prev = getRecentManifests().filter((r) => r.url !== u);
@@ -967,6 +967,8 @@ export function addRecentManifest({ url, signature, title } = {}) {
     url: u,
     signature: String(signature || '').trim() || null,
     title: String(title || '').trim() || null,
+    // First-canvas thumbnail URL (purpose-built /full/400,/ size) for the list.
+    thumb: String(thumb || '').trim() || null,
   };
   const next = [entry, ...prev].slice(0, RECENT_MANIFESTS_MAX);
   setPref('recentManifests', next);
