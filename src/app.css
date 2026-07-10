@@ -8429,6 +8429,16 @@ body.col-resizing * { cursor: col-resize !important; }
 
 .iiif-check { cursor: pointer; }
 
+/* Hoverable ⓘ on passport rows that need explanation (e.g. Aantal
+   folia vs the manifest's image count). */
+.iiif-passport__info {
+  margin-left: 6px;
+  color: var(--color-subtle);
+  font-size: 12px;
+  cursor: help;
+  border-bottom: 1px dotted var(--color-subtle);
+}
+
 /* Wikidata match panel — mirrors .iiif-existing-cats (the amber
    category box) in structure, with a blue tint so the two panels
    read as siblings but not the same thing. */

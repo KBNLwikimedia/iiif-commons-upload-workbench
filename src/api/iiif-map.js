@@ -9,18 +9,19 @@
 // All mapping targets follow the approved design decisions
 // (__inputs/iiif-ingestor-design.md) and the mined Commons conventions
 // (__inputs/commons-best-practices.md):
-//   - template {{Artwork}} (Q3); license {{Licensed-PD-Art|PD-old-100-expired|Cc-zero}} (Q4)
+//   - template {{Artwork}} (Q3); license {{PD-Art|PD-old-100-expired}} (Q4,
+//     revised 2026-07-07 — see KB_LICENSE_WIKITEXT below)
 //   - filenames "<Title> - <KW signature> - <canvas label part>" (Q7)
 //   - one category per manuscript, "<Title> - <KW signature>" (Q8)
 //   - Dutch description/caption verbatim from the manifest (Q13)
 //
-// Everything the current {{Artwork}} field map can't place yet (medium,
-// dimensions, institution, accession number, date wikitext) travels under
-// `item.iiif` — Phase 5.2 wires those into wikitext-templates.js. NOTE:
-// `iiif` is not in DRAFT_FIELDS, so these extras are session-only until
-// Phase 4 decides how they persist. The date deliberately does NOT go into
-// `dateTaken`: formatDate() truncates to ISO's first 10 chars, which would
-// mangle `{{other date|circa|1538}}` (Phase 5.2 adds a passthrough).
+// Since Phase 5.2 the {{Artwork}} extras (medium, dimensions, accession
+// number, date wikitext) are first-class draft fields: mapCanvases emits
+// them top-level (they're in DRAFT_FIELDS) and wikitext-templates.js
+// renders them; formatDate() passes non-ISO strings like
+// `{{other date|circa|1538}}` through untouched. The full mapping detail
+// additionally travels under `item.iiif` (session-only) for Phase 5's SDC
+// statements. Institution still waits on OI-62.
 //
 // Pure ESM, zero imports — Node-testable (scripts/test-iiif-map.mjs).
 

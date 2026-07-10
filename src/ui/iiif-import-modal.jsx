@@ -570,7 +570,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 input, so the header reads consistently through the wizard;
                 step-specific info goes on a second line. */}
             <p className="modal__sub">
-              {step === 'input' && 'Paste a IIIF Presentation 3.0 manifest URL, or pick a downloaded manifest .json file.'}
+              {step === 'input' && 'Paste a IIIF Presentation 3.0 manifest URL, or pick a downloaded manifest .json file. Only Presentation 3.0 is supported for now — 2.x support will be added in the future.'}
               {step !== 'input' && (manifest ? `${manifest.label || 'Untitled manifest'} — ${manifest.canvasCount} images` : 'The manifest could not be used.')}
             </p>
             {step !== 'input' && step !== 'review' && manifest && (
@@ -724,6 +724,16 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                               <span className="iiif-passport__value">
                                 {linkifyValue(m.value.length > 220 ? `${m.value.slice(0, 220)}…` : m.value)}
                               </span>
+                              {/* Folia ≠ images: a manuscript's leaf count and the
+                                  manifest's canvas count routinely differ — explain
+                                  on hover (maintainer request 2026-07-10). */}
+                              {/aantal folia/i.test(m.label) && (
+                                <span
+                                  className="iiif-passport__info"
+                                  title={`A folium is one physical leaf of the manuscript (parchment or paper); its front (recto) and back (verso) are two written pages. That count differs from the number of images in this manifest (${manifest.canvasCount}): binding, covers and flyleaves are photographed too, and some manuscripts are digitized as two-page spreads — one image showing two folia sides.`}
+                                  aria-label="What is a folium, and why does this number differ from the image count?"
+                                >ⓘ</span>
+                              )}
                               {m.placeholder && (
                                 <span className="iiif-field-flag">
                                   <span
