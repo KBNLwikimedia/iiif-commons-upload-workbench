@@ -2177,28 +2177,30 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
               </p>
             </div>
             <footer className="modal__foot">
+              <div className="clear-stash-modal__actions">
+                <a
+                  className="btn btn--progressive"
+                  href="https://commons.wikimedia.org/wiki/Special:UploadStash"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setClearStashOpen(false)}
+                >
+                  Open Special:UploadStash ↗
+                </a>
+                <button
+                  className="btn btn--destructive"
+                  onClick={() => {
+                    discardItems(stashItems);
+                    // Rows without sha1/filekey (e.g. failed imports) can't be
+                    // hidden by key — drop them from local state directly.
+                    setItems((prev) => prev.filter((i) => !(i.status?.startsWith('stash') && !i.sha1 && !i.filekey)));
+                    setClearStashOpen(false);
+                  }}
+                >
+                  Hide all {stashItems.length} here
+                </button>
+              </div>
               <button className="btn" onClick={() => setClearStashOpen(false)}>Cancel</button>
-              <button
-                className="btn btn--destructive-quiet"
-                onClick={() => {
-                  discardItems(stashItems);
-                  // Rows without sha1/filekey (e.g. failed imports) can't be
-                  // hidden by key — drop them from local state directly.
-                  setItems((prev) => prev.filter((i) => !(i.status?.startsWith('stash') && !i.sha1 && !i.filekey)));
-                  setClearStashOpen(false);
-                }}
-              >
-                Hide all {stashItems.length} here
-              </button>
-              <a
-                className="btn btn--progressive"
-                href="https://commons.wikimedia.org/wiki/Special:UploadStash"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setClearStashOpen(false)}
-              >
-                Open Special:UploadStash ↗
-              </a>
             </footer>
           </div>
         </div>

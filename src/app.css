@@ -8717,6 +8717,13 @@ body.col-resizing * { cursor: col-resize !important; }
 .clear-stash-modal {
   width: min(520px, 92vw);
 }
+/* Footer: the two actions group bottom-left (blue, then the destructive
+   "Hide all" button); the modal__foot's space-between pushes Cancel right. */
+.clear-stash-modal__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 
 .clear-stash-modal__hint {
   font-size: 13px;
