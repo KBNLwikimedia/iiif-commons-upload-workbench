@@ -277,9 +277,12 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Esc closes (except mid-run — abort first); lock body scroll while open.
+  // Esc closes only on the harmless steps (nothing loaded yet / already
+  // done). Once a manifest is loaded, minutes of fetch + lookups + edits
+  // are at stake — dismissal is the × button only (OI-31/OI-70, same
+  // policy as the lightbox). Also lock body scroll while open.
   React.useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape' && step !== 'running') onClose(); };
+    const onKey = (e) => { if (e.key === 'Escape' && (step === 'input' || step === 'done')) onClose(); };
     document.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -550,7 +553,9 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   };
 
   return (
-    <div className="modal-backdrop" onClick={step === 'running' ? undefined : onClose}>
+    // Backdrop follows the same dismissal policy as Esc (OI-70): a stray
+    // click must not destroy a loaded wizard.
+    <div className="modal-backdrop" onClick={(step === 'input' || step === 'done') ? onClose : undefined}>
       <div
         className="modal iiif-modal"
         onClick={(e) => e.stopPropagation()}
