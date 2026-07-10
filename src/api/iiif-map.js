@@ -123,8 +123,10 @@ export function deriveDateWikitext(dateText) {
   if (/^\d{3,4}$/.test(t)) return t;
   // Everything else (halves/quarters of centuries, compound datings) stays
   // verbatim Dutch — visible and user-editable in the wizard beats a wrong
-  // guess at {{other date}} sub-syntax.
-  return t;
+  // guess at {{other date}} sub-syntax. Verbatim manifest text goes into the
+  // |date= param unquoted, so neutralize wiki structural chars (OI-74); the
+  // mapper-authored {{other date|…}} returns above must stay raw.
+  return neutralizeWikitext(t);
 }
 
 // "440×312" (h × b, per the KB's label) → {{Size}} wikitext; verbatim fallback.
@@ -133,16 +135,22 @@ export function deriveDimensionsWikitext(dimText) {
   if (!t) return '';
   const m = t.match(/^(\d+)\s*[×x]\s*(\d+)/);
   if (m) return `{{Size|unit=mm|height=${m[1]}|width=${m[2]}}}`;
-  return t;
+  // Verbatim fallback (real corpus values like "Circa 250-255×180-188" land
+  // here) — manifest text destined for the |dimensions= param, so neutralize
+  // wiki structural chars (OI-74).
+  return neutralizeWikitext(t);
 }
 
 // Neutralize the five wiki structural characters in free text pulled verbatim
 // from the manifest, so a hostile value can't break out of a template
 // parameter or inject templates / wikilinks / categories once it reaches the
-// wikitext (OI-27). Applied only to values that go SOLELY to wikitext (author
-// names, the source URL) — never to values that also feed structured data
-// (e.g. the accession/inventory number → P217), and never to mapper-authored
-// template wikitext ({{unknown|author}}, {{Koninklijke Bibliotheek}}, …).
+// wikitext (OI-27; extended to the Phase 5.2 {{Artwork}} params in OI-74).
+// Applied only to values that go to wikitext (author names, the source URL,
+// medium, the dimensions/date verbatim fallbacks, the draft accession
+// number) — never to the SDC copies under `sdc.*` (P217 needs the raw
+// inventory number; SDC statements are not wikitext), and never to
+// mapper-authored template wikitext ({{unknown|author}}, {{Size|…}},
+// {{other date|…}}, {{Koninklijke Bibliotheek}}, …).
 function neutralizeWikitext(s) {
   return String(s || '').replace(/[{}[\]|]/g, (c) => (
     { '{': '&#123;', '}': '&#125;', '[': '&#91;', ']': '&#93;', '|': '&#124;' }[c]
@@ -197,8 +205,10 @@ export function mapManuscript(manifest) {
     wikidataQid: null,
     artwork: {
       institution: KB_INSTITUTION_WIKITEXT,
-      accessionNumber: String(f.signatuur || signature).trim(),
-      medium: String(f.materiaal || '').trim(),
+      // OI-74: these three reach the {{Artwork}} wikitext verbatim — the raw
+      // inventory number for SDC/P217 lives separately under sdc.inventoryNumber.
+      accessionNumber: neutralizeWikitext(String(f.signatuur || signature).trim()),
+      medium: neutralizeWikitext(String(f.materiaal || '').trim()),
       dimensions: deriveDimensionsWikitext(f.afmetingen),
       placeOfCreation: String(f.plaatsVanOrigine || '').replace(/^\[|\]$/g, '').trim(),
       objectHistory: String(f.herkomst || f.verwerving || '').trim(),
