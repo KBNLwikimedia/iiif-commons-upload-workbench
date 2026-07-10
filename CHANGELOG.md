@@ -6,6 +6,10 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 
 ## [Unreleased]
 
+### Security
+
+- **Closed a wikitext-injection surface the Phase 5.2 `{{Artwork}}` wiring re-opened** (OI-74 #74) — manifest-verbatim `medium`, accession number, and the dimensions/date verbatim fallbacks now pass through `neutralizeWikitext`, so a hostile manifest value can't break out of the template at publish. Mapper-authored templates and the SDC P217 value stay raw.
+
 ### Fixed
 
 - **Esc / backdrop-click no longer destroy the import wizard** (OI-31 #31, OI-70 #70) — both dismissed the whole modal on any step, silently discarding the manifest, lookups and edits (or, on step 1, a typed URL). They now close only on the `done` step; everywhere else the explicit × is the only way out (same policy as the lightbox).
