@@ -972,6 +972,12 @@ export function addRecentManifest({ url, signature, title } = {}) {
   setPref('recentManifests', next);
 }
 
+export function removeRecentManifest(url) {
+  const u = String(url || '').trim();
+  if (!u) return;
+  setPref('recentManifests', getRecentManifests().filter((r) => r.url !== u));
+}
+
 export function clearRecentManifests() {
   setPref('recentManifests', []);
 }

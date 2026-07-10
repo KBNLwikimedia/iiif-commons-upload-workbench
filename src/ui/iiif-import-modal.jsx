@@ -25,7 +25,7 @@ import { runIiifImport } from '../api/iiif-pipeline.js';
 import { categoryExists, searchCategories, findManuscriptCategoryVariants } from '../api/commons.js';
 import { KB_PARENT_CATEGORY, KB_LICENSE_WIKITEXT } from '../api/iiif-map.js';
 import { DEMO_MODE } from '../config.js';
-import { getRecentManifests, addRecentManifest, clearRecentManifests } from '../api/user-store.js';
+import { getRecentManifests, addRecentManifest, removeRecentManifest, clearRecentManifests } from '../api/user-store.js';
 
 const Icon = window.Icon;
 
@@ -715,12 +715,12 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       type="button"
                       className="iiif-linkbtn iiif-recent__clear"
                       onClick={() => { clearRecentManifests(); setRecent([]); }}
-                      title="Clear this list"
-                    >Clear</button>
+                      title="Remove every manifest from this list"
+                    >Clear all</button>
                   </div>
                   <ul className="iiif-recent__list">
                     {recent.map((r) => (
-                      <li key={r.url}>
+                      <li key={r.url} className="iiif-recent__row">
                         <button
                           type="button"
                           className="iiif-recent__item"
@@ -736,6 +736,13 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                           </span>
                           {(r.signature || r.title) && <span className="iiif-recent__url">{r.url}</span>}
                         </button>
+                        <button
+                          type="button"
+                          className="iiif-recent__remove"
+                          onClick={() => { removeRecentManifest(r.url); setRecent(getRecentManifests()); }}
+                          aria-label={`Remove ${r.signature || r.title || r.url} from recent manifests`}
+                          title="Remove from this list"
+                        >×</button>
                       </li>
                     ))}
                   </ul>
