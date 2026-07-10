@@ -11,9 +11,12 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 - **Esc / backdrop-click no longer destroy the import wizard** (OI-31 #31, OI-70 #70) — both dismissed the whole modal on any step, silently discarding the manifest, lookups and edits (or, on step 1, a typed URL). They now close only on the `done` step; everywhere else the explicit × is the only way out (same policy as the lightbox).
 - **"Gallery" link no longer shown for a `Category:` sitelink** — a Wikidata item whose only Commons link is a category-namespace sitelink (e.g. Q114989690 / KW 70 H 19) was presented as having a gallery; the sitelink is now rerouted to the category slot.
 - **"Choose a manifest .json file" label text vertically centered** — the `.iiif-file-btn` display override dropped `.btn`'s flex centering.
+- **Stale header comment in `iiif-map.js`** (OI-61 #61) — cited the pre-revision Q4 license and described the Phase 5.2 Artwork extras as future work; both now match the shipped code.
 
 ### Changed
 
+- **Wizard: hoverable ⓘ on the "Aantal folia" row** explaining folium (physical leaf, recto + verso) vs the manifest's image count (covers/flyleaves photographed too; some manuscripts digitized as two-page spreads).
+- **Wizard input step now states that only IIIF Presentation 3.0 is supported for now** — 2.x support will be added in the future (OI-07 #7).
 - **Wizard wording: "pages" → "images" everywhere** — a canvas is a photograph, not a manuscript page (KW 73 J 6: 96 canvases, 89 folia — digitized as two-page spreads), so "N pages" misled about what gets uploaded. Renamed in step titles, header lines, buttons, 25 MP notes, lightbox, progress and pipeline/report messages.
 - **Feedback-form issues are now labelled `user feedback`** on GitHub (plus the type label bug/enhancement), so form-originated reports are traceable — new repo label created.
 - **Wizard: manifest title shown as the first row of the metadata passport** (above Summary), so the review table is self-contained.
