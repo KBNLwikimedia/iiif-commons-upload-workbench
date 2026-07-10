@@ -944,3 +944,29 @@ export function setPref(key, value) {
 export function getAllPrefs() {
   return STORES.preferences.state;
 }
+
+// --- Recent manifests ---
+// A small user-activity list (the last N manifest URLs the user loaded)
+// persisted in Preferences.json so it follows them across devices — same
+// debounced write path as any other pref. Newest first, deduped by URL,
+// capped. Only reloadable (URL-loaded) manifests belong here; a dropped
+// file has no reusable URL. This is user-authored activity, not derived
+// data — safe to persist (unlike manifest JSON, which we recompute).
+const RECENT_MANIFESTS_MAX = 10;
+
+export function getRecentManifests() {
+  const arr = STORES.preferences.state.recentManifests;
+  return Array.isArray(arr) ? arr.filter((r) => r && r.url).slice(0, RECENT_MANIFESTS_MAX) : [];
+}
+
+export function addRecentManifest({ url, title } = {}) {
+  const u = String(url || '').trim();
+  if (!u) return;
+  const prev = getRecentManifests().filter((r) => r.url !== u);
+  const next = [{ url: u, title: String(title || '').trim() || null }, ...prev].slice(0, RECENT_MANIFESTS_MAX);
+  setPref('recentManifests', next);
+}
+
+export function clearRecentManifests() {
+  setPref('recentManifests', []);
+}

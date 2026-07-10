@@ -25,6 +25,7 @@ import { runIiifImport } from '../api/iiif-pipeline.js';
 import { categoryExists, searchCategories, findManuscriptCategoryVariants } from '../api/commons.js';
 import { KB_PARENT_CATEGORY, KB_LICENSE_WIKITEXT } from '../api/iiif-map.js';
 import { DEMO_MODE } from '../config.js';
+import { getRecentManifests, addRecentManifest, clearRecentManifests } from '../api/user-store.js';
 
 const Icon = window.Icon;
 
@@ -69,25 +70,8 @@ function saveDefaultParent(name) {
   try { localStorage.setItem(PARENT_CAT_KEY, name); } catch { /* private mode etc. */ }
 }
 
-// Recently loaded manifest URLs, for quick reloading from the input step.
-// Per-browser (localStorage), newest first, deduped by URL, capped at 10.
-const RECENT_KEY = 'uwb.iiif.recentManifests.v1';
-const RECENT_MAX = 10;
-function loadRecentManifests() {
-  try {
-    const arr = JSON.parse(localStorage.getItem(RECENT_KEY) || '[]');
-    return Array.isArray(arr) ? arr.filter((r) => r && r.url).slice(0, RECENT_MAX) : [];
-  } catch { return []; }
-}
-function pushRecentManifest({ url, title }) {
-  const u = String(url || '').trim();
-  if (!u) return;
-  try {
-    const prev = loadRecentManifests().filter((r) => r.url !== u);
-    const next = [{ url: u, title: String(title || '').trim() || null }, ...prev].slice(0, RECENT_MAX);
-    localStorage.setItem(RECENT_KEY, JSON.stringify(next));
-  } catch { /* private mode etc. */ }
-}
+// Recent manifests are persisted in Preferences.json (cross-device) via the
+// user-store — see getRecentManifests / addRecentManifest / clearRecentManifests.
 
 // A larger IIIF rendition for the lightbox (1200 px wide — well under the
 // 25 MP cap), falling back to the tile thumb / full-res URL.
@@ -176,8 +160,9 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   const [url, setUrl] = React.useState('');
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState(null);
-  // Recently loaded manifest URLs (localStorage), for one-click reloading.
-  const [recent, setRecent] = React.useState(loadRecentManifests);
+  // Recently loaded manifest URLs (persisted in Preferences.json), for
+  // one-click reloading.
+  const [recent, setRecent] = React.useState(getRecentManifests);
 
   // parse result
   const [parsed, setParsed] = React.useState(null); // { ok, report, manifest }
@@ -435,9 +420,10 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     try {
       const result = await fetchManifest(u);
       // Remember a successfully-loaded URL for quick reloading (the file
-      // route has no reusable URL, so it's not recorded).
-      pushRecentManifest({ url: u, title: result?.manifest?.label });
-      setRecent(loadRecentManifests());
+      // route has no reusable URL, so it's not recorded). Persisted to
+      // Preferences.json so the list follows the user across devices.
+      addRecentManifest({ url: u, title: result?.manifest?.label });
+      setRecent(getRecentManifests());
       acceptParse(result);
     } catch (e) {
       setError(e.message || String(e));
@@ -712,7 +698,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                     <button
                       type="button"
                       className="iiif-linkbtn iiif-recent__clear"
-                      onClick={() => { try { localStorage.removeItem(RECENT_KEY); } catch { /* noop */ } setRecent([]); }}
+                      onClick={() => { clearRecentManifests(); setRecent([]); }}
                       title="Clear this list"
                     >Clear</button>
                   </div>

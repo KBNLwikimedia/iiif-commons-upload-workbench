@@ -23,7 +23,7 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 
 ### Added
 
-- **Recent manifests on the import step** — the "Import IIIF manifest" step 1 now lists the last 10 successfully-loaded manifest URLs (per browser); one click reloads any of them. A "Clear" link empties the list.
+- **Recent manifests on the import step** — the "Import IIIF manifest" step 1 now lists the last 10 successfully-loaded manifest URLs; one click reloads any of them, and a "Clear" link empties the list. The list is persisted in your `Preferences.json` on Commons, so it follows you across devices.
 
 ### Changed
 
