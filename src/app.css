@@ -8116,9 +8116,11 @@ body.col-resizing * { cursor: col-resize !important; }
 }
 
 .iiif-file-btn {
-  /* keep .btn's inline-FLEX so the label text is vertically centered
-     like a real button (inline-block sat the text on the baseline) */
-  display: inline-flex;
+  /* flex (block-level) keeps .btn's vertical text centering AND lets
+     margin:auto center the button itself under the "— or —" divider */
+  display: flex;
+  width: max-content;
+  margin: 0 auto;
   cursor: pointer;
 }
 
