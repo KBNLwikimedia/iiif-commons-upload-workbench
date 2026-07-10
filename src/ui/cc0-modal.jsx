@@ -56,9 +56,9 @@ export function Cc0Modal({ username, onAcknowledge, onDismiss }) {
 
   // The user's own subpage tree — opens in a new tab so they can verify what's
   // stored without losing their workbench session.
-  const userPageUrl = username
-    ? `https://commons.wikimedia.org/wiki/User:${encodeURIComponent(username)}/IIIFManifestUploadWorkbench`
-    : 'https://commons.wikimedia.org/wiki/User:You/IIIFManifestUploadWorkbench';
+  const u = username || 'You';
+  const pageUrl = (file) =>
+    `https://commons.wikimedia.org/wiki/User:${encodeURIComponent(u)}/IIIFManifestUploadWorkbench/${file}`;
 
   return (
     <div className="modal-backdrop" onClick={onDismiss}>
@@ -94,8 +94,16 @@ export function Cc0Modal({ username, onAcknowledge, onDismiss }) {
             list, and related state to two pages in your own Wikimedia Commons user namespace:
           </p>
           <ul className="cc0-modal__pages">
-            <li><code>User:{username || 'You'}/IIIFManifestUploadWorkbench/Preferences.json</code></li>
-            <li><code>User:{username || 'You'}/IIIFManifestUploadWorkbench/Metadata.json</code></li>
+            <li>
+              <a href={pageUrl('Preferences.json')} target="_blank" rel="noopener noreferrer">
+                <code>User:{u}/IIIFManifestUploadWorkbench/Preferences.json</code>
+              </a>
+            </li>
+            <li>
+              <a href={pageUrl('Metadata.json')} target="_blank" rel="noopener noreferrer">
+                <code>User:{u}/IIIFManifestUploadWorkbench/Metadata.json</code>
+              </a>
+            </li>
           </ul>
           <p>
             These pages are <strong>public</strong>, just like every page on Commons — anyone
@@ -115,11 +123,6 @@ export function Cc0Modal({ username, onAcknowledge, onDismiss }) {
             Note: this only covers the workbench's own configuration and draft data. The
             files you publish to Commons keep whatever license you pick for them on the
             publish form (CC BY-SA 4.0, CC BY 4.0, CC0, public-domain claims, etc.).
-          </p>
-          <p className="cc0-modal__small">
-            <a href={userPageUrl} target="_blank" rel="noopener noreferrer">
-              {Icon && <Icon name="external" size={12} />} View your workbench pages on Commons
-            </a>
           </p>
         </div>
 
