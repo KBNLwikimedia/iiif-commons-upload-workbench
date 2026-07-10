@@ -571,7 +571,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 step-specific info goes on a second line. */}
             <p className="modal__sub">
               {step === 'input' && 'Paste a IIIF Presentation 3.0 manifest URL, or pick a downloaded manifest .json file. Only Presentation 3.0 is supported for now — 2.x support will be added in the future.'}
-              {step !== 'input' && (manifest ? `${manifest.label || 'Untitled manifest'} — ${manifest.canvasCount} images` : 'The manifest could not be used.')}
+              {step !== 'input' && (manifest ? `${manifest.label || 'Untitled manifest'} — ${manifest.canvasCount} images in this manifest` : 'The manifest could not be used.')}
             </p>
             {/* The selection count lives in the select-step toolbar (next to
                 Select all/none), not here — the header stays identity-only. */}
