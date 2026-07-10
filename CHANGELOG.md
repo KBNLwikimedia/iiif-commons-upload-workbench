@@ -14,6 +14,7 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 
 ### Changed
 
+- **Wizard wording: "pages" → "images" everywhere** — a canvas is a photograph, not a manuscript page (KW 73 J 6: 96 canvases, 89 folia — digitized as two-page spreads), so "N pages" misled about what gets uploaded. Renamed in step titles, header lines, buttons, 25 MP notes, lightbox, progress and pipeline/report messages.
 - **Feedback-form issues are now labelled `user feedback`** on GitHub (plus the type label bug/enhancement), so form-originated reports are traceable — new repo label created.
 - **Wizard: manifest title shown as the first row of the metadata passport** (above Summary), so the review table is self-contained.
 - **Wizard header: the manuscript identity line ("Title (signature) — N pages") now stays on every step** past input; step-specific info (selection count, transfer estimate, progress) moved to a second line.
