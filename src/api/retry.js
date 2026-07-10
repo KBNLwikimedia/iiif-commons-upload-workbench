@@ -20,8 +20,13 @@ export function apiError(message, { code = '', status = 0, retryAfter = 0, isNet
 // Auth failures kill the whole batch — re-login is needed, retrying is futile
 // and would surface as hundreds of identical per-item errors.
 const AUTH_CODE = /^(mwoauth-invalid-authorization|assertuserfailed|assertbotfailed|notloggedin|badcredentials|permissiondenied|badaccess-groups)$/i;
-// Transient failures are worth retrying with backoff.
-const TRANSIENT_CODE = /^(ratelimited|maxlag|readonly|internal_api_error|internal_api_error_dberror|timeout|http)$/i;
+// Transient failures are worth retrying with backoff. `internal_api_error` is
+// a PREFIX match: MediaWiki emits `internal_api_error_<ExceptionClass>` (e.g.
+// internal_api_error_DBQueryError, internal_api_error_DBConnectionError) — the
+// exact flaky-DB class this layer exists to retry — so anchoring the full
+// string would misclassify every real one as fatal (OI-75).
+const TRANSIENT_CODE = /^(ratelimited|maxlag|readonly|timeout|http)$/i;
+const TRANSIENT_PREFIX = /^internal_api_error/i;
 
 // → 'badtoken' | 'auth' | 'transient' | 'fatal'
 export function classifyError(err) {
@@ -29,7 +34,7 @@ export function classifyError(err) {
   const status = Number(err?.status || 0);
   if (/^badtoken$/i.test(code)) return 'badtoken';
   if (AUTH_CODE.test(code) || status === 401) return 'auth';
-  if (TRANSIENT_CODE.test(code) || err?.isNetwork || (status >= 500 && status < 600)) return 'transient';
+  if (TRANSIENT_CODE.test(code) || TRANSIENT_PREFIX.test(code) || err?.isNetwork || (status >= 500 && status < 600)) return 'transient';
   return 'fatal';
 }
 
@@ -60,7 +65,16 @@ export async function withRetry(fn, { retries = 3, onRetry, onBadToken, sleep = 
       const kind = classifyError(err);
       if (kind === 'badtoken' && onBadToken && !badTokenRetried) {
         badTokenRetried = true;
-        await onBadToken();
+        // The token refresh itself can fail — typically because the session
+        // actually died, so fetchCSRFToken() throws an auth error. Tag it
+        // (OI-76) so the caller's `err.kind === 'auth'` batch-abort catches
+        // it instead of treating a dead session as an ordinary item failure.
+        try {
+          await onBadToken();
+        } catch (refreshErr) {
+          refreshErr.kind = classifyError(refreshErr);
+          throw refreshErr;
+        }
         continue; // retry immediately with the fresh token
       }
       if (kind === 'transient' && attempt < retries) {

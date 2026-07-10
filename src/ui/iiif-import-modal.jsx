@@ -525,13 +525,31 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
       ? chosen.map((it) => ({ ...it, iiifPendingCategory: pendingCategory, iiifPendingParentCategory: parentCat }))
       : chosen;
 
-    const result = await runIiifImport(toImport, {
-      onAddItems,
-      onUpdateItem,
-      onReplaceItem,
-      onItemDone: (_r, _i) => setProgress((p) => ({ ...p, done: p.done + 1 })),
-      abortRef: abortRef.current,
-    });
+    // OI-77: the pipeline hardens its own body, but a throw from the callback
+    // surface (onAddItems/onUpdateItem → app state) or any future regression
+    // would reject here — and the `running` step disables every dismissal
+    // path (× hidden, Esc/backdrop inert), wedging the modal permanently.
+    // Always land on `done` so "Go to the table" stays reachable.
+    let result;
+    try {
+      result = await runIiifImport(toImport, {
+        onAddItems,
+        onUpdateItem,
+        onReplaceItem,
+        onItemDone: (_r, _i) => setProgress((p) => ({ ...p, done: p.done + 1 })),
+        abortRef: abortRef.current,
+      });
+    } catch (e) {
+      console.error('IIIF import crashed:', e);
+      result = {
+        uploaded: 0,
+        duplicates: 0,
+        failed: chosen.length,
+        aborted: true,
+        results: [],
+        error: e?.message || String(e),
+      };
+    }
     setSummary({
       ...result,
       catNote: pendingCategory
@@ -1267,7 +1285,9 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       ))}
                     </ul>
                   )}
-                  {summary.aborted && <p>⏹️ Import was cancelled before finishing.</p>}
+                  {summary.error
+                    ? <p>❌ The import stopped unexpectedly: {summary.error}. Anything already stashed is kept; re-run to continue.</p>
+                    : summary.aborted && <p>⏹️ Import was cancelled before finishing.</p>}
                   {summary.catNote && <p>🗂️ {summary.catNote}</p>}
                 </div>
               )}
