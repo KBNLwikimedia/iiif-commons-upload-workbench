@@ -289,18 +289,17 @@ export default function FeedbackModal({ onClose }) {
     });
   };
 
-  // Esc closes; body scroll locked while open; autofocus the comment box.
+  // Body scroll locked while open; autofocus the comment box. Esc does NOT
+  // close — a half-typed report shouldn't vanish on a stray key; the Close
+  // button (and the × in the header) are the deliberate way out.
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     if (commentRef.current) commentRef.current.focus();
     return () => {
-      document.removeEventListener('keydown', onKey);
       document.body.style.overflow = prevOverflow;
     };
-  }, [onClose]);
+  }, []);
 
   const githubUrl = useMemo(() => buildGithubIssueUrl({ title, body, typeId }), [title, body, typeId]);
 
@@ -328,10 +327,9 @@ export default function FeedbackModal({ onClose }) {
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-backdrop">
       <div
         className="modal feedback-modal"
-        onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="feedback-title"
@@ -448,7 +446,6 @@ export default function FeedbackModal({ onClose }) {
             {copyState === 'idle' && 'No data is sent anywhere until you click one of the buttons.'}
           </span>
           <div className="feedback-modal__actions">
-            <button className="btn btn--quiet" onClick={onClose}>Cancel</button>
             <button
               className="btn"
               onClick={copyToClipboard}
@@ -458,13 +455,14 @@ export default function FeedbackModal({ onClose }) {
               <Icon name="copy" size={14} /> Copy text
             </button>
             <button
-              className="btn btn--progressive"
+              className="btn"
               onClick={openGithub}
               disabled={!hasComment}
               title="Opens a pre-filled new issue on GitHub (KBNLwikimedia/iiif-manifest-upload-workbench). Requires a GitHub account."
             >
               <Icon name="external" size={14} /> Open GitHub issue
             </button>
+            <button className="btn btn--progressive" onClick={onClose}>Close</button>
           </div>
         </footer>
       </div>

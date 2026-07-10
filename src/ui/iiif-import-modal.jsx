@@ -1295,39 +1295,45 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
           )}
         </div>
 
+        {/* Nav (Back / Next) sits bottom-left; a blue Close anchors bottom-right
+            on every step-by-step screen, matching the other modals. During the
+            import run and on the done screen the footer keeps its own single
+            action (Cancel / Go to the table) — no second Close there. */}
         <footer className="modal__foot iiif-modal__foot">
-          {step === 'review' && (
-            <>
-              <button className="btn" onClick={() => setStep('input')}>Back</button>
-              <button className="btn btn--progressive" disabled={!parsed?.ok} onClick={() => setStep('select')}>
-                Next: select images
+          <div className="iiif-modal__nav">
+            {step === 'review' && (
+              <>
+                <button className="btn" onClick={() => setStep('input')}>Back</button>
+                <button className="btn btn--progressive" disabled={!parsed?.ok} onClick={() => setStep('select')}>
+                  Next: select images
+                </button>
+              </>
+            )}
+            {step === 'select' && (
+              <>
+                <button className="btn" onClick={() => setStep('review')}>Back</button>
+                <button className="btn btn--progressive" disabled={selected.size === 0} onClick={() => setStep('confirm')}>
+                  Next: review import
+                </button>
+              </>
+            )}
+            {step === 'confirm' && (
+              <>
+                <button className="btn" onClick={() => setStep('select')}>Back</button>
+                <button className="btn btn--progressive" onClick={start}>
+                  Start import ({chosen.length} images)
+                </button>
+              </>
+            )}
+            {step === 'running' && (
+              <button className="btn" onClick={() => { abortRef.current.current = true; }}>
+                Cancel after current image
               </button>
-            </>
-          )}
-          {step === 'select' && (
-            <>
-              <button className="btn" onClick={() => setStep('review')}>Back</button>
-              <button className="btn btn--progressive" disabled={selected.size === 0} onClick={() => setStep('confirm')}>
-                Next: review import
-              </button>
-            </>
-          )}
-          {step === 'confirm' && (
-            <>
-              <button className="btn" onClick={() => setStep('select')}>Back</button>
-              <button className="btn btn--progressive" onClick={start}>
-                Start import ({chosen.length} images)
-              </button>
-            </>
-          )}
-          {step === 'running' && (
-            <button className="btn" onClick={() => { abortRef.current.current = true; }}>
-              Cancel after current image
-            </button>
-          )}
-          {step === 'done' && (
-            <button className="btn btn--progressive" onClick={onClose}>Go to the table</button>
-          )}
+            )}
+          </div>
+          {step === 'done'
+            ? <button className="btn btn--progressive" onClick={onClose}>Go to the table</button>
+            : step !== 'running' && <button className="btn btn--progressive iiif-modal__close-btn" onClick={onClose}>Close</button>}
         </footer>
 
         {lightbox && (() => {

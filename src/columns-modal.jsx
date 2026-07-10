@@ -59,11 +59,9 @@ function ColumnsModal({
   // (now-deleted) CustomColumnCreator form when the modal was opened from
   // the "+ Add column" popover's "Custom wikitext-template column" entry.
 }) {
-  useEffectCM(() => {
-    const k = (e) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", k);
-    return () => document.removeEventListener("keydown", k);
-  }, [onClose]);
+  // Esc does NOT close — this modal holds column/template settings the user is
+  // actively arranging; a stray Esc shouldn't discard the interaction. The ×
+  // in the header and the "Done" button are the deliberate way out.
 
   // Tabs: Templates / Columns. Initial tab comes in via prop.
   const [tab, setTab] = useStateCM(initialTab === 'templates' ? 'templates' : 'columns');
@@ -187,8 +185,8 @@ function ColumnsModal({
   };
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
-      <div className="modal modal--cols" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
+    <div className="modal-backdrop">
+      <div className="modal modal--cols" role="dialog" aria-modal="true">
         <header className="modal__head">
           <div>
             <h2 className="modal__title">Templates and columns</h2>
