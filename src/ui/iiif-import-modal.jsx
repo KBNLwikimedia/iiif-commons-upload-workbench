@@ -1273,7 +1273,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       aria-invalid={titleForbidden.length > 0}
                     />
                     {titleForbidden.length > 0 && (
-                      <p className="iiif-input-error">Remove {titleForbidden.map((c) => `“${c}”`).join(', ')} — not allowed in a Commons filename.</p>
+                      <p className="iiif-input-error" role="alert">⚠️ Remove {titleForbidden.map((c) => `“${c}”`).join(', ')} — not allowed in a Commons filename.</p>
                     )}
 
                     <fieldset className="iiif-fieldset">
@@ -1289,7 +1289,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                         inputClassName={categoryForbidden.length ? 'iiif-input--invalid' : (catExists === null && category.trim() ? 'iiif-input--checking' : '')}
                       />
                       {categoryForbidden.length > 0 && (
-                        <p className="iiif-input-error">Remove {categoryForbidden.map((c) => `“${c}”`).join(', ')} — not allowed in a Commons category name.</p>
+                        <p className="iiif-input-error" role="alert">⚠️ Remove {categoryForbidden.map((c) => `“${c}”`).join(', ')} — not allowed in a Commons category name.</p>
                       )}
                       <p className="iiif-hint">
                         {catExists === null && category.trim() && 'Checking Commons…'}
@@ -1397,7 +1397,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                         inputClassName={parentForbidden.length ? 'iiif-input--invalid' : ''}
                       />
                       {parentForbidden.length > 0 && (
-                        <p className="iiif-input-error">Remove {parentForbidden.map((c) => `“${c}”`).join(', ')} — not allowed in a Commons category name.</p>
+                        <p className="iiif-input-error" role="alert">⚠️ Remove {parentForbidden.map((c) => `“${c}”`).join(', ')} — not allowed in a Commons category name.</p>
                       )}
                       <p className="iiif-hint">
                         {stripCatPrefix(parentCategory) && (
@@ -1452,7 +1452,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                         className={qidErr ? 'iiif-input--invalid' : undefined}
                         aria-invalid={!!qidErr}
                       />
-                      {qidErr && <p className="iiif-input-error">{qidErr}</p>}
+                      {qidErr && <p className="iiif-input-error" role="alert">⚠️ {qidErr}</p>}
                       {qidNote && qidNote.qid === qid.trim().toUpperCase() && (
                         <p className="iiif-hint">ℹ️ {qidNote.text}</p>
                       )}
