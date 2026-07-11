@@ -742,7 +742,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
               {recent.length > 0 && (
                 <div className="iiif-recent">
                   <div className="iiif-recent__head">
-                    Recent manifests
+                    <span>Recent manifests <span className="iiif-recent__count">({recent.length})</span></span>
                     <button
                       type="button"
                       className="iiif-linkbtn iiif-recent__clear"
