@@ -553,7 +553,10 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   //     is a zero-cost proxy for the SHA-1 the pipeline computes at download.
   // Positions shown to the user are 1-based image numbers (canvas index + 1).
   const collisions = React.useMemo(() => {
-    const canvases = manifest?.canvases || [];
+    // NB: `const manifest = parsed?.manifest` is declared further down — using
+    // it here would throw a TDZ ReferenceError during render (the exact bug
+    // class CLAUDE.md's mount-test lesson exists for). Read from `parsed`.
+    const canvases = parsed?.manifest?.canvases || [];
     const byLabel = new Map();
     const byImage = new Map();
     for (const c of canvases) {
@@ -573,7 +576,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
       if (idxs.length > 1) { idxs.forEach((i) => dupImageIdx.add(i)); imageGroups.push({ positions: idxs.map((i) => i + 1) }); }
     }
     return { dupLabelIdx, labelGroups, dupImageIdx, imageGroups };
-  }, [manifest]);
+  }, [parsed]);
 
   // --- step 4 → 5: run ------------------------------------------------------
 
