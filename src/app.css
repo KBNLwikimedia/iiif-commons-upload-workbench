@@ -9046,18 +9046,20 @@ body.col-resizing * { cursor: col-resize !important; }
   position: absolute;
   /* The tile has a 2px border (absolute offsets are measured from inside it),
      so top/left:4px would sit ~6px below the tile's outer edge — lower than
-     the borderless review carousel. Pull up by the border to match. */
+     the borderless review carousel. Pull up by the border, and drop the
+     vertical padding + tighten line-height so the digit hugs the top of the
+     badge instead of floating in the middle (matches the >25 MP badge). */
   top: 2px;
   left: 2px;
   z-index: 1;
   min-width: 16px;
-  padding: 1px 5px;
+  padding: 0 5px;
   border-radius: 3px;
   background: rgba(0, 0, 0, 0.65);
   color: #fff;
   font-size: 11px;
   font-weight: 600;
-  line-height: 1.5;
+  line-height: 1.4;
   text-align: center;
 }
 /* Selection checkbox moved to the bottom-centre of the thumbnail. The tile is
