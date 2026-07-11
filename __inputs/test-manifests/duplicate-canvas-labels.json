@@ -9,7 +9,7 @@
   },
   "summary": {
     "en": [
-      "SYNTHETIC TEST MANIFEST. Exercises two collision types: (1) duplicate canvas LABELS (same label -> same derived Commons filename) and (2) duplicate IMAGES within one manifest (two canvases pointing at the exact same image -> identical SHA-1). Image bodies point at a real KB manifest so thumbnails load and the SHA-1s genuinely match. Self-hosted on GitHub raw (CORS-open) so it loads by URL."
+      "SYNTHETIC TEST MANIFEST. Exercises three collision types: (1) duplicate canvas LABELS (same label -> same derived Commons filename): images 1,2,3 and 5,7. (2) duplicate IMAGES within the manifest (identical URL -> identical SHA-1): images 4=8 and 9=10. (3) images that ALREADY EXIST on Commons byte-for-byte (SHA-1 match -> exists-on-commons flag at import): image 11 = File:Karel van de Woestijne, 1904 - BBB-1560.jpg (sha1 884664f4...), image 12 = File:World map ... J.F. Martinet\".jpg (sha1 6a249cf8...). Bodies 1-10 point at a real KB manifest; 11-12 at the Commons originals (upload.wikimedia.org, CORS *). Self-hosted on GitHub raw (CORS-open) so it loads by URL."
     ]
   },
   "metadata": [
@@ -1277,6 +1277,84 @@
                 ]
               },
               "target": "https://presentation-api.dlc.services/canvases/ckvxjnfuwy914ulxrmqck0s"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-11",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0011_Already_On_Commons_Karel.jpg"
+        ]
+      },
+      "width": 421,
+      "height": 650,
+      "thumbnail": [
+        {
+          "id": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Karel_van_de_Woestijne%2C_1904_-_BBB-1560.jpg/400px-Karel_van_de_Woestijne%2C_1904_-_BBB-1560.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-11/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-11/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://upload.wikimedia.org/wikipedia/commons/9/96/Karel_van_de_Woestijne%2C_1904_-_BBB-1560.jpg",
+                "type": "Image",
+                "width": 421,
+                "height": 650,
+                "format": "image/jpeg"
+              },
+              "target": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-11"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-12",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0012_Already_On_Commons_Worldmap.jpg"
+        ]
+      },
+      "width": 1506,
+      "height": 948,
+      "thumbnail": [
+        {
+          "id": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/World_map_from_the_book_%22Kort_begrip_der_waereld-historie_voor_de_jeugd%22_by_J.F._Martinet%22.jpg/400px-World_map_from_the_book_%22Kort_begrip_der_waereld-historie_voor_de_jeugd%22_by_J.F._Martinet%22.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-12/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-12/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://upload.wikimedia.org/wikipedia/commons/1/1d/World_map_from_the_book_%22Kort_begrip_der_waereld-historie_voor_de_jeugd%22_by_J.F._Martinet%22.jpg",
+                "type": "Image",
+                "width": 1506,
+                "height": 948,
+                "format": "image/jpeg"
+              },
+              "target": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-12"
             }
           ]
         }
