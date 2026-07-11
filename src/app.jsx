@@ -1701,27 +1701,6 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
 
                 <div className="toolbar__spacer" style={{ flex: 1 }} />
 
-                {view === "grid" && (
-                  <div className="seg" role="group" aria-label="Grid tile size">
-                    <button
-                      className="seg__btn"
-                      onClick={() => stepGridSize(-1)}
-                      disabled={gridSizeIndex <= 0}
-                      aria-label="Smaller tiles"
-                      title="Smaller tiles">
-                      <Icon name="minus" size={14} />
-                    </button>
-                    <button
-                      className="seg__btn"
-                      onClick={() => stepGridSize(1)}
-                      disabled={gridSizeIndex >= GRID_SIZES.length - 1}
-                      aria-label="Larger tiles"
-                      title="Larger tiles">
-                      <Icon name="plus" size={14} />
-                    </button>
-                  </div>
-                )}
-
                 {/* Piling mode entry point (T425840). Fullscreen lighttable that
                     shares group state with the (in-progress) table-view groups. */}
                 <button
@@ -1756,6 +1735,28 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
                       }
                     >
                       Groups{groups.length ? ` (${groups.length})` : ''}
+                    </button>
+                  </div>
+                )}
+
+                {/* Tile zoom sits directly next to the Grid/List toggle. */}
+                {view === "grid" && (
+                  <div className="seg" role="group" aria-label="Grid tile size">
+                    <button
+                      className="seg__btn"
+                      onClick={() => stepGridSize(-1)}
+                      disabled={gridSizeIndex <= 0}
+                      aria-label="Smaller tiles"
+                      title="Smaller tiles">
+                      <Icon name="minus" size={14} />
+                    </button>
+                    <button
+                      className="seg__btn"
+                      onClick={() => stepGridSize(1)}
+                      disabled={gridSizeIndex >= GRID_SIZES.length - 1}
+                      aria-label="Larger tiles"
+                      title="Larger tiles">
+                      <Icon name="plus" size={14} />
                     </button>
                   </div>
                 )}
@@ -2043,6 +2044,8 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
                     onChange={(e) => setHistQuery(e.target.value)}
                   />
                 </div>
+                <div className="toolbar__spacer" style={{ flex: 1 }} />
+                {/* Tile zoom sits directly next to the Grid/List toggle. */}
                 {histView === 'grid' && (
                   <div className="seg" role="group" aria-label="History tile size">
                     <button

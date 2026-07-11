@@ -322,8 +322,8 @@ body {
   flex: 0 1 320px;
   min-width: 180px;
 }
-.hist-toolbar .seg { margin-left: 0; }
-.hist-toolbar > .seg:last-child { margin-left: auto; }
+/* (right-alignment comes from the explicit flex spacer in the markup,
+   so the tile-zoom seg can sit directly next to the Grid/List toggle) */
 
 /* Read-only history grid: thumbnail tiles linking to Commons. */
 .hist-grid {
