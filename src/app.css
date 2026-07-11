@@ -293,6 +293,40 @@ body {
 
 /* ===== Stream sections (stash + history shown one after the other) ===== */
 .stream { margin-bottom: var(--spacing-200); }
+
+/* Simplified upload-history list: thumb + title, whole row links to Commons. */
+.hist-simple { list-style: none; margin: 0; padding: 0; }
+.hist-simple__item { border-bottom: 1px solid var(--border-color-muted); }
+.hist-simple__item:last-child { border-bottom: 0; }
+.hist-simple__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 10px;
+  color: var(--color-base);
+  text-decoration: none;
+}
+.hist-simple__link:hover { background: var(--background-color-neutral-subtle, #f0f1f3); }
+.hist-simple__link:hover .hist-simple__title { color: var(--color-progressive); text-decoration: underline; }
+.hist-simple__thumb {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid var(--border-color-muted);
+  background: var(--background-color-neutral-subtle, #f0f1f3);
+}
+.hist-simple__thumb--empty { display: inline-block; }
+.hist-simple__title {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hist-simple__link .cdx-icon { flex: 0 0 auto; color: var(--color-subtle); }
 .stream:last-child { margin-bottom: 0; }
 
 .empty-row {

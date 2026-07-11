@@ -1930,11 +1930,12 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
             )}
           </section>
 
-          {/* Section 2 — Upload history (collapsible). Hidden unless the
-              `showUploadHistory` preference is explicitly enabled — a future
-              settings panel (OI-79) will expose the toggle; for now it
-              defaults off. */}
-          {getPref('showUploadHistory') === true && (
+          {/* Section 2 — Upload history (collapsible). A simplified read-only
+              list (thumbnail + title + link to the Commons file page) — none
+              of the workbench editing UI. Shown by default; the
+              `showUploadHistory` pref can hide it (a future settings panel,
+              OI-79, exposes the toggle). */}
+          {getPref('showUploadHistory') !== false && (
           <section className={"stream" + (histCollapsed ? " stream--collapsed" : "")}>
             <div
               className="section-head section-head--clickable"
@@ -1992,43 +1993,34 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
               "Nothing published yet." :
               "No published files match your filters."} /> :
 
-            view === "grid" ?
-            <GridView
-              items={filteredHist}
-              cardSize={gridCardPx}
-              selected={selected}
-              onToggleSelect={toggleSelect}
-              onOpen={setOpenId}
-              showFilenames={tweaks.showFilenames}
-              findDuplicate={findDuplicate} /> :
-
-
-            <Table
-              items={filteredHist}
-              selected={selected}
-              onToggleSelect={toggleSelect}
-              onSetSelection={setSelectionFor}
-              onUpdate={onUpdate}
-              onOpen={setOpenId}
-              onOpenLightbox={setLightboxId}
-              showThumbs={tweaks.showThumbsInList}
-              clipboard={clipboard}
-              onCopy={setClipboard}
-              onPaste={pasteIntoItem}
-              onClearClipboard={() => setClipboard(null)}
-              titleVocab={titleVocab}
-              requiredFields={requiredFields}
-              setRequiredFields={setRequiredFields}
-              columnDefaults={columnDefaults}
-              setColumnDefaults={setColumnDefaults}
-              selfUsername={user?.username}
-              wikitextTemplate={wikitextTemplate}
-              setWikitextTemplate={setWikitextTemplate}
-              items_all={items}
-              onCustomPropsChange={setCustomProps}
-              onPreviewWikitext={(it) => setWikitextPreviewItem(it)}
-              colState={columnState}
-              setColState={setColumnState} />)
+            /* Simplified read-only history: thumbnail + title, the whole row
+               links to the file's page on Commons. No editing/columns. */
+            <ul className="hist-simple">
+              {filteredHist.map((it) => (
+                <li key={it.id} className="hist-simple__item">
+                  <a
+                    className="hist-simple__link"
+                    href={it.descriptionurl || `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(it.filename || '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title={`Open ${it.filename || it.title} on Wikimedia Commons`}
+                  >
+                    {it.thumburl
+                      ? <img
+                          className="hist-simple__thumb"
+                          src={it.thumburl}
+                          alt=""
+                          loading="lazy"
+                          referrerPolicy="no-referrer"
+                          onError={(e) => { e.currentTarget.style.visibility = 'hidden'; }}
+                        />
+                      : <span className="hist-simple__thumb hist-simple__thumb--empty" />}
+                    <span className="hist-simple__title">{it.title || it.filename}</span>
+                    <Icon name="external" size={13} />
+                  </a>
+                </li>
+              ))}
+            </ul>)
 
             }
 
