@@ -8920,16 +8920,17 @@ body.col-resizing * { cursor: col-resize !important; }
 .iiif-select-bar__filtered { color: var(--color-progressive, #36c); font-weight: 600; }
 .iiif-select-bar__showall { margin-left: 4px; }
 
-/* Shared select-step note layout (25 MP note + the two collision boxes):
-   a top row with the heading on the left and the [filter] + [×] actions on
-   the right (saves the vertical space the buttons used to take on their own
-   row), then the explanatory body below. */
-.iiif-note__top {
+/* Shared select-step note layout (25 MP note + the two collision boxes): a
+   two-column flex — the heading + body stack tightly in the left column, the
+   [filter] + [×] actions sit top-right. Keeping the body in the same column
+   as the heading (rather than below a heading+button row) means the taller
+   button no longer pushes whitespace under the heading. */
+.iiif-note {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   gap: 12px;
 }
+.iiif-note__main { flex: 1 1 auto; min-width: 0; }
 .iiif-note__actions {
   flex: 0 0 auto;
   display: flex;
@@ -8954,7 +8955,8 @@ body.col-resizing * { cursor: col-resize !important; }
   color: var(--color-subtle);
 }
 .iiif-note__close:hover { color: var(--color-base); }
-.iiif-note__body { margin-top: 4px; }
+.iiif-note__body { margin-top: 2px; }
+.iiif-note__body .iiif-collision-note__list { margin-top: 2px; }
 
 .iiif-gallery {
   display: grid;
@@ -8983,13 +8985,40 @@ body.col-resizing * { cursor: col-resize !important; }
   background: var(--background-color-neutral-subtle, #f8f9fa);
 }
 .iiif-cluster__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
   font-size: 12px;
-  font-weight: 600;
   margin-bottom: 8px;
-  color: var(--color-base);
   overflow-wrap: anywhere;
 }
-.iiif-cluster__head code { color: var(--color-base); }
+.iiif-cluster__label {
+  font-weight: 600;
+  color: var(--color-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 10.5px;
+}
+.iiif-cluster__code {
+  font-family: var(--font-family-monospace, monospace);
+  background: var(--background-color-neutral, #eaecf0);
+  color: var(--color-base);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 11.5px;
+  overflow-wrap: anywhere;
+}
+.iiif-cluster__imgs {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--color-subtle);
+  background: var(--background-color-base, #fff);
+  border: 1px solid var(--border-color-muted);
+  border-radius: 10px;
+  padding: 0 8px;
+  white-space: nowrap;
+}
 .iiif-cluster__head code { font-size: 11.5px; overflow-wrap: anywhere; }
 .iiif-cluster__grid {
   display: grid;
