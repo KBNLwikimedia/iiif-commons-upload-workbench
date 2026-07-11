@@ -4622,6 +4622,13 @@ body.col-resizing * { cursor: col-resize !important; }
   flex-direction: column;
   gap: 2px;
 }
+/* OI-83: a right-hand gutter beside the scroll area. The vertical scrollbar
+   (which you can't re-cursor or reliably grab) sits at the body's edge; the
+   gutter puts modal-background whitespace between it and the modal's right
+   border, so that strip is a clean resize zone with the proper cursor.
+   ~10px keeps the content aligned with the header's 18px right padding. */
+.modal__body,
+.publish-modal__body { margin-right: 10px; }
 .modal__foot {
   display: flex;
   justify-content: space-between;
