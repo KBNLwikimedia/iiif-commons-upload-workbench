@@ -32,3 +32,16 @@ export function getProvider(id) {
   return PROVIDERS.find((p) => p.id === id)
     || PROVIDERS.find((p) => p.id === DEFAULT_PROVIDER_ID);
 }
+
+// Classify a manifest URL by provider, matching its host against each profile's
+// `hosts` (exact or subdomain). Returns the provider id, or null when the URL
+// belongs to no known provider (i.e. "Other"). Used to group the recent-manifest
+// list into per-collection tabs.
+export function providerForUrl(url) {
+  let host = '';
+  try { host = new URL(url).host.toLowerCase(); } catch { return null; }
+  for (const p of PROVIDERS) {
+    if ((p.hosts || []).some((h) => host === h || host.endsWith('.' + h))) return p.id;
+  }
+  return null;
+}

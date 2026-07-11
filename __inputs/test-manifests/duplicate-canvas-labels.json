@@ -1,15 +1,15 @@
 {
   "@context": "http://iiif.io/api/presentation/3/context.json",
-  "id": "https://example.org/iiif/test/KW-129-C-3-duplicate-labels/manifest.json",
+  "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json",
   "type": "Manifest",
   "label": {
     "en": [
-      "KW 129 C 3 (TEST — duplicate canvas labels)"
+      "KW 129 C 3 (TEST — duplicate labels & duplicate images)"
     ]
   },
   "summary": {
     "en": [
-      "SYNTHETIC TEST MANIFEST. Hand-crafted to exercise duplicate-canvas-label detection: label 'KW129C3_0001a_Front_Cover.jpg' appears 3x and 'KW129C3_0003v_Folio_1v.jpg' appears 2x (at non-adjacent positions). Image bodies point at a real KB manifest so thumbnails still load."
+      "SYNTHETIC TEST MANIFEST. Exercises two collision types: (1) duplicate canvas LABELS (same label -> same derived Commons filename) and (2) duplicate IMAGES within one manifest (two canvases pointing at the exact same image -> identical SHA-1). Image bodies point at a real KB manifest so thumbnails load and the SHA-1s genuinely match. Self-hosted on GitHub raw (CORS-open) so it loads by URL."
     ]
   },
   "metadata": [
@@ -33,7 +33,7 @@
       },
       "value": {
         "nl": [
-          "Synthetic test manuscript for duplicate-filename detection"
+          "Synthetic test manuscript for duplicate-filename & duplicate-image detection"
         ]
       }
     },
@@ -173,7 +173,7 @@
   "rights": "http://creativecommons.org/publicdomain/zero/1.0/",
   "items": [
     {
-      "id": "https://presentation-api.dlc.services/canvases/1nb24y18qupesqpvvapjw4t",
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-1",
       "type": "Canvas",
       "label": {
         "en": [
@@ -284,7 +284,7 @@
       ]
     },
     {
-      "id": "https://presentation-api.dlc.services/canvases/n8wy87b3619ivegora30k3mc",
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-2",
       "type": "Canvas",
       "label": {
         "en": [
@@ -395,7 +395,7 @@
       ]
     },
     {
-      "id": "https://presentation-api.dlc.services/canvases/zg6sjp7rwstk01p9m8leqd2",
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-3",
       "type": "Canvas",
       "label": {
         "en": [
@@ -506,7 +506,7 @@
       ]
     },
     {
-      "id": "https://presentation-api.dlc.services/canvases/w7dwbdjld7eedp8ivwtsybq",
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-4",
       "type": "Canvas",
       "label": {
         "en": [
@@ -617,7 +617,7 @@
       ]
     },
     {
-      "id": "https://presentation-api.dlc.services/canvases/h21gz3ef1fjeuf7162255y9",
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-5",
       "type": "Canvas",
       "label": {
         "en": [
@@ -728,7 +728,7 @@
       ]
     },
     {
-      "id": "https://presentation-api.dlc.services/canvases/b0s3b1cp7lkc29elu5yws88",
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-6",
       "type": "Canvas",
       "label": {
         "en": [
@@ -839,7 +839,7 @@
       ]
     },
     {
-      "id": "https://presentation-api.dlc.services/canvases/2dynzo0y74lkl4sdnaeay8k",
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-7",
       "type": "Canvas",
       "label": {
         "en": [
@@ -950,11 +950,233 @@
       ]
     },
     {
-      "id": "https://presentation-api.dlc.services/canvases/ckvxjnfuwy914ulxrmqck0s",
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-8",
       "type": "Canvas",
       "label": {
         "en": [
-          "KW129C3_0005_Back_Cover.jpg"
+          "KW129C3_0008_Copy_Of_Folio_1r.jpg"
+        ]
+      },
+      "width": 4513,
+      "height": 5938,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0003_001r.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/w7dwbdjld7eedp8ivwtsybq/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/w7dwbdjld7eedp8ivwtsybq/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0003_001r.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4513,
+                "height": 5938,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0003_001r.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4513,
+                    "height": 5938,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 779,
+                        "height": 1024
+                      },
+                      {
+                        "width": 304,
+                        "height": 400
+                      },
+                      {
+                        "width": 152,
+                        "height": 200
+                      },
+                      {
+                        "width": 77,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/w7dwbdjld7eedp8ivwtsybq"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-9",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0009r_Folio_4r.jpg"
+        ]
+      },
+      "width": 4513,
+      "height": 5938,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0007_003r.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/ckvxjnfuwy914ulxrmqck0s/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/ckvxjnfuwy914ulxrmqck0s/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0007_003r.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4513,
+                "height": 5938,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0007_003r.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4513,
+                    "height": 5938,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 779,
+                        "height": 1024
+                      },
+                      {
+                        "width": 304,
+                        "height": 400
+                      },
+                      {
+                        "width": 152,
+                        "height": 200
+                      },
+                      {
+                        "width": 77,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/ckvxjnfuwy914ulxrmqck0s"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-10",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0010_Copy_Of_Folio_4r.jpg"
         ]
       },
       "width": 4513,

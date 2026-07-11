@@ -26,7 +26,7 @@ import { categoryExists, searchCategories, findManuscriptCategoryVariants } from
 import { KB_PARENT_CATEGORY, KB_LICENSE_WIKITEXT } from '../api/iiif-map.js';
 import { DEMO_MODE } from '../config.js';
 import { getRecentManifests, addRecentManifest, removeRecentManifest, clearRecentManifests } from '../api/user-store.js';
-import { PROVIDERS, DEFAULT_PROVIDER_ID } from '../providers.js';
+import { PROVIDERS, DEFAULT_PROVIDER_ID, providerForUrl } from '../providers.js';
 
 const Icon = window.Icon;
 
@@ -164,6 +164,13 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   // Recently loaded manifest URLs (persisted in Preferences.json), for
   // one-click reloading.
   const [recent, setRecent] = React.useState(getRecentManifests);
+  // Which provider tab of the recent list is active. Default to the first tab
+  // that actually has entries (KB → eCodices → Other).
+  const [recentTab, setRecentTab] = React.useState(() => {
+    const counts = { kb: 0, ecodices: 0, other: 0 };
+    for (const r of getRecentManifests()) counts[providerForUrl(r.url) || 'other'] += 1;
+    return counts.kb ? 'kb' : counts.ecodices ? 'ecodices' : 'other';
+  });
   // Provider profile (OI-78 scaffolding). Only KB is selectable for now; the
   // eCodices card is shown disabled. Doesn't gate loading yet.
   const [providerId, setProviderId] = React.useState(DEFAULT_PROVIDER_ID);
@@ -739,7 +746,19 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
               </label>
               {error && <p className="iiif-error" role="alert">{error}</p>}
 
-              {recent.length > 0 && (
+              {recent.length > 0 && (() => {
+                // Group the recent list by provider (KB / eCodices NL / Other)
+                // so each collection gets its own tab.
+                const groups = { kb: [], ecodices: [], other: [] };
+                for (const r of recent) (groups[providerForUrl(r.url) || 'other']).push(r);
+                const TABS = [
+                  { id: 'kb', label: 'KB' },
+                  { id: 'ecodices', label: 'eCodices NL' },
+                  { id: 'other', label: 'Other' },
+                ];
+                const activeTab = groups[recentTab] ? recentTab : 'kb';
+                const shown = groups[activeTab] || [];
+                return (
                 <div className="iiif-recent">
                   <div className="iiif-recent__head">
                     <span>Recent manifests <span className="iiif-recent__count">({recent.length})</span></span>
@@ -750,8 +769,25 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       title="Remove every manifest from this list"
                     >Clear all</button>
                   </div>
+                  <div className="iiif-recent__tabs" role="tablist">
+                    {TABS.map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={activeTab === t.id}
+                        className={'iiif-recent__tab' + (activeTab === t.id ? ' iiif-recent__tab--active' : '')}
+                        onClick={() => setRecentTab(t.id)}
+                      >
+                        {t.label} <span className="iiif-recent__tabcount">({groups[t.id].length})</span>
+                      </button>
+                    ))}
+                  </div>
+                  {shown.length === 0 ? (
+                    <p className="iiif-recent__empty">No recent manifests from this collection.</p>
+                  ) : (
                   <ul className="iiif-recent__list">
-                    {recent.map((r) => (
+                    {shown.map((r) => (
                       <li key={r.url} className="iiif-recent__row">
                         <button
                           type="button"
@@ -790,8 +826,10 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       </li>
                     ))}
                   </ul>
+                  )}
                 </div>
-              )}
+                );
+              })()}
             </div>
           )}
 
