@@ -1,0 +1,1064 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://example.org/iiif/test/KW-129-C-3-duplicate-labels/manifest.json",
+  "type": "Manifest",
+  "label": {
+    "en": [
+      "KW 129 C 3 (TEST — duplicate canvas labels)"
+    ]
+  },
+  "summary": {
+    "en": [
+      "SYNTHETIC TEST MANIFEST. Hand-crafted to exercise duplicate-canvas-label detection: label 'KW129C3_0001a_Front_Cover.jpg' appears 3x and 'KW129C3_0003v_Folio_1v.jpg' appears 2x (at non-adjacent positions). Image bodies point at a real KB manifest so thumbnails still load."
+    ]
+  },
+  "metadata": [
+    {
+      "label": {
+        "nl": [
+          "Signatuur"
+        ]
+      },
+      "value": {
+        "nl": [
+          "KW 129 C 3"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Inhoud"
+        ]
+      },
+      "value": {
+        "nl": [
+          "Synthetic test manuscript for duplicate-filename detection"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Collectiebeheerder"
+        ]
+      },
+      "value": {
+        "nl": [
+          "KB, Nationale Bibliotheek van Nederland"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Plaats van origine"
+        ]
+      },
+      "value": {
+        "nl": [
+          "[Noord-Frankrijk (Clairmarais?)]"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Datum van origine"
+        ]
+      },
+      "value": {
+        "nl": [
+          "[vierde kwart 12de eeuw]"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Materiaal"
+        ]
+      },
+      "value": {
+        "nl": [
+          "Perkament"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Aantal folia"
+        ]
+      },
+      "value": {
+        "nl": [
+          "114"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Afmetingen (in mm)"
+        ]
+      },
+      "value": {
+        "nl": [
+          "239×172 (178×115) mm"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Schrift"
+        ]
+      },
+      "value": {
+        "nl": [
+          "Littera pregothica"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Taal"
+        ]
+      },
+      "value": {
+        "nl": [
+          "Latijn"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Herkomst"
+        ]
+      },
+      "value": {
+        "nl": [
+          "In 1823 verworven, coll. Lupus (nr. B 60)"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Beeldlicentie"
+        ]
+      },
+      "value": {
+        "nl": [
+          "http://creativecommons.org/publicdomain/zero/1.0/"
+        ]
+      }
+    },
+    {
+      "label": {
+        "nl": [
+          "Datalicentie"
+        ]
+      },
+      "value": {
+        "nl": [
+          "http://creativecommons.org/publicdomain/zero/1.0/"
+        ]
+      }
+    }
+  ],
+  "rights": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "items": [
+    {
+      "id": "https://presentation-api.dlc.services/canvases/1nb24y18qupesqpvvapjw4t",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0001a_Front_Cover.jpg"
+        ]
+      },
+      "width": 4775,
+      "height": 6496,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0001a_Front_Cover.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/1nb24y18qupesqpvvapjw4t/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/1nb24y18qupesqpvvapjw4t/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0001a_Front_Cover.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4775,
+                "height": 6496,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0001a_Front_Cover.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4775,
+                    "height": 6496,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 753,
+                        "height": 1024
+                      },
+                      {
+                        "width": 295,
+                        "height": 400
+                      },
+                      {
+                        "width": 148,
+                        "height": 200
+                      },
+                      {
+                        "width": 74,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/1nb24y18qupesqpvvapjw4t"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://presentation-api.dlc.services/canvases/n8wy87b3619ivegora30k3mc",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0001a_Front_Cover.jpg"
+        ]
+      },
+      "width": 4775,
+      "height": 6496,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0001b_Front_Cover_Ruler.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/n8wy87b3619ivegora30k3mc/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/n8wy87b3619ivegora30k3mc/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0001b_Front_Cover_Ruler.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4775,
+                "height": 6496,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0001b_Front_Cover_Ruler.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4775,
+                    "height": 6496,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 753,
+                        "height": 1024
+                      },
+                      {
+                        "width": 295,
+                        "height": 400
+                      },
+                      {
+                        "width": 148,
+                        "height": 200
+                      },
+                      {
+                        "width": 74,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/n8wy87b3619ivegora30k3mc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://presentation-api.dlc.services/canvases/zg6sjp7rwstk01p9m8leqd2",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0001a_Front_Cover.jpg"
+        ]
+      },
+      "width": 4647,
+      "height": 6377,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0002_Front_Board.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/zg6sjp7rwstk01p9m8leqd2/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/zg6sjp7rwstk01p9m8leqd2/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0002_Front_Board.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4647,
+                "height": 6377,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0002_Front_Board.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4647,
+                    "height": 6377,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 746,
+                        "height": 1024
+                      },
+                      {
+                        "width": 292,
+                        "height": 400
+                      },
+                      {
+                        "width": 146,
+                        "height": 200
+                      },
+                      {
+                        "width": 73,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/zg6sjp7rwstk01p9m8leqd2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://presentation-api.dlc.services/canvases/w7dwbdjld7eedp8ivwtsybq",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0002r_Folio_1r.jpg"
+        ]
+      },
+      "width": 4513,
+      "height": 5938,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0003_001r.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/w7dwbdjld7eedp8ivwtsybq/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/w7dwbdjld7eedp8ivwtsybq/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0003_001r.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4513,
+                "height": 5938,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0003_001r.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4513,
+                    "height": 5938,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 779,
+                        "height": 1024
+                      },
+                      {
+                        "width": 304,
+                        "height": 400
+                      },
+                      {
+                        "width": 152,
+                        "height": 200
+                      },
+                      {
+                        "width": 77,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/w7dwbdjld7eedp8ivwtsybq"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://presentation-api.dlc.services/canvases/h21gz3ef1fjeuf7162255y9",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0003v_Folio_1v.jpg"
+        ]
+      },
+      "width": 4579,
+      "height": 6239,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0004_001v.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/h21gz3ef1fjeuf7162255y9/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/h21gz3ef1fjeuf7162255y9/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0004_001v.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4579,
+                "height": 6239,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0004_001v.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4579,
+                    "height": 6239,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 752,
+                        "height": 1024
+                      },
+                      {
+                        "width": 294,
+                        "height": 400
+                      },
+                      {
+                        "width": 148,
+                        "height": 200
+                      },
+                      {
+                        "width": 73,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/h21gz3ef1fjeuf7162255y9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://presentation-api.dlc.services/canvases/b0s3b1cp7lkc29elu5yws88",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0004r_Folio_2r.jpg"
+        ]
+      },
+      "width": 4513,
+      "height": 5938,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0005_002r.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/b0s3b1cp7lkc29elu5yws88/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/b0s3b1cp7lkc29elu5yws88/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0005_002r.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4513,
+                "height": 5938,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0005_002r.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4513,
+                    "height": 5938,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 779,
+                        "height": 1024
+                      },
+                      {
+                        "width": 304,
+                        "height": 400
+                      },
+                      {
+                        "width": 152,
+                        "height": 200
+                      },
+                      {
+                        "width": 77,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/b0s3b1cp7lkc29elu5yws88"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://presentation-api.dlc.services/canvases/2dynzo0y74lkl4sdnaeay8k",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0003v_Folio_1v.jpg"
+        ]
+      },
+      "width": 4579,
+      "height": 6239,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0006_002v.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/2dynzo0y74lkl4sdnaeay8k/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/2dynzo0y74lkl4sdnaeay8k/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0006_002v.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4579,
+                "height": 6239,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0006_002v.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4579,
+                    "height": 6239,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 752,
+                        "height": 1024
+                      },
+                      {
+                        "width": 294,
+                        "height": 400
+                      },
+                      {
+                        "width": 148,
+                        "height": 200
+                      },
+                      {
+                        "width": 73,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/2dynzo0y74lkl4sdnaeay8k"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://presentation-api.dlc.services/canvases/ckvxjnfuwy914ulxrmqck0s",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "KW129C3_0005_Back_Cover.jpg"
+        ]
+      },
+      "width": 4513,
+      "height": 5938,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0007_003r.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/ckvxjnfuwy914ulxrmqck0s/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/ckvxjnfuwy914ulxrmqck0s/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0007_003r.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4513,
+                "height": 5938,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0007_003r.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4513,
+                    "height": 5938,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 779,
+                        "height": 1024
+                      },
+                      {
+                        "width": 304,
+                        "height": 400
+                      },
+                      {
+                        "width": 152,
+                        "height": 200
+                      },
+                      {
+                        "width": 77,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/ckvxjnfuwy914ulxrmqck0s"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
