@@ -79,6 +79,135 @@ The **duplicate-detection & input-hardening** milestone. The import wizard now s
 
 ---
 
+<details>
+<summary><strong>Commits in this release (121)</strong> — v0.40.0…v0.41.0</summary>
+
+- `55e0cfe` release: v0.41.0 — duplicate-detection & input-hardening milestone
+- `1f4a1da` Fix: test-manifest previews for canvases 11 & 12 (Commons-file thumbnails 404'd)
+- `09f3e63` Fix: short-title reject note says "removed it from the short title"
+- `fb3790f` feat: strip forbidden chars on input; trim Q-id spaces; + OI-86 security-triage issue
+- `c4a28dc` feat: ⚠️ icon on the review-step input validation warnings
+- `cba86dd` feat: validate review-step inputs (forbidden chars + Q-id shape); numbers to top:0
+- `6caecd5` feat: ⚠️ + reworded >25 MP heading; nudge sequence numbers up again
+- `86ff83e` Fix: sequence number hugs the tile top (drop vertical padding + tighten line-height)
+- `50cb70f` Fix: nudge the select-step sequence number up to match the carousel
+- `baafa69` Fix: kill the whitespace under note headings; restyle cluster headers
+- `414a4ed` feat: >25MP filter button; note buttons inline top-right; dark cluster frames
+- `9b5bf6c` Fix: duplicate clusters flow side by side (snug frame each), not full-width stacks
+- `e54c1af` feat: move dup filters into their warning boxes; cluster duplicates by group
+- `57ac71d` feat: select-step filter toggles — show only duplicate names / duplicate images
+- `f7e229c` feat: select-step tiles get a top-left sequence number; checkbox to bottom-centre
+- `23a4bff` Fix: wizard width really applies now; split collision warnings into dismissible per-type boxes
+- `fb28482` feat: dup badges name their partner images; recent-tab follows last-loaded manifest
+- `3b793c0` docs: fixture v3 (all double scenarios) + wider wizard in changelog/archive
+- `3ace64f` test: fixture covers every double scenario incl. Commons filename collision; wider wizard
+- `e8868b4` feat(OI-85): inline rename of duplicate filenames + proactive Commons name check (stages 2+3)
+- `769585e` feat: rebrand the "Report this error" modal to the fork (OI-10)
+- `efb293c` Fix: TDZ crash on opening the import wizard (collisions memo read 'manifest' too early)
+- `cfe7b8a` docs: OI-85 row — stage-1 shipped, 12-canvas fixture, scenario matrix in #85
+- `bc4e664` test: add already-on-Commons canvases (11+12) to the collision fixture
+- `ceec84c` feat(OI-85): select-step warning + red/orange borders for duplicate labels & images
+- `aee8538` feat: per-provider tabs in the recent-manifest list; richer collision test fixture
+- `00a48fe` docs: record OI-85 (non-unique canvas-label warning + filename check) in the archive
+- `2383d66` test: add IIIF test manifest with duplicate canvas labels
+- `c27dbd2` feat: show recent-manifest count behind the "Recent manifests" heading
+- `7457404` Merge pull request #84 from KBNLwikimedia/dependabot/npm_and_yarn/multi-d17762413a
+- `bcbe5c0` chore(deps-dev): bump vite and @vitejs/plugin-react
+- `ec1f20b` feat: sortable history List columns + shared grid hover overlay (stash & history)
+- `9bcae10` docs: sweep — per-section toolbars, placeholder/zoom polish, OI-81 in status/archive
+- `f3cd092` docs: record OI-81 (re-enable full workbench on history) in the archive
+- `318ce72` feat: clearer search placeholders — "stashed files" vs "published files on Commons"
+- `09be53d` Fix: tile-zoom buttons sit directly next to the Grid/List toggle in both toolbars
+- `8064402` feat: stash controls move into the Upload-stash section
+- `8307bfb` docs: cross-link OI-80 defaults as the KB provider-profile preset (OI-78)
+- `fbf4c18` docs: sweep — changelog, CLAUDE.md status, archive rows current (pre-compact)
+- `d683c41` feat: history mini-toolbar — own search, Grid/List view, tile zoom (read-only)
+- `6aa85a4` docs: record OI-80 (KB-optimized defaults) + OI-79 basic-toggle progress
+- `8350c0e` feat: basic showUploadHistory toggle — hide/show writes the pref (OI-79 seed)
+- `6bd3e2d` feat: simplified read-only Upload history (thumb + title + link to Commons)
+- `a36aeab` docs: record OI-79 (user-settings panel) in the archive
+- `d59ee21` feat: hide Upload history behind a showUploadHistory preference (default off)
+- `69e013e` feat: small tagline under the app title in the topbar
+- `2fa6bac` Fix: move scrollbar gap into .tbl content (padding on scroll box was eaten)
+- `50ff773` Fix: space between the last table row and the horizontal scrollbar
+- `25a1540` Fix: add the missing close X to the clear-stash modal; fix "1 files" plural
+- `809251c` Fix: align version label to the bottom of the title
+- `2dc08c4` Fix: history sync stamp shows explicit DD-MM-YYYY HH:MM instead of "today"
+- `696da4d` Fix: version label — larger font, tighter spacing next to the brand
+- `a29f62e` feat: static version label in the topbar; drop the releases dropdown + Beta pill
+- `ce4beae` feat: Import IIIF manifest button leads the toolbar; search moves right
+- `2d3e4e0` feat: center the "Choose a manifest .json file" button
+- `76ba931` feat: KB-only hint moves below the provider cards; drop the issue link
+- `0088f74` docs: sweep — CLAUDE.md status/modules/identity current, archive header, changelog polish
+- `485062a` feat: KB-only explanation on the provider picker; "Manifest URL (KB compliant)" label
+- `c363058` feat: provider-profile picker scaffolding — KB active, eCodices coming soon (OI-78)
+- `6369977` docs: use the full eCodices search URL in the OI-78 archive row
+- `45c1f18` docs: record OI-78 (eCodices-compliance analysis) in the archive
+- `71ce4e2` feat: clear-stash modal — actions bottom-left, Cancel right, Hide-all a proper button
+- `44c7286` feat: small first-image thumbnail on each recent-manifest row
+- `290e4eb` feat: per-item remove (×) in the recent-manifests list; rename Clear → Clear all
+- `44f5d93` feat: record dropped/chosen manifests in the recent list via their id URL (route C)
+- `c0dafb0` docs: CC0 notice lists recently loaded manifests (now persisted too)
+- `114f07a` feat: show signature + title in the recent-manifests list
+- `6e2ed90` feat: persist recent manifests in Preferences.json (cross-device)
+- `f779912` Fix: Load button passed the click event to loadUrl → "[object Object]" + 404
+- `e16ce64` feat: recent-manifests quick-load, blue file button, linked CC0 paths, CHANGELOG <Template> fix
+- `08cdbc6` docs: changelog for the version-chip repoint + CC0 notice restore
+- `9dffbc8` feat: repoint version chip at GitHub + localhost; restore/rebrand the CC0 notice (OI-10)
+- `b6db153` docs: changelog reflects Cancel-button footer refinement
+- `c5b8718` feat: wizard Close→Cancel (white); feedback GitHub blue + Cancel white bottom-right
+- `62911fd` docs: changelog for the consistent modal footers
+- `e5e0e87` feat: consistent modal footers — blue Close bottom-right; no stray-dismiss on feedback/columns
+- `8a78b15` docs: close OI-75/76/77 in the archive + changelog entries
+- `a996891` Fix: retry classification prefix + tagged badtoken-refresh failure + un-wedge start() (OI-75/76/77)
+- `3242c1f` docs: close OI-74 in the archive + changelog security entry
+- `b68e2bc` Fix: neutralize manifest-verbatim text on the Phase 5.2 {{Artwork}} params (OI-74)
+- `f7a517c` docs: refresh open-issues.md rows with the 2026-07-10 deep-review anchors
+- `d714546` docs: 2026-07-10 deep-review results — section G, OI-04/OI-58 closed, comment fix
+- `cc9d688` feat: right-align the warnings-restore line (where the dismiss x sat)
+- `82c5df6` feat: "(type to change it)" hint on all four editable review-step fields
+- `3ebc188` docs: changelog for restorable warnings + visible scrollbar
+- `aa63870` feat: restorable warning boxes + a clearly visible wizard scrollbar
+- `6816ecd` docs: sweep — changelog for the select-step round, CLAUDE.md post-v0.40.0 status, OI-72/73 archive rows
+- `e79b43b` feat: pinned select-step header, dismissible 25 MP note, title + bold tweaks
+- `d8b5f59` docs: close OI-47 in the archive; changelog for the hover-zoom fix + select-title
+- `e819916` Fix: hover-zoom intent delay + scroll dismissal (OI-47)
+- `dfda6cc` feat: bold "N images" (not just the number) in the download sentence
+- `068b024` feat: bold the selected count in the select-step toolbar
+- `392c7fc` feat: bold the download count, unbold the header image count
+- `2d553e1` feat: restructure the Ready-to-import header into three clear lines
+- `53c7cca` feat: bold the image count in the wizard header line
+- `c8c1264` feat: header line reads "N images in this manifest"
+- `be8d849` docs: changelog for the selection-counter move
+- `5f1b240` feat: move the selection counter into the select-step toolbar
+- `355a96a` docs: move OI-61 to the Closed table
+- `99087a5` docs: changelog for OI-61 + the folia info-icon + the 3.0-only note
+- `e9edd29` Fix: stale header comment in iiif-map.js (OI-61) + two wizard clarifications
+- `dd84a7c` docs: changelog for the pages-to-images rename
+- `880c7dd` feat: rename "pages" to "images" across the wizard UI
+- `1472ae2` docs: changelog for the feedback label + passport title row
+- `9ca3bb9` feat: label feedback-form issues "user feedback" for traceability
+- `8139015` feat: show the manifest title as the first row of the metadata passport
+- `4a4996e` docs: screenshot gallery in the README (expandable, walkthrough-ordered)
+- `b85db65` docs: changelog for the persistent wizard-header identity line
+- `c7af870` feat: keep the manuscript identity line in the header on every wizard step
+- `27c1460` docs: record OI-71 (per-manifest metadata-quality survey) in the archive
+- `b11dc3f` docs: OI-70 follow-up — dismissal policy tightened to done-step only
+- `845c69c` Fix: backdrop/Esc also inert on the input step — a typed URL is state too (OI-70)
+- `c347355` docs: close OI-31 + OI-70 in the archive; changelog for the recent fixes
+- `6188555` Fix: Esc and backdrop clicks no longer destroy a loaded import wizard (OI-31, OI-70)
+- `9a1c3d8` docs: record OI-69 (paste manifest JSON into the import modal) in the archive
+- `5170ce8` Fix: a Category: sitelink is not a gallery — reroute it to the category slot
+- `e226670` Fix: vertically center the "Choose a manifest .json file" label text
+- `da65292` docs: changelog for the Wikidata match-panel redesign
+- `e7c4775` feat: redesign the Wikidata block as a structured match panel
+- `769dda2` docs: changelog for the P6243/P180 hint removal
+- `f0392e0` Fix: drop the "Feeds P6243 + P180" hint from the Wikidata fieldset
+
+</details>
+
+---
+
 ## [0.40.0] — 2026-07-10
 
 The IIIF-ingestor milestone: the import funnel is complete and hardened end-to-end (design Phases 0–5.2), the wizard's review step got a full UX overhaul, and the backlog moved to GitHub Issues. Everything below is fork work on top of upstream v0.39.0.
@@ -136,6 +265,143 @@ The IIIF-ingestor milestone: the import funnel is complete and hardened end-to-e
 - The backlog lives in **[GitHub Issues](https://github.com/KBNLwikimedia/iiif-manifest-upload-workbench/issues)** (migrated 2026-07-08 from `__inputs/open-issues.md`, which stays as the annotated archive; `OI-NN` ↔ `#NN` line up 1:1). The 2026-07-08 multi-agent code review recorded 37 findings; the hardening pass in this release closed the Critical (OI-25, confirmed in production) and the highest-value High/Medium items (see *Fixed*). Notable still-open items: OI-26's publish-path retry (lands with Phase 6), OI-28/29/31/32/33 (import edge cases + bootstrap request storms), OI-44/OI-48.
 - **Phase 5 remaining:** SDC statements (`buildSdcClaims` extension — P6243/P180/P195+P217/P6216/P275/P7482 + captions). **Phase 6:** end-to-end publish verification. Designed-and-parked: OI-67 (KB-catalogue enrichment via P528/PPN — blocked on a CORS ask for `jsru.kb.nl`).
 - Not authenticated interactively: owner-only OAuth consumers can't serve the PKCE "Log in with Wikimedia" flow — a public consumer (admin review) is needed (OI-09). Local dev uses `VITE_OWNER_ACCESS_TOKEN`.
+
+---
+
+<details>
+<summary><strong>Commits in this release (129)</strong> — fork start…v0.40.0</summary>
+
+- `7759d0d` chore: release v0.40.0 — the IIIF-ingestor milestone
+- `7bc1373` Fix: don't repeat the category name next to the button (single variant)
+- `f11ea6f` feat: discoverable + fuller explanations for all source badges
+- `6ec93c9` feat: name the found category in the panel head + explain source badges
+- `f12c1ff` feat: clearer existing-category UX — no contradiction, real button
+- `bfb5239` docs: close OI-68 (existing-category discovery shipped)
+- `d9a221f` feat: source the Commons gallery from P935 (dedicated property)
+- `74c7f84` feat: link the Wikidata item's Commons category too (not just the gallery)
+- `a312feb` Fix: TDZ crash — move variant-discovery effect below `mapping`
+- `105e210` docs: changelog OI-68 B/C (existing-category discovery)
+- `b75820b` feat: discover existing category variants — naming + verified fuzzy search (OI-68 B/C)
+- `a2ea785` feat: resolve merged/redirected Wikidata Q-ids to the canonical item
+- `7a1101e` Fix: Wikidata lookup failure is retry-able, not a false "no item found"
+- `cfa0fe9` docs: changelog OI-68 Phase A
+- `7377fb7` feat: offer the manuscript's existing Commons category from Wikidata (OI-68 A)
+- `98c877c` docs: OI-68 — decide single category per manuscript (never multiple)
+- `08c871f` docs: OI-68 — find existing Commons category-variant discovery (issue #68)
+- `d08361d` feat: label "Suggested category for this manuscript"
+- `0045125` feat: "View manifest (JSON)" inspector in the review step
+- `ea70179` feat: lightbox closes only via the × button (not a backdrop click)
+- `fdf870b` feat: loading spinner in the lightbox while an image loads
+- `e9029ed` perf: preload lightbox neighbours so ‹ / › feels instant
+- `9c13478` feat: carousel page numbers + lightbox; smaller nav buttons
+- `70d5bcb` feat: review-step thumbnail carousel over all canvases
+- `bc79be0` Fix: hide the report box when there's nothing (visible) to report
+- `f8de365` feat: group the Wikidata block in a legended section like Categories
+- `c61457a` feat: parent-category autosuggest + Set/Reset default; move P6243/P180 note
+- `a8f115f` feat: dedicated Categories section with an editable, resettable parent
+- `7fa3e47` feat: surface the parent category in the review step (+ link it)
+- `818d014` docs: close OI-01 + OI-02 (Phase 5.2 Artwork wiring, commit 635658a)
+- `635658a` Fix: wire {{Artwork}} medium/dimensions/accession/date (OI-01, OI-02)
+- `4bdafc0` feat: link the "category already exists" hint to the Commons category
+- `6e07746` feat: four preview thumbs in the review step (first page + three random)
+- `11e0638` feat: three preview thumbs in the review step (first page + two random)
+- `74a8662` Fix: state the 25 MP note once — counts move to the select step
+- `61d9b7f` docs: move fully-fixed items to the Closed table (own convention)
+- `05cccee` docs: OI-67 — KB-catalogue (GGC) enrichment design, recorded as issue #67
+- `ff22889` Merge: placeholder-field review + first-page preview thumbnail (OI-66)
+- `36a7486` feat: drop the review thumbnail caption (raw canvas label read poorly)
+- `842d7d1` docs: changelog placeholder-field review + preview thumb
+- `2e779de` feat: review placeholder metadata fields instead of silently dropping them
+- `9cd9849` docs: changelog OI-26 import-path retry/backoff
+- `1ffe04a` Fix: retry/backoff/maxlag/badtoken for the IIIF import pipeline (OI-26)
+- `2259c4b` Fix: OI-65 — always warn on leave instead of a silent Back trap
+- `2ca0e01` docs: changelog OI-65 (Back-button OAuth trap)
+- `8fcfc73` Fix: trap Back at the app root so it can't land on the OAuth screen (OI-65)
+- `06f1a6d` docs: migrate open-issues backlog to GitHub Issues + annotate
+- `e006019` docs: close OI-27 + OI-30, log OI-25 production confirmation
+- `49d794d` Fix: guard the Q-id auto-lookup against stale results (OI-30)
+- `14085e3` Fix: neutralize wiki metacharacters in manifest-derived text (OI-27)
+- `3cd6df9` docs: close OI-34 + OI-35 (parser correctness, commit 97cd20a)
+- `97cd20a` Fix: unwrap Choice image bodies + collision-safe filenames (OI-34, OI-35)
+- `fc2f335` docs: link commit hashes in open-issues to GitHub
+- `054d39b` docs: close OI-38 (Metadata.json dedup + 2 MB guard, commit d785948)
+- `d785948` Fix: dedupe batch drafts via shared records + 2 MB store guard (OI-38)
+- `55cd754` docs: close OI-25 + changelog the IIIF-only entry and import-write fix
+- `c455893` Fix: coalesce IIIF import draft writes into ~1 edit per 25 canvases (OI-25)
+- `9cba9d6` feat: IIIF-only entry — drop "Browse files", make Import the primary action
+- `21f5920` chore: rename repo slug to iiif-manifest-upload-workbench
+- `5273d45` feat: About links as a sentence (docs + uploaded files) + record Commons pages
+- `5921173` feat: wire the Commons homepage + project pages (now created)
+- `cc1c3f3` feat: About "Files uploaded" link points to the project category
+- `6b4f747` docs: bring CLAUDE.md, design doc, open-issues, CHANGELOG up to date
+- `7f60350` feat: IIIF app icon in every modal header + drop upstream link from About
+- `74b8459` feat: rename the tracking category to "Uploaded with IIIF Manifest Upload Workbench"
+- `789693e` feat: rewrite the About modal for the fork (GitHub links, no GitLab)
+- `569ba1f` feat: link the {{Artwork}} template in the confirm recap
+- `39c9305` feat: link the Wikidata property IDs in the manuscript-item label
+- `c3add98` feat: empty-hero drop hint lists accepted formats
+- `edbd193` docs: mark OI-40 + OI-51 fixed (commit 5ffe043)
+- `5ffe043` Fix: snappier + non-hanging category check (OI-40, OI-51)
+- `1ea507e` Fix: stack tile dimensions + full-res link vertically
+- `aafe673` feat: fuller >25 MP explanation in the manifest validation report
+- `e1e1d95` feat: move the >25 MP note above the selection controls, full width
+- `853f2ea` Fix: add a concrete example to the >25 MP hint
+- `a4e6621` Fix: clearer >25 MP explanation — cap is the IIIF server, not Commons
+- `8162a46` Fix: rename the "25 MP" tag to ">25 MP"
+- `f2ab84c` feat: per-tile native dimensions + full-res link in the canvas gallery
+- `3965268` Fix: clearer confirm-step subtitle wording
+- `adb4e36` Fix: "25 MP" badge was clipped by the label truncation — now a thumb overlay
+- `08973ff` Fix: denser canvas gallery (~5 columns in a narrow modal)
+- `98075ab` feat: wider import wizard, Invert selection, roomier confirm step
+- `bb3235f` docs: OI-63 — implement chunked uploading (investigated, queued)
+- `a091d73` feat: category-missing notice is bold and red
+- `997b89b` Fix: friendlier wording for the downscale notice
+- `8283b6a` feat: move user-store to User:<u>/IIIFManifestUploadWorkbench/ (auto-migrate)
+- `3707aab` feat: repoint edit-summary attribution + Feedback button to GitHub
+- `491b4ee` docs: OI-62 — Institution field/column for {{Artwork}} (queued)
+- `489128d` feat: update login screen branding + links to the fork
+- `839fde8` feat: dropping a IIIF manifest .json opens the import wizard
+- `663af3a` feat: IIIF branding, topbar buttons, clickable recap links, focus-mode size
+- `4f8a530` docs: catch CHANGELOG up with the wizard polish, license/institution, review
+- `ebb8b6a` feat: Institution field for {{Artwork}} (chooser in detail panel + column)
+- `9c9593b` Fix: PD-Art default license as a real catalog option + Artwork template + Reset-to-default
+- `83a8a99` docs: make OI-26's four failure-handling sub-gaps explicit
+- `7a24624` Restore __inputs/conversation.html (unintentionally deleted)
+- `34832a4` docs: multi-agent code review findings (OI-25…OI-61)
+- `f27ac70` feat: category creation requires explicit approval in the confirm step
+- `530e5f1` Fix: create the per-manuscript category at publish time, not at import
+- `cd0ca9d` docs: OI-18 fixed upstream — KW 130 E 1 now has a summary
+- `e90886a` Fix: show the manifest summary in the manuscript passport
+- `3ccc334` Fix: 10 category suggestions, tighter dropdown rows
+- `7524bab` feat: checking-state gray-out + clickable URLs in the passport
+- `31f8a5d` feat: category autosuggest as a Commons-style dropdown combobox
+- `dee741a` feat: category-exists confirmation is green and bold
+- `8638837` feat: live category check + Commons-style autosuggest in the wizard
+- `2d38196` feat: hover zoom on gallery tiles
+- `bcf2a7c` feat: full-detail tooltips on the canvas gallery tiles
+- `0ff7d4e` docs: owner-only OAuth consumers cannot serve the PKCE login flow
+- `c1ed110` Fix: IIIF previews survive reloads (persist iiifThumbUrl in the draft)
+- `29c21eb` Fix: stash counter + Clear entire stash sit next to the section title
+- `6c6f2f0` Fix: Clear entire stash button sits right of the stash counter
+- `18bd291` docs: NoScript/content-blocker failure mode documented
+- `72bbbc5` feat: confirm step lists every target filename in a scrollable box
+- `dbcc356` feat: Wikidata candidate in the wizard links to the item
+- `7cb7708` Fix: align the two empty-hero buttons
+- `56f5245` feat: Import IIIF manifest button on the empty-stash hero
+- `d8a5935` feat: Clear-stash modal leads with Special:UploadStash
+- `78b3af6` feat: Clear stash action in the stash section header
+- `112e9c8` feat: default IIIF import license is now {{PD-Art|PD-old-100-expired}}
+- `30d941d` feat: show per-error breakdown in the IIIF import report
+- `6ef29d0` feat: Import IIIF manifest wizard + import pipeline (Phases 2+4)
+- `191c718` docs: open-issues register (__inputs/open-issues.md)
+- `b30895f` feat: IIIF-to-workbench metadata mapper + Wikidata lookup (Phase 3)
+- `b6eee0e` docs: KB IIIF canonical base is now iiif.bibliotheken.nl
+- `1709b26` docs: record Phase 0.3 mining outcomes in the design doc
+- `167a253` Merge branch 'feat/iiif-parser'
+- `9325ed7` docs: move repo to KBNLwikimedia org + Commons best-practice research
+- `37b389c` feat: IIIF Presentation 3.0 manifest parser (Phase 1)
+
+</details>
 
 ---
 
