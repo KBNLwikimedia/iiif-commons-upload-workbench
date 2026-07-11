@@ -9044,8 +9044,11 @@ body.col-resizing * { cursor: col-resize !important; }
 /* Sequence number, top-left — mirrors the review-step carousel's badge. */
 .iiif-canvas__num {
   position: absolute;
-  top: 4px;
-  left: 4px;
+  /* The tile has a 2px border (absolute offsets are measured from inside it),
+     so top/left:4px would sit ~6px below the tile's outer edge — lower than
+     the borderless review carousel. Pull up by the border to match. */
+  top: 2px;
+  left: 2px;
   z-index: 1;
   min-width: 16px;
   padding: 1px 5px;
