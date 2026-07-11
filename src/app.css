@@ -296,6 +296,20 @@ body {
 /* Row that offers to re-show the hidden upload-history section. */
 .hist-show-row { padding: 10px 2px; }
 
+/* Stash toolbar — lives inside the Upload-stash section so it's clear the
+   search/filter/view controls apply to stashed files only. */
+.stash-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+.stash-toolbar__search {
+  /* section tool, not a page-wide search — cap the width like hist's */
+  flex: 0 1 380px;
+  min-width: 200px;
+}
+
 /* History mini-toolbar: own search + tile zoom + Grid/List (read-only). */
 .hist-toolbar {
   display: flex;

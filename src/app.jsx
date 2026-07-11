@@ -1628,101 +1628,12 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
 
       {/* Toolbar */}
       <div className="toolbar">
-        {/* Primary action leads the toolbar (moved here from the topbar);
-            search + view controls cluster on the right. */}
+        {/* Primary action — the only global control up here. The search /
+            filter / view controls live inside the Upload-stash section (they
+            only apply to stashed files, mirroring the history mini-toolbar). */}
         <button className="btn btn--progressive" onClick={() => setIiifImportOpen(true)} title="Import all pages of a IIIF manifest into your stash">
           <Icon name="upload" size={16} /> Import IIIF manifest
         </button>
-
-        <div className="toolbar__spacer" style={{ flex: 1 }} />
-
-        <div className="search">
-          <span className="search__icon"><Icon name="search" size={16} /></span>
-          <input
-            className="search__input"
-            placeholder="Search your files…"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)} />
-
-        </div>
-
-        <div className="toolbar__group">
-          <select className="select" value={filter} onChange={(e) => setFilter(e.target.value)} title="Filter">
-            <option value="all">All files</option>
-            <option value="needs-attention">
-              Needs attention{needsAttn ? ` (${needsAttn})` : ""}
-            </option>
-            <option value="complete">Ready to publish</option>
-          </select>
-        </div>
-
-        {view === "grid" && (
-          <div className="seg" role="group" aria-label="Grid tile size">
-            <button
-              className="seg__btn"
-              onClick={() => stepGridSize(-1)}
-              disabled={gridSizeIndex <= 0}
-              aria-label="Smaller tiles"
-              title="Smaller tiles">
-              <Icon name="minus" size={14} />
-            </button>
-            <button
-              className="seg__btn"
-              onClick={() => stepGridSize(1)}
-              disabled={gridSizeIndex >= GRID_SIZES.length - 1}
-              aria-label="Larger tiles"
-              title="Larger tiles">
-              <Icon name="plus" size={14} />
-            </button>
-          </div>
-        )}
-
-        {/* Piling mode entry point (T425840). Fullscreen lighttable that
-            shares group state with the (in-progress) table-view groups. */}
-        <button
-          type="button"
-          className="btn"
-          onClick={() => setPilingOpen(true)}
-          title="Open visual piling mode — drag photos together to group them"
-        >
-          <Icon name="folder" size={14} /> Piling mode{groups.length ? ` (${groups.length})` : ''}
-        </button>
-
-        {/* All / Groups toggle — spreadsheet-only. Hidden in Grid view since
-            groups are a row-table concept. (T425839) */}
-        {view === "list" && (
-          <div className="seg" role="group" aria-label="Group mode" title="Toggle between flat and grouped layouts">
-            <button
-              className="seg__btn"
-              aria-pressed={tableMode === "all"}
-              onClick={() => setTableMode("all")}
-              title="Show every row in one table"
-            >
-              All
-            </button>
-            <button
-              className="seg__btn"
-              aria-pressed={tableMode === "groups"}
-              onClick={() => setTableMode("groups")}
-              title={
-                groups.length
-                  ? `Show ${groups.length} group${groups.length === 1 ? '' : 's'} as stacked mini-tables`
-                  : "Stack rows into mini-tables once you create groups"
-              }
-            >
-              Groups{groups.length ? ` (${groups.length})` : ''}
-            </button>
-          </div>
-        )}
-
-        <div className="seg" role="group" aria-label="View">
-          <button className="seg__btn" aria-pressed={view === "grid"} onClick={() => setView("grid")} title="Grid">
-            <Icon name="grid" size={14} /> Grid
-          </button>
-          <button className="seg__btn" aria-pressed={view === "list"} onClick={() => setView("list")} title="List">
-            <Icon name="list" size={14} /> List
-          </button>
-        </div>
       </div>
 
       {/* Content */}
@@ -1763,6 +1674,102 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
                 )}
               </span>
             </div>
+
+            {/* Stash toolbar — search / filter / view controls apply to the
+                stashed files only, so they live inside this section (the
+                history section has its own mini-toolbar). */}
+            {stashItems.length > 0 && (
+              <div className="stash-toolbar">
+                <div className="search stash-toolbar__search">
+                  <span className="search__icon"><Icon name="search" size={16} /></span>
+                  <input
+                    className="search__input"
+                    placeholder="Search your files…"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)} />
+                </div>
+
+                <div className="toolbar__group">
+                  <select className="select" value={filter} onChange={(e) => setFilter(e.target.value)} title="Filter">
+                    <option value="all">All files</option>
+                    <option value="needs-attention">
+                      Needs attention{needsAttn ? ` (${needsAttn})` : ""}
+                    </option>
+                    <option value="complete">Ready to publish</option>
+                  </select>
+                </div>
+
+                <div className="toolbar__spacer" style={{ flex: 1 }} />
+
+                {view === "grid" && (
+                  <div className="seg" role="group" aria-label="Grid tile size">
+                    <button
+                      className="seg__btn"
+                      onClick={() => stepGridSize(-1)}
+                      disabled={gridSizeIndex <= 0}
+                      aria-label="Smaller tiles"
+                      title="Smaller tiles">
+                      <Icon name="minus" size={14} />
+                    </button>
+                    <button
+                      className="seg__btn"
+                      onClick={() => stepGridSize(1)}
+                      disabled={gridSizeIndex >= GRID_SIZES.length - 1}
+                      aria-label="Larger tiles"
+                      title="Larger tiles">
+                      <Icon name="plus" size={14} />
+                    </button>
+                  </div>
+                )}
+
+                {/* Piling mode entry point (T425840). Fullscreen lighttable that
+                    shares group state with the (in-progress) table-view groups. */}
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => setPilingOpen(true)}
+                  title="Open visual piling mode — drag photos together to group them"
+                >
+                  <Icon name="folder" size={14} /> Piling mode{groups.length ? ` (${groups.length})` : ''}
+                </button>
+
+                {/* All / Groups toggle — spreadsheet-only. Hidden in Grid view since
+                    groups are a row-table concept. (T425839) */}
+                {view === "list" && (
+                  <div className="seg" role="group" aria-label="Group mode" title="Toggle between flat and grouped layouts">
+                    <button
+                      className="seg__btn"
+                      aria-pressed={tableMode === "all"}
+                      onClick={() => setTableMode("all")}
+                      title="Show every row in one table"
+                    >
+                      All
+                    </button>
+                    <button
+                      className="seg__btn"
+                      aria-pressed={tableMode === "groups"}
+                      onClick={() => setTableMode("groups")}
+                      title={
+                        groups.length
+                          ? `Show ${groups.length} group${groups.length === 1 ? '' : 's'} as stacked mini-tables`
+                          : "Stack rows into mini-tables once you create groups"
+                      }
+                    >
+                      Groups{groups.length ? ` (${groups.length})` : ''}
+                    </button>
+                  </div>
+                )}
+
+                <div className="seg" role="group" aria-label="View">
+                  <button className="seg__btn" aria-pressed={view === "grid"} onClick={() => setView("grid")} title="Grid">
+                    <Icon name="grid" size={14} /> Grid
+                  </button>
+                  <button className="seg__btn" aria-pressed={view === "list"} onClick={() => setView("list")} title="List">
+                    <Icon name="list" size={14} /> List
+                  </button>
+                </div>
+              </div>
+            )}
 
             {loadErrors?.stash && (
               <div className="load-error" role="alert">
