@@ -1611,14 +1611,19 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
           About
         </button>
         <SaveStatus />
-        <button className="btn btn--progressive" onClick={() => setIiifImportOpen(true)} title="Import all pages of a IIIF manifest into your stash">
-          <Icon name="upload" size={16} /> Import IIIF manifest
-        </button>
         <UserMenu user={user} onLogout={onLogout} />
       </header>
 
       {/* Toolbar */}
       <div className="toolbar">
+        {/* Primary action leads the toolbar (moved here from the topbar);
+            search + view controls cluster on the right. */}
+        <button className="btn btn--progressive" onClick={() => setIiifImportOpen(true)} title="Import all pages of a IIIF manifest into your stash">
+          <Icon name="upload" size={16} /> Import IIIF manifest
+        </button>
+
+        <div className="toolbar__spacer" style={{ flex: 1 }} />
+
         <div className="search">
           <span className="search__icon"><Icon name="search" size={16} /></span>
           <input
@@ -1626,7 +1631,7 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
             placeholder="Search your files…"
             value={query}
             onChange={(e) => setQuery(e.target.value)} />
-          
+
         </div>
 
         <div className="toolbar__group">
@@ -1638,8 +1643,6 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
             <option value="complete">Ready to publish</option>
           </select>
         </div>
-
-        <div className="toolbar__spacer" style={{ flex: 1 }} />
 
         {view === "grid" && (
           <div className="seg" role="group" aria-label="Grid tile size">
