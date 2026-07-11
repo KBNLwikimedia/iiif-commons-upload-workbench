@@ -1598,18 +1598,28 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 onScroll={clearHoverPreview}
               >
                 {galleryFilter
-                  ? (galleryFilter === 'dup-name' ? collisions.labelGroups : collisions.imageGroups).map((g, gi) => (
-                      <div className={'iiif-cluster iiif-cluster--' + (galleryFilter === 'dup-name' ? 'name' : 'image')} key={gi}>
-                        <div className="iiif-cluster__head">
-                          {galleryFilter === 'dup-name'
-                            ? <>Same filename <code>{g.label}</code> — images {g.positions.join(', ')}</>
-                            : <>Identical image — images {g.positions.join(' = ')}</>}
+                  ? (galleryFilter === 'dup-name' ? collisions.labelGroups : collisions.imageGroups).map((g, gi) => {
+                      // Frame each group to exactly its tiles: N columns of
+                      // 112px (capped at 6, wraps beyond), + gaps + padding.
+                      const cols = Math.min(g.indices.length, 6);
+                      const width = cols * 112 + (cols - 1) * 8 + 24;
+                      return (
+                        <div
+                          className={'iiif-cluster iiif-cluster--' + (galleryFilter === 'dup-name' ? 'name' : 'image')}
+                          key={gi}
+                          style={{ width }}
+                        >
+                          <div className="iiif-cluster__head">
+                            {galleryFilter === 'dup-name'
+                              ? <>Same filename <code>{g.label}</code> — images {g.positions.join(', ')}</>
+                              : <>Identical image — images {g.positions.join(' = ')}</>}
+                          </div>
+                          <div className="iiif-cluster__grid" style={{ gridTemplateColumns: `repeat(${cols}, 112px)` }}>
+                            {g.indices.map((idx) => renderCanvasTile(canvasByIndex.get(idx))).filter(Boolean)}
+                          </div>
                         </div>
-                        <div className="iiif-cluster__grid">
-                          {g.indices.map((idx) => renderCanvasTile(canvasByIndex.get(idx))).filter(Boolean)}
-                        </div>
-                      </div>
-                    ))
+                      );
+                    })
                   : manifest.canvases.map((c) => renderCanvasTile(c))}
               </div>
               {hoverPreview && (

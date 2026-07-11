@@ -8922,14 +8922,18 @@ body.col-resizing * { cursor: col-resize !important; }
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 8px;
 }
-/* Clustered view (when a collision filter is active): stack one bordered
-   cluster per duplicate group so the groups are visually separated. */
+/* Clustered view (when a collision filter is active): one snug bordered box
+   per duplicate group, flowing side by side and wrapping — a small gap
+   between groups instead of full-width stacks. Each cluster's width is set
+   inline to exactly fit its tiles. */
 .iiif-gallery--clustered {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
 }
 .iiif-cluster {
+  box-sizing: border-box;
   border-radius: 8px;
   padding: 8px 10px 10px;
   border: 1px solid var(--border-color-muted);
@@ -8941,13 +8945,13 @@ body.col-resizing * { cursor: col-resize !important; }
   font-weight: 600;
   margin-bottom: 8px;
   color: var(--color-base);
+  overflow-wrap: anywhere;
 }
 .iiif-cluster--name .iiif-cluster__head { color: #8a0f0f; }
 .iiif-cluster--image .iiif-cluster__head { color: #7a3d00; }
-.iiif-cluster__head code { font-size: 11.5px; }
+.iiif-cluster__head code { font-size: 11.5px; overflow-wrap: anywhere; }
 .iiif-cluster__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 8px;
 }
 
