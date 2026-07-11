@@ -8927,11 +8927,39 @@ body.col-resizing * { cursor: col-resize !important; }
   opacity: 1;
 }
 
-.iiif-canvas input[type="checkbox"] {
+/* Sequence number, top-left — mirrors the review-step carousel's badge. */
+.iiif-canvas__num {
   position: absolute;
-  top: 6px;
-  left: 6px;
+  top: 4px;
+  left: 4px;
   z-index: 1;
+  min-width: 16px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+}
+/* Selection checkbox moved to the bottom-centre of the thumbnail. The tile is
+   a flex column whose thumbnail band is a fixed 110px at the top (.iiif-canvas
+   img), so anchor to that band's bottom (top:110px − box − margin), not the
+   card bottom. Enlarged a touch + white halo so it reads over any image. */
+.iiif-canvas__check {
+  position: absolute;
+  left: 50%;
+  top: 86px;
+  transform: translateX(-50%);
+  z-index: 1;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: var(--color-progressive, #36c);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.85);
+  border-radius: 3px;
 }
 
 .iiif-canvas img {

@@ -1516,8 +1516,10 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       }}
                       onMouseLeave={clearHoverPreview}
                     >
+                      <span className="iiif-canvas__num" aria-hidden="true">{c.index + 1}</span>
                       <input
                         type="checkbox"
+                        className="iiif-canvas__check"
                         checked={selected.has(c.index)}
                         onChange={() => toggleOne(c.index)}
                       />
