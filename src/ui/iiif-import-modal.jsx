@@ -298,6 +298,9 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   // note; each leaves a one-line restore link while hidden.
   const [dupNameNoteHidden, setDupNameNoteHidden] = React.useState(false);
   const [dupImageNoteHidden, setDupImageNoteHidden] = React.useState(false);
+  // Select-step gallery filter: null | 'dup-name' | 'dup-image' — narrows the
+  // grid to just the colliding thumbnails (selection state is untouched).
+  const [galleryFilter, setGalleryFilter] = React.useState(null);
   const [reportHidden, setReportHidden] = React.useState(false);
   // Lightbox: the canvas shown enlarged (or null). Click a carousel thumb.
   const [lightbox, setLightbox] = React.useState(null);
@@ -406,6 +409,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     setDownscaleNoteHidden(false);
     setDupNameNoteHidden(false);
     setDupImageNoteHidden(false);
+    setGalleryFilter(null);
     setReportHidden(false);
     setLightbox(null);
     setShowJson(false);
@@ -1474,12 +1478,44 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 <button className="btn btn--quiet" onClick={() => toggleAll(true)}>Select all</button>
                 <button className="btn btn--quiet" onClick={() => toggleAll(false)}>Select none</button>
                 <button className="btn btn--quiet" onClick={invertSelection}>Invert selection</button>
+                {/* OI-85: filter the grid down to just the colliding images.
+                    Toggle off (or a new manifest) shows everything again. */}
+                {collisions.dupLabelIdx.size > 0 && (
+                  <button
+                    className={'btn btn--quiet iiif-select-bar__filter iiif-select-bar__filter--name' + (galleryFilter === 'dup-name' ? ' is-active' : '')}
+                    aria-pressed={galleryFilter === 'dup-name'}
+                    onClick={() => setGalleryFilter((f) => (f === 'dup-name' ? null : 'dup-name'))}
+                    title="Show only images whose filename collides"
+                  >
+                    Duplicate names ({collisions.dupLabelIdx.size})
+                  </button>
+                )}
+                {collisions.dupImageIdx.size > 0 && (
+                  <button
+                    className={'btn btn--quiet iiif-select-bar__filter iiif-select-bar__filter--image' + (galleryFilter === 'dup-image' ? ' is-active' : '')}
+                    aria-pressed={galleryFilter === 'dup-image'}
+                    onClick={() => setGalleryFilter((f) => (f === 'dup-image' ? null : 'dup-image'))}
+                    title="Show only images that are duplicated (identical picture)"
+                  >
+                    Duplicate images ({collisions.dupImageIdx.size})
+                  </button>
+                )}
+                {galleryFilter && (
+                  <button className="btn btn--quiet iiif-linkbtn" onClick={() => setGalleryFilter(null)} title="Clear the filter — show all images">
+                    Show all
+                  </button>
+                )}
                 <span className="iiif-select-bar__count">
+                  {galleryFilter && <span className="iiif-select-bar__filtered">filtered · </span>}
                   <strong>{selected.size}</strong> of {manifest.canvasCount} images selected
                 </span>
               </div>
               <div className="iiif-gallery" onScroll={clearHoverPreview}>
-                {manifest.canvases.map((c) => {
+                {manifest.canvases.filter((c) =>
+                  galleryFilter === 'dup-name' ? collisions.dupLabelIdx.has(c.index)
+                    : galleryFilter === 'dup-image' ? collisions.dupImageIdx.has(c.index)
+                    : true,
+                ).map((c) => {
                   // Full-detail native tooltip: labels are ellipsized in the
                   // tile, so hovering must reveal the whole story — canvas
                   // label + the Commons filename this page would get.

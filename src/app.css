@@ -8902,6 +8902,20 @@ body.col-resizing * { cursor: col-resize !important; }
   color: var(--color-subtle);
   white-space: nowrap;
 }
+.iiif-select-bar__filtered { color: var(--color-progressive, #36c); font-weight: 600; }
+/* Collision filter toggles — active state adopts the collision colour so the
+   button matches the border it filters to. */
+.iiif-select-bar__filter { border: 1px solid transparent; }
+.iiif-select-bar__filter--name.is-active {
+  background: #fdf0f0;
+  border-color: #d43a3a;
+  color: #8a0f0f;
+}
+.iiif-select-bar__filter--image.is-active {
+  background: #fff7ef;
+  border-color: #e07b1a;
+  color: #7a3d00;
+}
 
 .iiif-gallery {
   display: grid;
