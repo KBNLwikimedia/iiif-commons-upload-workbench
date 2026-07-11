@@ -28,7 +28,10 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 
 ### Changed
 
-- **"Choose a manifest .json file" button is now blue** (progressive), matching the primary affordances.
+- **Upload history redesigned as a read-only list/grid** — the fold-out no longer embeds the full workbench table; each row/tile is a thumbnail + title linking to the file's page on Commons. It got its own mini-toolbar (section search, Grid/List toggle, −/+ tile zoom in grid view) and a **hide/show toggle** persisted as the `showUploadHistory` preference in `Preferences.json` (the seed for the OI-79 #79 settings panel; OI-80 #80 tracks shipping KB-optimized defaults).
+- **Toolbar/topbar reorder** — the blue "Import IIIF manifest" button moved from the topbar to the front of the controls toolbar; the search box + "All files" filter moved right, next to the view controls. The topbar shows a small tagline under the app title, and the history "synced" stamp is an explicit DD-MM-YYYY HH:MM instead of "today".
+- **Clear-stash modal** got its missing close ×; "delete all 1 files" pluralizes correctly; and the table's horizontal scrollbar no longer hugs the last row.
+- **"Choose a manifest .json file" button is now blue** (progressive) and centered under the "— or —" divider; the KB-only support note sits under the provider cards.
 - **CC0 "Heads up" notice**: the two user-subpage paths (`…/Preferences.json`, `…/Metadata.json`) are now direct links to those pages on Commons; the separate "View your workbench pages on Commons" link was removed as redundant.
 - **CHANGELOG**: fixed the `[0.12.0]` entry where `<Template>` rendered as an empty HTML tag — wrapped it in backticks so it shows literally.
 - **Topbar version indicator simplified to a static version number** (OI-10 #10) — the clickable releases/PRs dropdown (which still pointed at upstream GitLab/Toolforge) is gone, as is the topbar **Beta pill**; the topbar now just shows this build's version. The About modal keeps the changelog link. (`src/api/gitlab.js`, the interim `github.js`, `version-chip.jsx` and `changelog-parse.jsx` deleted.)
