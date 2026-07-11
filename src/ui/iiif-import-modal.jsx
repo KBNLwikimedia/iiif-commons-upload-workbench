@@ -1491,16 +1491,31 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
           {step === 'select' && manifest && (
             <div className="iiif-step-select">
               {manifest.downscaledCount > 0 && !downscaleNoteHidden && (
-                <p className="iiif-hint iiif-downscale-note">
-                  <button
-                    type="button"
-                    className="iiif-downscale-note__close"
-                    onClick={() => setDownscaleNoteHidden(true)}
-                    aria-label="Dismiss this note"
-                    title="Dismiss this note"
-                  >×</button>
-                  <strong>{manifest.downscaledCount} of the {manifest.canvasCount} images are larger than 25 megapixels</strong> — they carry a “&gt;25 MP” tag below. The KB's IIIF image server caps what it delivers at 25 MP, so those images arrive slightly smaller than the original (but still high-res) — e.g. an 8040 × 6030 image (48 MP) downloads at ~25 MP. This is a limit of the IIIF server — not of Wikimedia Commons, which accepts much larger files.
-                </p>
+                <div className="iiif-hint iiif-note iiif-downscale-note">
+                  <div className="iiif-note__top">
+                    <strong>{manifest.downscaledCount} of the {manifest.canvasCount} images are larger than 25 megapixels</strong>
+                    <div className="iiif-note__actions">
+                      <button
+                        type="button"
+                        className={'btn btn--quiet iiif-note__filter' + (galleryFilter === 'downscale' ? ' is-active' : '')}
+                        aria-pressed={galleryFilter === 'downscale'}
+                        onClick={() => setGalleryFilter((f) => (f === 'downscale' ? null : 'downscale'))}
+                      >
+                        {galleryFilter === 'downscale' ? '↩ Show all images' : `Show only these ${manifest.downscaledCount} images`}
+                      </button>
+                      <button
+                        type="button"
+                        className="iiif-note__close"
+                        onClick={() => { setDownscaleNoteHidden(true); if (galleryFilter === 'downscale') setGalleryFilter(null); }}
+                        aria-label="Dismiss this note"
+                        title="Dismiss this note"
+                      >×</button>
+                    </div>
+                  </div>
+                  <div className="iiif-note__body">
+                    They carry a “&gt;25 MP” tag below. The KB's IIIF image server caps what it delivers at 25 MP, so those images arrive slightly smaller than the original (but still high-res) — e.g. an 8040 × 6030 image (48 MP) downloads at ~25 MP. This is a limit of the IIIF server — not of Wikimedia Commons, which accepts much larger files.
+                  </div>
+                </div>
               )}
               {manifest.downscaledCount > 0 && downscaleNoteHidden && (
                 <p className="iiif-warnings-restore">
@@ -1514,29 +1529,35 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                   filename, dashed orange = same picture). Both dismissible with
                   a restore line, like the 25 MP note. */}
               {collisions.labelGroups.length > 0 && !dupNameNoteHidden && (
-                <div className="iiif-hint iiif-collision-note iiif-collision-note--name" role="alert">
-                  <button
-                    type="button"
-                    className="iiif-downscale-note__close"
-                    onClick={() => { setDupNameNoteHidden(true); if (galleryFilter === 'dup-name') setGalleryFilter(null); }}
-                    aria-label="Dismiss this warning"
-                    title="Dismiss this warning"
-                  >×</button>
-                  <strong>⚠️ Duplicate filenames — {collisions.dupLabelIdx.size} images.</strong>{' '}
-                  These canvases share a label, so they would derive the <em>same</em> Commons filename, which is not allowed. They are marked with a <span className="iiif-collision-swatch iiif-collision-swatch--name" />&nbsp;red border below; you'll be able to rename them in the next step.
-                  <ul className="iiif-collision-note__list">
-                    {collisions.labelGroups.map((g) => (
-                      <li key={g.label}><code>{g.label}</code> — images {g.positions.join(', ')}</li>
-                    ))}
-                  </ul>
-                  <button
-                    type="button"
-                    className={'btn btn--quiet iiif-collision-note__filter' + (galleryFilter === 'dup-name' ? ' is-active' : '')}
-                    aria-pressed={galleryFilter === 'dup-name'}
-                    onClick={() => setGalleryFilter((f) => (f === 'dup-name' ? null : 'dup-name'))}
-                  >
-                    {galleryFilter === 'dup-name' ? '↩ Show all images' : `Show only these ${collisions.dupLabelIdx.size} images`}
-                  </button>
+                <div className="iiif-hint iiif-note iiif-collision-note iiif-collision-note--name" role="alert">
+                  <div className="iiif-note__top">
+                    <strong>⚠️ Duplicate filenames — {collisions.dupLabelIdx.size} images.</strong>
+                    <div className="iiif-note__actions">
+                      <button
+                        type="button"
+                        className={'btn btn--quiet iiif-note__filter' + (galleryFilter === 'dup-name' ? ' is-active' : '')}
+                        aria-pressed={galleryFilter === 'dup-name'}
+                        onClick={() => setGalleryFilter((f) => (f === 'dup-name' ? null : 'dup-name'))}
+                      >
+                        {galleryFilter === 'dup-name' ? '↩ Show all images' : `Show only these ${collisions.dupLabelIdx.size} images`}
+                      </button>
+                      <button
+                        type="button"
+                        className="iiif-note__close"
+                        onClick={() => { setDupNameNoteHidden(true); if (galleryFilter === 'dup-name') setGalleryFilter(null); }}
+                        aria-label="Dismiss this warning"
+                        title="Dismiss this warning"
+                      >×</button>
+                    </div>
+                  </div>
+                  <div className="iiif-note__body">
+                    These canvases share a label, so they would derive the <em>same</em> Commons filename, which is not allowed. They are marked with a <span className="iiif-collision-swatch iiif-collision-swatch--name" />&nbsp;red border below; you'll be able to rename them in the next step.
+                    <ul className="iiif-collision-note__list">
+                      {collisions.labelGroups.map((g) => (
+                        <li key={g.label}><code>{g.label}</code> — images {g.positions.join(', ')}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               )}
               {collisions.labelGroups.length > 0 && dupNameNoteHidden && (
@@ -1547,29 +1568,35 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 </p>
               )}
               {collisions.imageGroups.length > 0 && !dupImageNoteHidden && (
-                <div className="iiif-hint iiif-collision-note iiif-collision-note--image" role="alert">
-                  <button
-                    type="button"
-                    className="iiif-downscale-note__close"
-                    onClick={() => { setDupImageNoteHidden(true); if (galleryFilter === 'dup-image') setGalleryFilter(null); }}
-                    aria-label="Dismiss this warning"
-                    title="Dismiss this warning"
-                  >×</button>
-                  <strong>⚠️ Duplicate images — {collisions.dupImageIdx.size} images.</strong>{' '}
-                  The exact same picture appears more than once in this manifest (identical image URL → identical SHA-1). They are marked with a <span className="iiif-collision-swatch iiif-collision-swatch--image" />&nbsp;orange dashed border. Uploading the same image twice is usually a manifest defect — consider deselecting the duplicates.
-                  <ul className="iiif-collision-note__list">
-                    {collisions.imageGroups.map((g, i) => (
-                      <li key={i}>images {g.positions.join(' = ')} are identical</li>
-                    ))}
-                  </ul>
-                  <button
-                    type="button"
-                    className={'btn btn--quiet iiif-collision-note__filter' + (galleryFilter === 'dup-image' ? ' is-active' : '')}
-                    aria-pressed={galleryFilter === 'dup-image'}
-                    onClick={() => setGalleryFilter((f) => (f === 'dup-image' ? null : 'dup-image'))}
-                  >
-                    {galleryFilter === 'dup-image' ? '↩ Show all images' : `Show only these ${collisions.dupImageIdx.size} images`}
-                  </button>
+                <div className="iiif-hint iiif-note iiif-collision-note iiif-collision-note--image" role="alert">
+                  <div className="iiif-note__top">
+                    <strong>⚠️ Duplicate images — {collisions.dupImageIdx.size} images.</strong>
+                    <div className="iiif-note__actions">
+                      <button
+                        type="button"
+                        className={'btn btn--quiet iiif-note__filter' + (galleryFilter === 'dup-image' ? ' is-active' : '')}
+                        aria-pressed={galleryFilter === 'dup-image'}
+                        onClick={() => setGalleryFilter((f) => (f === 'dup-image' ? null : 'dup-image'))}
+                      >
+                        {galleryFilter === 'dup-image' ? '↩ Show all images' : `Show only these ${collisions.dupImageIdx.size} images`}
+                      </button>
+                      <button
+                        type="button"
+                        className="iiif-note__close"
+                        onClick={() => { setDupImageNoteHidden(true); if (galleryFilter === 'dup-image') setGalleryFilter(null); }}
+                        aria-label="Dismiss this warning"
+                        title="Dismiss this warning"
+                      >×</button>
+                    </div>
+                  </div>
+                  <div className="iiif-note__body">
+                    The exact same picture appears more than once in this manifest (identical image URL → identical SHA-1). They are marked with a <span className="iiif-collision-swatch iiif-collision-swatch--image" />&nbsp;orange dashed border. Uploading the same image twice is usually a manifest defect — consider deselecting the duplicates.
+                    <ul className="iiif-collision-note__list">
+                      {collisions.imageGroups.map((g, i) => (
+                        <li key={i}>images {g.positions.join(' = ')} are identical</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               )}
               {collisions.imageGroups.length > 0 && dupImageNoteHidden && (
@@ -1594,10 +1621,12 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 </span>
               </div>
               <div
-                className={'iiif-gallery' + (galleryFilter ? ' iiif-gallery--clustered' : '')}
+                className={'iiif-gallery' + (galleryFilter === 'dup-name' || galleryFilter === 'dup-image' ? ' iiif-gallery--clustered' : '')}
                 onScroll={clearHoverPreview}
               >
-                {galleryFilter
+                {galleryFilter === 'downscale'
+                  ? manifest.canvases.filter((c) => c.downscaled).map((c) => renderCanvasTile(c))
+                  : galleryFilter === 'dup-name' || galleryFilter === 'dup-image'
                   ? (galleryFilter === 'dup-name' ? collisions.labelGroups : collisions.imageGroups).map((g, gi) => {
                       // Frame each group to exactly its tiles: N columns of
                       // 112px (capped at 6, wraps beyond), + gaps + padding.
