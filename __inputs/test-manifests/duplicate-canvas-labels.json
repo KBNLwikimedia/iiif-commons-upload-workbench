@@ -4,36 +4,19 @@
   "type": "Manifest",
   "label": {
     "en": [
-      "KW 129 C 3 (TEST — duplicate labels & duplicate images)"
-    ]
-  },
-  "summary": {
-    "en": [
-      "SYNTHETIC TEST MANIFEST. Exercises three collision types: (1) duplicate canvas LABELS (same label -> same derived Commons filename): images 1,2,3 and 5,7. (2) duplicate IMAGES within the manifest (identical URL -> identical SHA-1): images 4=8 and 9=10. (3) images that ALREADY EXIST on Commons byte-for-byte (SHA-1 match -> exists-on-commons flag at import): image 11 = File:Karel van de Woestijne, 1904 - BBB-1560.jpg (sha1 884664f4...), image 12 = File:World map ... J.F. Martinet\".jpg (sha1 6a249cf8...). Bodies 1-10 point at a real KB manifest; 11-12 at the Commons originals (upload.wikimedia.org, CORS *). Self-hosted on GitHub raw (CORS-open) so it loads by URL."
+      "Karel van de Woestijne, 1904"
     ]
   },
   "metadata": [
     {
       "label": {
         "nl": [
-          "Signatuur"
+          "Toelichting"
         ]
       },
       "value": {
         "nl": [
-          "KW 129 C 3"
-        ]
-      }
-    },
-    {
-      "label": {
-        "nl": [
-          "Inhoud"
-        ]
-      },
-      "value": {
-        "nl": [
-          "Synthetic test manuscript for duplicate-filename & duplicate-image detection"
+          "SYNTHETISCH TESTMANIFEST voor dubbel-detectie (OI-85). Scenario's: beelden 1,2,3 en 5,7 = dubbele canvas-labels (zelfde afgeleide bestandsnaam); 4=8 en 9=10 = exact dezelfde afbeelding binnen het manifest (identieke SHA-1); 11 en 12 = byte-identiek aan bestaande Commons-bestanden (SHA-1-match bij import); 13 = afgeleide bestandsnaam botst met een bestaand Commons-bestand (Karel van de Woestijne, 1904 - BBB-1560.jpg) terwijl de afbeelding zelf nieuw is; hernoem beeld 11 naar 'Karel van de Woestijne, 1904 - BBB-1560' voor de gecombineerde naam+SHA-1-botsing."
         ]
       }
     },
@@ -1355,6 +1338,117 @@
                 "format": "image/jpeg"
               },
               "target": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-12"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://raw.githubusercontent.com/KBNLwikimedia/iiif-manifest-upload-workbench/main/__inputs/test-manifests/duplicate-canvas-labels.json#canvas-13",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "0013_BBB-1560.jpg"
+        ]
+      },
+      "width": 4619,
+      "height": 6239,
+      "thumbnail": [
+        {
+          "id": "https://dlc.services/iiif-img/32/5/128E19_0008_003v.jpg/full/400,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://presentation-api.dlc.services/canvases/xa7iu9bcon1wm4516d2zjw3m/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://presentation-api.dlc.services/canvases/xa7iu9bcon1wm4516d2zjw3m/painting/0",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0008_003v.jpg/full/max/0/default.jpg",
+                "type": "Image",
+                "width": 4619,
+                "height": 6239,
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "@context": "http://iiif.io/api/image/3/context.json",
+                    "id": "https://dlc.services/iiif-img/v3/32/5/128E19_0008_003v.jpg",
+                    "type": "ImageService3",
+                    "profile": "level2",
+                    "protocol": "http://iiif.io/api/image",
+                    "width": 4619,
+                    "height": 6239,
+                    "maxArea": 25000000,
+                    "sizes": [
+                      {
+                        "width": 758,
+                        "height": 1024
+                      },
+                      {
+                        "width": 297,
+                        "height": 400
+                      },
+                      {
+                        "width": 149,
+                        "height": 200
+                      },
+                      {
+                        "width": 74,
+                        "height": 100
+                      }
+                    ],
+                    "tiles": [
+                      {
+                        "width": 512,
+                        "height": 512,
+                        "scaleFactors": [
+                          1,
+                          2,
+                          4,
+                          8,
+                          16,
+                          32,
+                          64
+                        ]
+                      }
+                    ],
+                    "extraQualities": [
+                      "bitonal",
+                      "color",
+                      "gray"
+                    ],
+                    "extraFormats": [
+                      "tif",
+                      "gif"
+                    ],
+                    "extraFeatures": [
+                      "baseUriRedirect",
+                      "canonicalLinkHeader",
+                      "cors",
+                      "jsonldMediaType",
+                      "mirroring",
+                      "profileLinkHeader",
+                      "regionByPct",
+                      "regionByPx",
+                      "regionSquare",
+                      "rotationArbitrary",
+                      "rotationBy90s",
+                      "sizeByConfinedWh",
+                      "sizeByH",
+                      "sizeByPct",
+                      "sizeByW",
+                      "sizeByWh"
+                    ]
+                  }
+                ]
+              },
+              "target": "https://presentation-api.dlc.services/canvases/xa7iu9bcon1wm4516d2zjw3m"
             }
           ]
         }

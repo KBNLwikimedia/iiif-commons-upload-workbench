@@ -8190,8 +8190,10 @@ body.col-resizing * { cursor: col-resize !important; }
    ============================================================ */
 
 .iiif-modal {
-  width: min(1160px, 95vw);
-  max-height: 90vh;
+  /* Wide enough that the select-step gallery breathes (was 1160px — the
+     collision warnings + badges made it cramped, 2026-07-11). */
+  width: min(1480px, 96vw);
+  max-height: 92vh;
   display: flex;
   flex-direction: column;
 }
