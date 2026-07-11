@@ -1684,7 +1684,7 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
                   <span className="search__icon"><Icon name="search" size={16} /></span>
                   <input
                     className="search__input"
-                    placeholder="Search your files…"
+                    placeholder="Search your stashed files…"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)} />
                 </div>
@@ -2039,7 +2039,7 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
                   <span className="search__icon"><Icon name="search" size={14} /></span>
                   <input
                     className="search__input"
-                    placeholder="Search published files…"
+                    placeholder="Search your published files on Commons…"
                     value={histQuery}
                     onChange={(e) => setHistQuery(e.target.value)}
                   />
