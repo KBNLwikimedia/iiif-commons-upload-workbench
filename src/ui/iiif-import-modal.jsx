@@ -1493,7 +1493,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
               {manifest.downscaledCount > 0 && !downscaleNoteHidden && (
                 <div className="iiif-hint iiif-note iiif-downscale-note">
                   <div className="iiif-note__main">
-                    <strong>{manifest.downscaledCount} of the {manifest.canvasCount} images are larger than 25 megapixels</strong>
+                    <strong>⚠️ Images larger than 25 megapixels — {manifest.downscaledCount} / {manifest.canvasCount} images</strong>
                     <div className="iiif-note__body">
                       They carry a “&gt;25 MP” tag below. The KB's IIIF image server caps what it delivers at 25 MP, so those images arrive slightly smaller than the original (but still high-res) — e.g. an 8040 × 6030 image (48 MP) downloads at ~25 MP. This is a limit of the IIIF server — not of Wikimedia Commons, which accepts much larger files.
                     </div>
