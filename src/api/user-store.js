@@ -952,11 +952,12 @@ export function getAllPrefs() {
 // capped. Only reloadable (URL-loaded) manifests belong here; a dropped
 // file has no reusable URL. This is user-authored activity, not derived
 // data — safe to persist (unlike manifest JSON, which we recompute).
-const RECENT_MANIFESTS_MAX = 10;
-
+// The recent-manifest list is unbounded (maintainer request 2026-07-12):
+// it's small user-authored state (url + signature + title + thumb per entry),
+// and users want their full import history, not just the last 10.
 export function getRecentManifests() {
   const arr = STORES.preferences.state.recentManifests;
-  return Array.isArray(arr) ? arr.filter((r) => r && r.url).slice(0, RECENT_MANIFESTS_MAX) : [];
+  return Array.isArray(arr) ? arr.filter((r) => r && r.url) : [];
 }
 
 export function addRecentManifest({ url, signature, title, thumb } = {}) {
@@ -970,7 +971,7 @@ export function addRecentManifest({ url, signature, title, thumb } = {}) {
     // First-canvas thumbnail URL (purpose-built /full/400,/ size) for the list.
     thumb: String(thumb || '').trim() || null,
   };
-  const next = [entry, ...prev].slice(0, RECENT_MANIFESTS_MAX);
+  const next = [entry, ...prev];
   setPref('recentManifests', next);
 }
 
