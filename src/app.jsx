@@ -9,6 +9,7 @@ import { WikitextPreviewModal } from './ui/wikitext-preview-modal.jsx';
 import InfoModal from './ui/info-modal.jsx';
 import PilingMode from './ui/piling-mode.jsx';
 import { Cc0Modal, CC0_ACK_VERSION, shouldShowCc0Modal } from './ui/cc0-modal.jsx';
+import { WaiverModal, WAIVER_VERSION, shouldShowWaiverModal } from './ui/waiver-modal.jsx';
 import { IiifImportModal } from './ui/iiif-import-modal.jsx';
 import { DEMO_MODE } from './config.js';
 import {
@@ -1407,6 +1408,19 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
     if (DEMO_MODE) return false;
     return shouldShowCc0Modal(getPref('cc0Acknowledgment'));
   });
+  // 48-hour waiver — shown AFTER the CC0 modal. If CC0 is up, the waiver waits
+  // and is opened when CC0 closes (see closeCc0); if CC0 is already suppressed,
+  // the waiver may show on its own at first paint.
+  const [waiverModalOpen, setWaiverModalOpen] = useState(() => {
+    if (DEMO_MODE) return false;
+    const cc0WillShow = shouldShowCc0Modal(getPref('cc0Acknowledgment'));
+    return !cc0WillShow && shouldShowWaiverModal(getPref('iiifWaiver'));
+  });
+  // Close the CC0 modal, then chain the waiver if it still needs showing.
+  const closeCc0 = () => {
+    setCc0ModalOpen(false);
+    if (!DEMO_MODE && shouldShowWaiverModal(getPref('iiifWaiver'))) setWaiverModalOpen(true);
+  };
   // Wikitext preview modal: { item } or null. Read-only inspection of the
   // assembled wikitext for any single row.
   const [wikitextPreviewItem, setWikitextPreviewItem] = useState(null);
@@ -2451,9 +2465,34 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
               suppressFurther: !!suppressFurther,
               version: CC0_ACK_VERSION,
             });
-            setCc0ModalOpen(false);
+            closeCc0();
           }}
-          onDismiss={() => setCc0ModalOpen(false)}
+          onDismiss={closeCc0}
+        />
+      )}
+
+      {/* 48-hour waiver — active acknowledgment that the temporary Commons
+          upload area is cleared after 48h. Shown after the CC0 modal. */}
+      {waiverModalOpen && (
+        <WaiverModal
+          onAccept={({ suppressFurther }) => {
+            setPref('iiifWaiver', {
+              accepted: true,
+              acknowledgedAt: new Date().toISOString(),
+              suppressFurther: !!suppressFurther,
+              version: WAIVER_VERSION,
+            });
+            setWaiverModalOpen(false);
+          }}
+          onDecline={({ suppressFurther }) => {
+            setPref('iiifWaiver', {
+              accepted: false,
+              acknowledgedAt: new Date().toISOString(),
+              suppressFurther: !!suppressFurther,
+              version: WAIVER_VERSION,
+            });
+            setWaiverModalOpen(false);
+          }}
         />
       )}
 

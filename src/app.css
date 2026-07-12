@@ -4730,6 +4730,40 @@ body.col-resizing * { cursor: col-resize !important; }
   .cc0-modal__buttons .btn { width: 100%; }
 }
 
+/* 48-hour waiver modal (chained after CC0). */
+.waiver-modal { max-width: 560px; }
+.waiver-modal__body {
+  padding: 16px 20px;
+  gap: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-base);
+}
+.waiver-modal__body p { margin: 0; }
+.waiver-modal__points { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+.waiver-modal__risk {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color-destructive, #d0a3a0);
+  background: var(--background-color-destructive-subtle, #fee7e6);
+  border-radius: 6px;
+  color: var(--color-base);
+}
+.waiver-modal__dontshow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-subtle);
+  cursor: pointer;
+  margin-top: 2px;
+}
+.waiver-modal__foot { flex-direction: column; align-items: stretch; gap: 10px; }
+.waiver-modal__buttons { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+@media (max-width: 520px) {
+  .waiver-modal__buttons { flex-direction: column-reverse; }
+  .waiver-modal__buttons .btn { width: 100%; }
+}
+
 .reqrow {
   display: flex;
   align-items: flex-start;

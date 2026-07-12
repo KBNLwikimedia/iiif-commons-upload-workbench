@@ -109,8 +109,7 @@ function Login() {
           <span className="chip chip--info" style={{ marginLeft: 'var(--spacing-50)' }}>Beta</span>
         </div>
         <p className="login-screen__lede">
-          Turn IIIF manifests (starting with the KB's medieval manuscripts)
-          into Wikimedia Commons uploads — parse the metadata, derive full-res
+          <strong>Turn IIIF manifests into Wikimedia Commons uploads</strong> — parse the metadata, derive full-res
           images, prefill wikitext + structured data, review, and publish.
         </p>
         <button

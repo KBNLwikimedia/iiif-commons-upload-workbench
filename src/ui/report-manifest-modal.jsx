@@ -319,17 +319,21 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
           {/* Step 2: record the created issue number. */}
           <section className="feedback-modal__section report-modal__record">
             <label htmlFor="report-issue" className="feedback-modal__label">
-              2. Created the issue? Let the tool find it — or paste in the number or URL
+              2. Created the issue? Let the tool find it — or paste in the number
             </label>
             <div className="report-modal__record-row">
               <input
                 id="report-issue"
                 type="text"
+                inputMode="numeric"
                 className={'report-modal__issue-input' + (inputError ? ' report-modal__issue-input--invalid' : '')}
                 value={issueInput}
-                onChange={(e) => setIssueInput(e.target.value)}
+                /* Digits only: strip every non-digit as typed/pasted (also drops
+                   any spaces, #, or a pasted URL's punctuation) so the field can
+                   only ever hold an issue number. */
+                onChange={(e) => setIssueInput(e.target.value.replace(/\D/g, ''))}
                 onKeyDown={(e) => { if (e.key === 'Enter') saveIssue(); }}
-                placeholder="e.g. 42, #42, or https://github.com/…/issues/42"
+                placeholder="e.g. 42"
                 aria-invalid={!!inputError}
               />
               <button
