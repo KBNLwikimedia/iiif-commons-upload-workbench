@@ -1,37 +1,31 @@
-// 48-hour waiver modal — shown after the CC0 notice. The user must actively
-// acknowledge (or decline) that imported images sit in a temporary upload area
-// on Commons that is cleared after 48 hours, so the import→publish flow has to
-// be finished within that window.
+// 48-hour waiver modal — shown after the CC0 notice. The user acknowledges
+// that imported images sit in a temporary upload area on Commons that is
+// cleared after 48 hours, so the import→publish flow has to be finished within
+// that window.
 //
-// Two DISTINCT outcomes (both proceed into the app — this is a warning, not a
-// hard gate):
-//   - Accept  → iiifWaiver.accepted = true  → never shown again.
-//   - Decline → iiifWaiver.accepted = false → the user proceeds "at their own
-//               risk"; the modal reappears next session (nudging them to
-//               accept) UNLESS they also ticked "Don't show this again".
-//
-// The "Don't show this again" checkbox (unchecked by default) sets
-// suppressFurther, which only affects the decline path (accepting already
-// suppresses future shows).
+// One button ("OK, I understand") plus a "Don't show this again" checkbox
+// (unchecked by default). The checkbox is the ONLY thing that suppresses the
+// modal: acknowledging with it unchecked records suppressFurther=false, so the
+// modal reappears next session; ticking it records suppressFurther=true and it
+// never shows again.
 //
 // Persistence: one key on Preferences.json:
-//   iiifWaiver: { accepted: <bool>, acknowledgedAt: <ISO>, suppressFurther: <bool>, version: 1 }
+//   iiifWaiver: { acknowledgedAt: <ISO>, suppressFurther: <bool>, version: 1 }
 
 import React from 'react';
 
 // Bump to re-prompt everyone after a material change to the 48-hour policy/copy.
 export const WAIVER_VERSION = 1;
 
-// Show unless: accepted (ever), or declined-with-suppress, or version matches an
-// accepted record. A version mismatch always re-prompts.
+// Show unless the user acknowledged with "Don't show this again" ticked. A
+// missing record or a version mismatch always re-prompts.
 export function shouldShowWaiverModal(waiver) {
   if (!waiver) return true;
   if (waiver.version !== WAIVER_VERSION) return true;
-  if (waiver.accepted) return false;      // accepted → done forever
-  return !waiver.suppressFurther;         // declined → again unless suppressed
+  return !waiver.suppressFurther;
 }
 
-export function WaiverModal({ onAccept, onDecline }) {
+export function WaiverModal({ onAcknowledge }) {
   const [suppress, setSuppress] = React.useState(false);
 
   // Lock body scroll while open. Esc does NOT close — this is a required
@@ -77,8 +71,8 @@ export function WaiverModal({ onAccept, onDecline }) {
             <li>Re-importing is cheap and safe — the tool detects images already on Commons (by SHA-1), so nothing is uploaded twice.</li>
           </ul>
           <p className="waiver-modal__risk">
-            ⚠️ If you do not accept this, you can still use the tool — but any imported images
-            lost after 48 hours are then <strong>your own responsibility</strong>.
+            ⚠️ Any imported images you have not published within 48 hours are removed and are
+            then <strong>your own responsibility</strong> to re-import.
           </p>
           <label className="waiver-modal__dontshow">
             <input
@@ -95,16 +89,9 @@ export function WaiverModal({ onAccept, onDecline }) {
             <button
               type="button"
               className="btn btn--progressive"
-              onClick={() => onAccept({ suppressFurther: suppress })}
+              onClick={() => onAcknowledge({ suppressFurther: suppress })}
             >
-              I understand — I&apos;ll upload within 48&nbsp;hours
-            </button>
-            <button
-              type="button"
-              className="btn"
-              onClick={() => onDecline({ suppressFurther: suppress })}
-            >
-              I don&apos;t accept — proceed at my own risk
+              OK, I understand
             </button>
           </div>
         </footer>

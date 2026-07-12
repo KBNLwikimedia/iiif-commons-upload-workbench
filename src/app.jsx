@@ -2475,18 +2475,8 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
           upload area is cleared after 48h. Shown after the CC0 modal. */}
       {waiverModalOpen && (
         <WaiverModal
-          onAccept={({ suppressFurther }) => {
+          onAcknowledge={({ suppressFurther }) => {
             setPref('iiifWaiver', {
-              accepted: true,
-              acknowledgedAt: new Date().toISOString(),
-              suppressFurther: !!suppressFurther,
-              version: WAIVER_VERSION,
-            });
-            setWaiverModalOpen(false);
-          }}
-          onDecline={({ suppressFurther }) => {
-            setPref('iiifWaiver', {
-              accepted: false,
               acknowledgedAt: new Date().toISOString(),
               suppressFurther: !!suppressFurther,
               version: WAIVER_VERSION,

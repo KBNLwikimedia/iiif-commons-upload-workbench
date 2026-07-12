@@ -9823,11 +9823,16 @@ body.col-resizing * { cursor: col-resize !important; }
    scrolled internally got squeezed to a sliver. Now the entire column
    (warnings + toolbar + gallery) scrolls together on the modal body, so the
    gallery keeps its full height (maintainer request 2026-07-12). */
-.iiif-modal__body--select { overflow-y: auto; }
+/* Zero the body's TOP padding so the sticky select-bar can stick flush against
+   the header (top:0 would otherwise land 16px down at the padding edge, and
+   scrolling tiles would peek through that band). The top spacing is moved into
+   the wrapper so the warnings still clear the header at scroll 0. */
+.iiif-modal__body--select { overflow-y: auto; padding-top: 0; }
 .iiif-step-select {
   display: flex;
   flex-direction: column;
   flex: 0 0 auto; /* natural height so the body — not the grid — is the scroller */
+  padding-top: var(--spacing-100);
 }
 .iiif-step-select .iiif-gallery {
   /* Explicit row sizing stays: `auto` rows can still collapse in a flex column. */
