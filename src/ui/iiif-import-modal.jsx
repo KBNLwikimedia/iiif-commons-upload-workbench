@@ -1012,7 +1012,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     // click must not destroy a loaded wizard — or a typed URL.
     <div className="modal-backdrop" onClick={step === 'done' ? onClose : undefined}>
       <div
-        className="modal iiif-modal"
+        className={`modal iiif-modal${step === 'select' ? ' iiif-modal--wide' : ''}`}
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"

@@ -18,7 +18,7 @@ export default function FeedbackButton() {
         type="button"
         className="btn btn--quiet topbar__feedback"
         onClick={() => setOpen(true)}
-        title="Upload Workbench is in beta — your feedback is unusually valuable"
+        title="IIIF Manifest Upload Workbench is in beta — your feedback is unusually valuable"
       >
         <Icon name="info" size={16} />
         <span className="topbar__feedback-label">Feedback</span>

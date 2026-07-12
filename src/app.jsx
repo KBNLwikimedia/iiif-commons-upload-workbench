@@ -1665,7 +1665,7 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
         <button
           type="button"
           className="btn btn--quiet"
-          title="About Upload Workbench — version, links, changelog"
+          title="About IIIF Manifest Upload Workbench — version, links, changelog"
           onClick={() => setInfoOpen(true)}
         >
           About

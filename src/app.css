@@ -76,8 +76,12 @@ body {
 .topbar__avatar {
   width: 28px; height: 28px;
   border-radius: var(--border-radius-circle);
-  background: var(--background-color-progressive-subtle);
-  color: var(--color-progressive);
+  /* Neutral, sober chrome (Codex "one accent per screen"): the account button
+     is not a second brand-blue element. Hairline edge + neutral fill + dark
+     initials, matching the topbar's other quiet controls. */
+  background: var(--background-color-neutral-subtle);
+  color: var(--color-emphasized);
+  border: 1px solid var(--border-color-base);
   display: grid; place-items: center;
   font-weight: var(--font-weight-semi-bold);
   font-size: 12px;
@@ -5438,7 +5442,6 @@ body.col-resizing * { cursor: col-resize !important; }
   position: relative;
 }
 .topbar__avatar--btn {
-  border: 0;
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
@@ -8297,15 +8300,22 @@ body.col-resizing * { cursor: col-resize !important; }
    ============================================================ */
 
 .iiif-modal {
-  /* Wide enough that the select-step gallery breathes (2026-07-11). NB: the
-     base .modal rule carries max-width: 540px — without overriding max-width
-     here the width line silently does nothing (the wizard sat clamped at
-     540px all along). */
-  width: min(1480px, 96vw);
-  max-width: min(1480px, 96vw);
+  /* Default width for the text-content steps (input / review / confirm /
+     done). The base .modal rule carries max-width: 540px — override it here or
+     the width line silently does nothing. Only the select step needs to be
+     wide (see .iiif-modal--wide). */
+  width: min(880px, 94vw);
+  max-width: min(880px, 94vw);
   max-height: 92vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Select step only: wide enough that the thumbnail gallery + duplicate
+   clusters breathe. */
+.iiif-modal--wide {
+  width: min(1480px, 96vw);
+  max-width: min(1480px, 96vw);
 }
 
 .iiif-modal__body {
