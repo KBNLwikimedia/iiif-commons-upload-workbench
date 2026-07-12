@@ -1757,6 +1757,15 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
               </div>
               {hoverPreview && (
                 <div className="iiif-hover-preview" style={{ left: hoverPreview.left, top: hoverPreview.top }} aria-hidden="true">
+                  {/* Caption above the image (maintainer request 2026-07-12):
+                      filename first, then the manuscript short title. */}
+                  <div className="iiif-hover-preview__cap">
+                    <span className="iiif-hover-preview__label">{hoverPreview.canvas.label || `#${hoverPreview.canvas.index + 1}`}</span>
+                    {(() => {
+                      const st = (title || mapping?.manuscript?.title || '').trim();
+                      return st ? <span className="iiif-hover-preview__title">{st}</span> : null;
+                    })()}
+                  </div>
                   <img
                     src={hoverPreview.canvas.serviceId
                       ? `${hoverPreview.canvas.serviceId}/full/700,/0/default.jpg`
@@ -1764,7 +1773,6 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                     alt=""
                     onError={(e) => { if (e.target.src !== hoverPreview.canvas.thumbUrl) e.target.src = hoverPreview.canvas.thumbUrl; }}
                   />
-                  <span className="iiif-hover-preview__label">{hoverPreview.canvas.label || `#${hoverPreview.canvas.index + 1}`}</span>
                 </div>
               )}
             </div>

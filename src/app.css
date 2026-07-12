@@ -9434,12 +9434,23 @@ body.col-resizing * { cursor: col-resize !important; }
   border-radius: 4px;
 }
 
+/* Caption block sits ABOVE the image (filename first, short title under). */
+.iiif-hover-preview__cap {
+  padding: 2px 4px 6px;
+  text-align: center;
+}
 .iiif-hover-preview__label {
   display: block;
-  font-size: 11.5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-emphasized, #202122);
+  word-break: break-all;
+}
+.iiif-hover-preview__title {
+  display: block;
+  font-size: 11px;
   color: var(--color-subtle);
-  padding: 5px 4px 1px;
-  text-align: center;
+  margin-top: 1px;
 }
 
 /* Category suggestion chips (wizard step 2) */
