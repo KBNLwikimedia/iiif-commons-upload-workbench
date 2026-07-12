@@ -8647,8 +8647,29 @@ body.col-resizing * { cursor: col-resize !important; }
   border-radius: 5px;
   font-size: 13px;
 }
-.report-modal__saved { margin: 8px 0 0; font-size: 12.5px; color: var(--color-base); }
-.report-modal__saved a { color: var(--color-progressive, #36c); }
+.report-modal__saved { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 8px 0 0; font-size: 12.5px; color: var(--color-base); }
+.report-modal__saved-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 1px 2px 1px 7px;
+  border: 1px solid var(--border-color-base, #c8ccd1);
+  border-radius: 10px;
+  background: var(--background-color-neutral-subtle, #f6f7f9);
+}
+.report-modal__saved-chip a { color: var(--color-progressive, #36c); text-decoration: none; }
+.report-modal__saved-remove {
+  border: 0;
+  background: none;
+  cursor: pointer;
+  color: var(--color-subtle);
+  font-size: 15px;
+  line-height: 1;
+  padding: 0 4px;
+  border-radius: 50%;
+}
+.report-modal__saved-remove:hover { color: var(--color-destructive, #b32424); }
+.report-modal__saved-note { color: var(--color-subtle); }
 /* Find-my-issue button turns red when the search comes back empty / errors,
    so a failed lookup is obvious even without reading the message line. */
 .report-modal__findbtn--notfound,

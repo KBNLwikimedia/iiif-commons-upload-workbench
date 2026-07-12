@@ -1014,6 +1014,23 @@ export function recordManifestIssue(url, { number, url: issueUrl } = {}) {
   return issues;
 }
 
+// Remove a wrongly-recorded issue from a manifest (pasted/looked-up the wrong
+// number). Returns the remaining issues array.
+export function removeManifestIssue(url, number) {
+  const u = String(url || '').trim();
+  const num = Number(number) || null;
+  if (!u || !num) return [];
+  const all = getRecentManifests();
+  const idx = all.findIndex((r) => r.url === u);
+  if (idx < 0) return [];
+  const entry = all[idx];
+  const issues = (Array.isArray(entry.issues) ? entry.issues : []).filter((i) => i.number !== num);
+  const next = all.slice();
+  next[idx] = { ...entry, issues };
+  setPref('recentManifests', next);
+  return issues;
+}
+
 export function removeRecentManifest(url) {
   const u = String(url || '').trim();
   if (!u) return;

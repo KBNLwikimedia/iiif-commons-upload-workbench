@@ -25,7 +25,7 @@ import { runIiifImport } from '../api/iiif-pipeline.js';
 import { categoryExists, searchCategories, findManuscriptCategoryVariants, checkFilenamesExist } from '../api/commons.js';
 import { KB_PARENT_CATEGORY, KB_LICENSE_WIKITEXT } from '../api/iiif-map.js';
 import { DEMO_MODE } from '../config.js';
-import { getRecentManifests, addRecentManifest, removeRecentManifest, clearRecentManifests, recordManifestIssue } from '../api/user-store.js';
+import { getRecentManifests, addRecentManifest, removeRecentManifest, clearRecentManifests, recordManifestIssue, removeManifestIssue } from '../api/user-store.js';
 import { PROVIDERS, DEFAULT_PROVIDER_ID, providerForUrl } from '../providers.js';
 import ReportManifestModal from './report-manifest-modal.jsx';
 
@@ -860,6 +860,11 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   const handleRecordIssue = (number, issueUrl) => {
     if (!activeManifestUrl) return;
     recordManifestIssue(activeManifestUrl, { number, url: issueUrl });
+    setRecent(getRecentManifests());
+  };
+  const handleRemoveIssue = (number) => {
+    if (!activeManifestUrl) return;
+    removeManifestIssue(activeManifestUrl, number);
     setRecent(getRecentManifests());
   };
 
@@ -2240,6 +2245,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
             sourceUrl={activeManifestUrl || manifest.sourceUrl || manifest.id}
             recordedIssues={activeRecentEntry?.issues || []}
             onRecordIssue={handleRecordIssue}
+            onRemoveIssue={handleRemoveIssue}
           />
         )}
       </div>

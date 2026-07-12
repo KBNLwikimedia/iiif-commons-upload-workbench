@@ -81,7 +81,7 @@ function buildReportBody({ manuscript, sourceUrl, dup, canvases, note }) {
   return lines.join('\n');
 }
 
-export default function ReportManifestModal({ onClose, manifest, manuscript, sourceUrl, recordedIssues = [], onRecordIssue }) {
+export default function ReportManifestModal({ onClose, manifest, manuscript, sourceUrl, recordedIssues = [], onRecordIssue, onRemoveIssue }) {
   const canvases = manifest?.canvases || [];
   const dup = useMemo(() => findManifestDuplicates(canvases), [canvases]);
   const ms = manuscript || {};
@@ -144,6 +144,14 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
     onRecordIssue?.(num, issueInput.trim());
     setSaved((prev) => (prev.includes(num) ? prev : [...prev, num]));
     setIssueInput('');
+  };
+
+  // Undo a wrong paste/lookup: drop the number here and from Preferences, and
+  // clear any stale "found" message so a fresh lookup starts clean.
+  const removeSaved = (num) => {
+    onRemoveIssue?.(num);
+    setSaved((prev) => prev.filter((x) => x !== num));
+    setFindMsg(null);
   };
 
   // "Find my issue": query GitHub's public search API (no auth, CORS-enabled)
@@ -304,14 +312,22 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
               </p>
             )}
             {saved.length > 0 && (
-              <p className="report-modal__saved">
-                Reported as {saved.map((n, i) => (
-                  <React.Fragment key={n}>
-                    {i > 0 && ', '}
+              <div className="report-modal__saved">
+                <span>Reported as</span>
+                {saved.map((n) => (
+                  <span key={n} className="report-modal__saved-chip">
                     <a href={`https://github.com/KBNLwikimedia/iiif-manifest-upload-workbench/issues/${n}`} target="_blank" rel="noopener noreferrer">#{n}</a>
-                  </React.Fragment>
-                ))} — now shown under <strong>Needs work</strong>.
-              </p>
+                    <button
+                      type="button"
+                      className="report-modal__saved-remove"
+                      onClick={() => removeSaved(n)}
+                      title={`Remove issue #${n} — wrong number? Delete it and look up again.`}
+                      aria-label={`Remove issue #${n}`}
+                    >×</button>
+                  </span>
+                ))}
+                <span className="report-modal__saved-note">— shown under <strong>Needs work</strong>. Wrong one? Remove it (×) and look up again.</span>
+              </div>
             )}
           </section>
         </div>
