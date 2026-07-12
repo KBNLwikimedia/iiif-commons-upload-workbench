@@ -1713,7 +1713,7 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
                 </span>
                 {stashItems.length > 0 && (
                   <button
-                    className="btn btn--quiet section-head__clear"
+                    className="btn btn--destructive-quiet section-head__clear"
                     onClick={() => setClearStashOpen(true)}
                     title="Clear the stash: via Special:UploadStash (server-side) or by hiding all rows here"
                   >

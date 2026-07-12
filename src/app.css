@@ -1363,9 +1363,13 @@ hr.divider { border: 0; border-top: 1px solid var(--border-color-muted); margin:
 
 /* ===== Table (editable, sortable, hideable, focus mode) ===== */
 .tbl-wrap {
+  /* Codex: rule-separated table band on one surface, not a rounded card
+     floating on the page (DESIGN.md "hairline rules instead of cards"). White
+     surface with hairline top/bottom rules, no side borders, no radius. */
   background: var(--background-color-base);
-  border: 1px solid var(--border-color-muted);
-  border-radius: var(--border-radius-large);
+  border-block: 1px solid var(--border-color-subtle);
+  border-inline: 0;
+  border-radius: 0;
   overflow: hidden;
 }
 
@@ -5565,10 +5569,13 @@ body.col-resizing * { cursor: col-resize !important; }
    header is the toggle; the body grows downward when expanded so the toggle
    never shifts under the user's cursor. (T425883) */
 .hidden-section {
+  /* Rule-separated collapsible (was a dashed rounded card — dashed borders are
+     explicitly un-Codex). Hairline top rule, no radius. */
   margin-top: var(--spacing-100);
-  border: 1px dashed var(--border-color-muted);
-  border-radius: var(--border-radius-large);
-  background: var(--background-color-neutral-subtle);
+  border: 0;
+  border-top: 1px solid var(--border-color-subtle);
+  border-radius: 0;
+  background: transparent;
   overflow: hidden;
 }
 .hidden-section--open { background: var(--background-color-base); }
@@ -9495,12 +9502,9 @@ body.col-resizing * { cursor: col-resize !important; }
 }
 
 .section-head__clear {
+  /* Colour comes from .btn--destructive-quiet (red) so the destructive action
+     is identifiable and doesn't read as part of the grey metadata line. */
   font-size: 12.5px;
-  color: var(--color-subtle);
-}
-
-.section-head__clear:hover {
-  color: var(--color-destructive, #b32424);
 }
 
 .clear-stash-modal {
