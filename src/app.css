@@ -4719,7 +4719,10 @@ body.col-resizing * { cursor: col-resize !important; }
 .modal__hint { font-size: 12px; color: var(--color-subtle); }
 
 /* ----- CC0 acknowledgment modal (T426455) ----- */
-.cc0-modal { max-width: 560px; }
+/* CC0 (step 1) and the waiver (step 2) share width AND a min-height, so their
+   footers — and the "OK, I understand" button — sit at the exact same spot.
+   Advancing step 1 → 2 then needs no mouse movement to click OK again. */
+.cc0-modal, .waiver-modal { max-width: 560px; min-height: 500px; }
 .cc0-modal__body {
   padding: 16px 20px;
   gap: 12px;
