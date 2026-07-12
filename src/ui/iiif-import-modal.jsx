@@ -190,6 +190,8 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
   const [url, setUrl] = React.useState('');
   const [busy, setBusy] = React.useState(false);
   const [error, setError] = React.useState(null);
+  // True while a file is dragged over the input step (drop-to-import).
+  const [dragOver, setDragOver] = React.useState(false);
   // Recently loaded manifest URLs (persisted in Preferences.json), for
   // one-click reloading.
   const [recent, setRecent] = React.useState(getRecentManifests);
@@ -534,6 +536,32 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     } finally {
       setBusy(false);
     }
+  };
+
+  // Drag-and-drop a manifest .json onto the input step. stopPropagation keeps
+  // the drop from bubbling to the app-level image dropzone behind the modal;
+  // a successful parse advances straight to the review step (via loadFile →
+  // acceptParse), so the drop opens the "next" modal just like the picker.
+  const onDropFile = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragOver(false);
+    if (busy) return;
+    const file = e.dataTransfer?.files?.[0];
+    if (file) loadFile(file);
+  };
+  const onDragOverFile = (e) => {
+    // Must preventDefault on dragover for the drop event to fire at all.
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+    if (!busy && !dragOver) setDragOver(true);
+  };
+  const onDragLeaveFile = (e) => {
+    // Ignore dragleave fired when moving between child elements — only clear
+    // when the pointer actually leaves the drop container.
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    setDragOver(false);
   };
 
   // --- derived mapping (re-runs when the user edits title/category/qid) ----
@@ -1002,7 +1030,21 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
         >
 
           {step === 'input' && (
-            <div className="iiif-step-input">
+            <div
+              className={`iiif-step-input${dragOver ? ' iiif-step-input--drag' : ''}`}
+              onDragOver={onDragOverFile}
+              onDragEnter={onDragOverFile}
+              onDragLeave={onDragLeaveFile}
+              onDrop={onDropFile}
+            >
+              {dragOver && (
+                <div className="iiif-dropoverlay" aria-hidden="true">
+                  <div className="iiif-dropoverlay__inner">
+                    <span className="iiif-dropoverlay__icon">⬇</span>
+                    Drop the manifest .json to import
+                  </div>
+                </div>
+              )}
               {/* Provider profile (OI-78). KB is the only supported collection
                   for now; eCodices is shown disabled ("coming soon"). */}
               <div className="iiif-providers">
@@ -1048,7 +1090,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
               </div>
               <p className="iiif-or">— or —</p>
               <label className="btn btn--progressive iiif-file-btn">
-                Choose a manifest .json file
+                Choose a manifest .json file — or drop one anywhere here
                 <input
                   type="file"
                   accept=".json,application/json"

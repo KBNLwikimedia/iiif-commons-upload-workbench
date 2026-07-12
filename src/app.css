@@ -8415,6 +8415,31 @@ body.col-resizing * { cursor: col-resize !important; }
   margin: 14px 0;
 }
 
+/* Drop-to-import: the whole input step is a drop target. */
+.iiif-step-input { position: relative; }
+.iiif-step-input--drag { outline: 2px dashed var(--color-progressive, #3366cc); outline-offset: -2px; border-radius: 8px; }
+.iiif-dropoverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--color-progressive, #3366cc) 10%, var(--background-color-base, #fff) 90%);
+  border-radius: 8px;
+  pointer-events: none;
+}
+.iiif-dropoverlay__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-progressive, #3366cc);
+}
+.iiif-dropoverlay__icon { font-size: 30px; line-height: 1; }
+
 .iiif-file-btn {
   /* flex (block-level) keeps .btn's vertical text centering AND lets
      margin:auto center the button itself under the "— or —" divider */
