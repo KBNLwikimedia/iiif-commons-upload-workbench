@@ -8668,6 +8668,10 @@ body.col-resizing * { cursor: col-resize !important; }
   display: block;
   height: 150px;
   width: auto;
+  /* Reserve width before the (lazy) image loads so the strip's layout is
+     stable — the lightbox↔carousel position sync measures item positions and
+     would under-scroll if unloaded thumbs collapsed to zero width. */
+  min-width: 108px;
   max-width: 220px;
   border: 1px solid var(--border-color-base);
   border-radius: 4px;

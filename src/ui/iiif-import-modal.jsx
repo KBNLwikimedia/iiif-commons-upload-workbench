@@ -610,6 +610,30 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
     const pos = list.findIndex((c) => c.index === cur.index);
     return list[pos + dir] || cur;
   });
+  // Keep the review carousel in sync with the lightbox: whenever the lightbox
+  // moves (open or arrow-navigated), centre the matching thumb in the strip so
+  // that when the lightbox closes, the carousel is parked on that image.
+  // Instant (not smooth) because the strip is hidden behind the lightbox while
+  // navigating — no point animating scrolls the user can't see.
+  React.useEffect(() => {
+    if (!lightbox) return;
+    const strip = carouselRef.current;
+    if (!strip) return;
+    const item = strip.querySelector(`[data-cindex="${lightbox.index}"]`);
+    if (!item) return;
+    const stripRect = strip.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    const delta = (itemRect.left - stripRect.left) - (strip.clientWidth - item.clientWidth) / 2;
+    // The strip's CSS `scroll-behavior: smooth` animates *every* scroll — even
+    // a scrollLeft assignment — so rapid arrow-navigation would queue a pile of
+    // interrupting animations that never reach the target. Force an instant
+    // jump for the sync (the strip is hidden behind the lightbox anyway), then
+    // restore the smooth default for the user's own nav-button scrolls.
+    const prevBehavior = strip.style.scrollBehavior;
+    strip.style.scrollBehavior = 'auto';
+    strip.scrollLeft = Math.max(0, strip.scrollLeft + delta);
+    strip.style.scrollBehavior = prevBehavior;
+  }, [lightbox]);
 
   // Apply user-edited title/category on top of the mapped items without
   // re-deriving everything: filenames and captions substitute the derived
@@ -1246,7 +1270,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       >‹</button>
                       <div className="iiif-carousel__strip" ref={carouselRef}>
                         {manifest.canvases.map((c, i) => (
-                          <figure key={c.index} className="iiif-carousel__item" title={c.label || `image ${i + 1}`}>
+                          <figure key={c.index} className="iiif-carousel__item" data-cindex={c.index} title={c.label || `image ${i + 1}`}>
                             <button
                               type="button"
                               className="iiif-carousel__thumb"
