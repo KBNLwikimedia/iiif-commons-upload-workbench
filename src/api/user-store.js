@@ -572,11 +572,8 @@ function pruneSharedDrafts() {
   return pruned;
 }
 
-export function getDraft(key) {
-  if (!key) return null;
-  const d = STORES.metadata.state.drafts?.[key];
-  return d ? expandDraft(d) : null;
-}
+// (Per-key getDraft removed OI-89: the app reads drafts only via the bulk
+//  mergeDraftsOntoItems path; add it back if a single-key read is ever needed.)
 
 export function setDraft(key, partial) {
   if (!key || !partial) return;

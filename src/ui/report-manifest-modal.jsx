@@ -23,8 +23,15 @@ const REPO_SLUG = 'KBNLwikimedia/iiif-manifest-upload-workbench';
 const GITHUB_ISSUES_NEW_URL = `https://github.com/${REPO_SLUG}/issues/new`;
 const REPORT_LABEL = 'manifest-needs-checking';
 
-// Turn "https://github.com/owner/repo/issues/123" or "#123" or "123" into the
-// numeric issue id, or null if it doesn't look like one.
+// OI-90: session cache for the repo's highest issue number (the "is this a new
+// issue" baseline). Repeated report-modal opens reuse it instead of each
+// spending one unauthenticated core-API request (~60/hr/IP).
+let cachedBaseline = null;
+
+// The issue-number field is digit-stripped on input, so `raw` is normally a
+// bare number; the optional issues-URL / #-prefix branch is a defensive guard
+// for any non-stripped caller. The 7-digit cap keeps a pasted comment-anchor
+// URL (…/issues/42#issuecomment-123456) from being read as one huge number.
 function parseIssueNumber(raw) {
   const s = String(raw || '').trim();
   if (!s) return null;
@@ -102,12 +109,15 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
   //      reject a number that isn't above the repo's highest issue at open.
   //      A number confirmed by "Find my issue" is a verified existing issue and
   //      bypasses this guard.
-  const [baseline, setBaseline] = useState(null); // highest issue# at open, or null if unknown
+  const [baseline, setBaseline] = useState(cachedBaseline); // highest issue# at open, null if unknown
   const [verifiedNumber, setVerifiedNumber] = useState(null);
   useEffect(() => {
+    if (cachedBaseline != null) { setBaseline(cachedBaseline); return undefined; }
     let alive = true;
     (async () => {
       try {
+        // The issues endpoint intentionally includes PRs: issue and PR numbers
+        // share one sequence, so the newest of either is the true highest id.
         const res = await fetch(
           `https://api.github.com/repos/${REPO_SLUG}/issues?state=all&per_page=1&sort=created&direction=desc`,
           { headers: { Accept: 'application/vnd.github+json' } },
@@ -115,7 +125,7 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
         if (!res.ok) return; // rate-limited/offline → guard 2 simply doesn't apply
         const arr = await res.json();
         const top = Array.isArray(arr) && arr[0] ? Number(arr[0].number) : null;
-        if (alive && top) setBaseline(top);
+        if (top) { cachedBaseline = top; if (alive) setBaseline(top); }
       } catch { /* ignore — soft guard */ }
     })();
     return () => { alive = false; };
@@ -207,7 +217,10 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
     setFinding(true);
     setFindMsg(null);
     try {
-      const q = `repo:KBNLwikimedia/iiif-manifest-upload-workbench is:issue label:${REPORT_LABEL} in:title "${searchKey}"`;
+      // Strip double quotes from the phrase so a title containing one can't
+      // break the quoted `in:title "…"` search qualifier (OI-90).
+      const phrase = searchKey.replace(/"/g, ' ').replace(/\s+/g, ' ').trim();
+      const q = `repo:${REPO_SLUG} is:issue label:${REPORT_LABEL} in:title "${phrase}"`;
       const url = `https://api.github.com/search/issues?q=${encodeURIComponent(q)}&sort=created&order=desc&per_page=5`;
       const res = await fetch(url, { headers: { Accept: 'application/vnd.github+json' } });
       if (res.status === 403) { setFindMsg({ kind: 'error', text: 'GitHub search rate limit reached (a few searches per minute). Wait a moment and retry, or paste the number manually.' }); return; }

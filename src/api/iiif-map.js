@@ -41,7 +41,11 @@ export const KB_LICENSE_WIKITEXT = '{{PD-Art|PD-old-100-expired}}';
 export const KB_PARENT_CATEGORY = 'Medieval manuscripts from Koninklijke Bibliotheek';
 export const KB_INSTITUTION_WIKITEXT = '{{Institution:Koninklijke Bibliotheek, Den Haag}}';
 export const KB_COLLECTION_QID = 'Q1526131'; // Koninklijke Bibliotheek
-// SDC constants per the mined conventions (commons-best-practices.md §3):
+// SDC constants per the mined conventions (commons-best-practices.md §3).
+// NB (OI-89): these SDC_* / KB_INSTITUTION_* constants and several derive*
+// exports below are consumed by the Node test harnesses (scripts/test-iiif-*)
+// and reserved for the Phase-5 buildSdcClaims() work — an "unused export"
+// scan will flag them; do NOT delete on that basis alone.
 export const SDC_PUBLIC_DOMAIN_QID = 'Q19652';
 export const SDC_FILE_AVAILABLE_ON_INTERNET_QID = 'Q74228490';
 export const SDC_COLLECTION_QUALIFIER = { property: 'P2868', qid: 'Q29188408' }; // subject has role: museum object / holding
