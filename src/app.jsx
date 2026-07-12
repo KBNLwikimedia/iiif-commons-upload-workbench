@@ -2483,6 +2483,7 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
             });
             setWaiverModalOpen(false);
           }}
+          onBack={() => { setWaiverModalOpen(false); setCc0ModalOpen(true); }}
         />
       )}
 

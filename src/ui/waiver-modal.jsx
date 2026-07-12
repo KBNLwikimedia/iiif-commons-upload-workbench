@@ -25,7 +25,7 @@ export function shouldShowWaiverModal(waiver) {
   return !waiver.suppressFurther;
 }
 
-export function WaiverModal({ onAcknowledge }) {
+export function WaiverModal({ onAcknowledge, onBack }) {
   const [suppress, setSuppress] = React.useState(false);
 
   // Lock body scroll while open. Esc does NOT close — this is a required
@@ -50,6 +50,7 @@ export function WaiverModal({ onAcknowledge }) {
               Finish your upload within 48 hours
             </h2>
             <p className="modal__sub">
+              <span className="modal__stepbadge">Step 2 of 2</span>
               One thing to acknowledge about how imported images are staged on Commons.
             </p>
           </div>
@@ -86,6 +87,11 @@ export function WaiverModal({ onAcknowledge }) {
 
         <footer className="modal__foot waiver-modal__foot">
           <div className="waiver-modal__buttons">
+            {onBack && (
+              <button type="button" className="btn" onClick={onBack}>
+                ‹ Back
+              </button>
+            )}
             <button
               type="button"
               className="btn btn--progressive"

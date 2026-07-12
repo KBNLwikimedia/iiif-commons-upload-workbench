@@ -75,7 +75,8 @@ export function Cc0Modal({ username, onAcknowledge, onDismiss }) {
               Heads up: your workbench data is public
             </h2>
             <p className="modal__sub">
-              Quick one-time notice about how your drafts and preferences are stored.
+              <span className="modal__stepbadge">Step 1 of 2</span>
+              Quick notice about how your drafts and preferences are stored.
             </p>
           </div>
           <button
