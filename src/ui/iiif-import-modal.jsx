@@ -978,7 +978,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                 input, so the header reads consistently through the wizard;
                 step-specific info goes on a second line. */}
             {step === 'input' && (
-              <p className="modal__sub">Paste a IIIF Presentation 3.0 manifest URL, or pick a downloaded manifest .json file. Only Presentation 3.0 is supported for now — 2.x support will be added in the future.</p>
+              <p className="modal__sub">Paste a IIIF Presentation 3.0 manifest URL, or pick — or drag-and-drop — a downloaded manifest .json file. Only Presentation 3.0 is supported for now — 2.x support will be added in the future.</p>
             )}
             {/* Steps past input show the manuscript identity prominently:
                 Short title + signature, bigger and darker than the old grey
