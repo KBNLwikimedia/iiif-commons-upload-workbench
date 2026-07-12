@@ -4605,6 +4605,19 @@ body.col-resizing * { cursor: col-resize !important; }
   margin-top: 1px;
   background: url('/app-logo.png') center / contain no-repeat;
 }
+/* IIIF wizard: the manifest's first-image thumbnail replaces the generic app
+   icon in the header on every step past input. */
+.modal__head--iiif-thumb::before { display: none; }
+.iiif-modal__thumb {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  margin-top: 1px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border-color-base, #c8ccd1);
+  background: var(--background-color-neutral, #eaecf0);
+}
 .modal__head > div { flex: 1; min-width: 0; }
 .modal__title { font-size: 17px; font-weight: 600; margin: 0; }
 .modal__sub { margin: 4px 0 0; font-size: 13px; color: var(--color-subtle); line-height: 1.4; }

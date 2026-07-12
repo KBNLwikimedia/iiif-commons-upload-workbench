@@ -971,7 +971,19 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
         aria-modal="true"
         aria-labelledby="iiif-modal-title"
       >
-        <header className="modal__head">
+        <header className={`modal__head${step !== 'input' && manifest?.canvases?.[0]?.thumbUrl ? ' modal__head--iiif-thumb' : ''}`}>
+          {/* Thumbnail of the manifest's first image, top-left of the header on
+              every step past input — a quick visual anchor for which manuscript
+              is open. Replaces the generic app icon on those steps (CSS hides
+              ::before via .modal__head--iiif-thumb). */}
+          {step !== 'input' && manifest?.canvases?.[0]?.thumbUrl && (
+            <img
+              className="iiif-modal__thumb"
+              src={manifest.canvases[0].thumbUrl}
+              alt=""
+              aria-hidden="true"
+            />
+          )}
           <div>
             <h2 className="modal__title" id="iiif-modal-title">{STEP_TITLES[step]}</h2>
             {/* The manuscript identity line stays put on every step past
