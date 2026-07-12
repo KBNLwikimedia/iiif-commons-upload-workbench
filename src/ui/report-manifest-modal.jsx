@@ -264,7 +264,7 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
                 placeholder="e.g. 42, #42, or https://github.com/…/issues/42"
               />
               <button
-                className="btn"
+                className={'btn' + (findMsg && findMsg.kind !== 'found' ? ' report-modal__findbtn--notfound' : '')}
                 onClick={findMyIssue}
                 disabled={finding || !searchKey}
                 title={`Search GitHub for the ${REPORT_LABEL} issue mentioning “${searchKey || 'this manifest'}”`}
