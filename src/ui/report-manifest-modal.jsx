@@ -319,7 +319,7 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
           {/* Step 2: record the created issue number. */}
           <section className="feedback-modal__section report-modal__record">
             <label htmlFor="report-issue" className="feedback-modal__label">
-              2. Created the issue? Paste its number or URL — or let the tool find it
+              2. Created the issue? Let the tool find it — or paste in the number or URL
             </label>
             <div className="report-modal__record-row">
               <input

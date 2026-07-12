@@ -9752,22 +9752,20 @@ body.col-resizing * { cursor: col-resize !important; }
 
 /* Select step: the header note + toolbar stay pinned; only the
    thumbnail grid scrolls (maintainer request 2026-07-10). */
-.iiif-modal__body--select { overflow: hidden; }
+/* One scrollbar for the whole select body: when several warning boxes stack
+   up (25 MP + dup filenames + dup images + report bar), a gallery that only
+   scrolled internally got squeezed to a sliver. Now the entire column
+   (warnings + toolbar + gallery) scrolls together on the modal body, so the
+   gallery keeps its full height (maintainer request 2026-07-12). */
+.iiif-modal__body--select { overflow-y: auto; }
 .iiif-step-select {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  min-height: 0; /* let the step shrink so the gallery gets the scrollbar */
+  flex: 0 0 auto; /* natural height so the body — not the grid — is the scroller */
 }
 .iiif-step-select .iiif-gallery {
-  overflow-y: auto;
-  flex: 1;
-  min-height: 0;
-  /* Explicit row sizing is load-bearing: with `auto` rows Chrome sizes
-     them to 0 inside this shrunk flex context and every tile squashes
-     to its 4px of borders. */
+  /* Explicit row sizing stays: `auto` rows can still collapse in a flex column. */
   grid-auto-rows: max-content;
-  /* keep tiles clear of the scrollbar */
   padding-right: 6px;
 }
 
