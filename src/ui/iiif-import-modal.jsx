@@ -971,19 +971,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
         aria-modal="true"
         aria-labelledby="iiif-modal-title"
       >
-        <header className={`modal__head${step !== 'input' && manifest?.canvases?.[0]?.thumbUrl ? ' modal__head--iiif-thumb' : ''}`}>
-          {/* Thumbnail of the manifest's first image, top-left of the header on
-              every step past input — a quick visual anchor for which manuscript
-              is open. Replaces the generic app icon on those steps (CSS hides
-              ::before via .modal__head--iiif-thumb). */}
-          {step !== 'input' && manifest?.canvases?.[0]?.thumbUrl && (
-            <img
-              className="iiif-modal__thumb"
-              src={manifest.canvases[0].thumbUrl}
-              alt=""
-              aria-hidden="true"
-            />
-          )}
+        <header className="modal__head">
           <div>
             <h2 className="modal__title" id="iiif-modal-title">{STEP_TITLES[step]}</h2>
             {/* The manuscript identity line stays put on every step past
@@ -993,19 +981,26 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
               <p className="modal__sub">Paste a IIIF Presentation 3.0 manifest URL, or pick — or drag-and-drop — a downloaded manifest .json file. Only Presentation 3.0 is supported for now — 2.x support will be added in the future.</p>
             )}
             {/* Steps past input show the manuscript identity prominently:
-                Short title + signature, bigger and darker than the old grey
-                sub-line, with the image count demoted to a muted suffix
-                (maintainer request 2026-07-12). */}
+                the first-image thumbnail in front of the Short title +
+                signature (bigger/darker than the old grey sub-line), with the
+                image count demoted to a muted suffix (maintainer request
+                2026-07-12). The app icon stays put at the top-left of the head. */}
             {step !== 'input' && (manifest ? (() => {
               const short = (title || mapping?.manuscript?.title || '').trim();
               const sig = (mapping?.manuscript?.signature || '').trim();
               const parts = [short, sig].filter(Boolean);
               const identity = parts.length ? parts.join(' — ') : (manifest.label || 'Untitled manifest');
+              const thumbUrl = manifest.canvases?.[0]?.thumbUrl;
               return (
-                <p className="iiif-modal__identity" title={identity}>
-                  {identity}
-                  <span className="iiif-modal__idcount"> · {manifest.canvasCount} images in this manifest</span>
-                </p>
+                <div className="iiif-modal__idrow">
+                  {thumbUrl && (
+                    <img className="iiif-modal__thumb" src={thumbUrl} alt="" aria-hidden="true" />
+                  )}
+                  <p className="iiif-modal__identity" title={identity}>
+                    {identity}
+                    <span className="iiif-modal__idcount"> · {manifest.canvasCount} images in this manifest</span>
+                  </p>
+                </div>
               );
             })() : (
               <p className="modal__sub">The manifest could not be used.</p>

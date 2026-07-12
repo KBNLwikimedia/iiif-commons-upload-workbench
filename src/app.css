@@ -4605,14 +4605,19 @@ body.col-resizing * { cursor: col-resize !important; }
   margin-top: 1px;
   background: url('/app-logo.png') center / contain no-repeat;
 }
-/* IIIF wizard: the manifest's first-image thumbnail replaces the generic app
-   icon in the header on every step past input. */
-.modal__head--iiif-thumb::before { display: none; }
+/* IIIF wizard: the manifest's first-image thumbnail sits in front of the
+   "Short title — signature" identity line (the app icon stays at top-left). */
+.iiif-modal__idrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 5px;
+}
+.iiif-modal__idrow .iiif-modal__identity { margin: 0; }
 .iiif-modal__thumb {
   flex: 0 0 auto;
-  width: 44px;
-  height: 44px;
-  margin-top: 1px;
+  width: 40px;
+  height: 40px;
   object-fit: cover;
   border-radius: 4px;
   border: 1px solid var(--border-color-base, #c8ccd1);
