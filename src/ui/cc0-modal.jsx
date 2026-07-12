@@ -5,10 +5,10 @@
 // Step 1 of the coupled CC0 → waiver onboarding. The user must agree every
 // fresh session: there is no "don't remind me again" option and nothing is
 // persisted (maintainer decision 2026-07-12). DEMO_MODE skips it (no wiki
-// writes). A single "I agree" button proceeds to step 2 (the waiver).
+// writes). A single "OK, I understand" button proceeds to step 2 (the waiver).
 //
-// Esc / backdrop click is treated as NO acknowledgment (App re-chains to the
-// waiver either way, and the modal shows again next session regardless).
+// There is no Esc / backdrop / × dismissal — the button is the only way
+// through, so the consent can't be skipped by accident.
 
 import React from 'react';
 
@@ -18,19 +18,15 @@ export function shouldShowCc0Modal() {
   return true;
 }
 
-export function Cc0Modal({ username, onAcknowledge, onDismiss }) {
-  // Lock body scroll + Esc-to-dismiss while open. Esc is "no ack" — the modal
-  // will come back on next session.
+export function Cc0Modal({ username, onAcknowledge }) {
+  // Lock body scroll while open. No Esc / backdrop dismissal — this is a
+  // required per-session consent (step 1 of 2); the "OK, I understand" button
+  // is the only way through, matching the waiver step.
   React.useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onDismiss(); };
-    document.addEventListener('keydown', onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prev;
-    };
-  }, [onDismiss]);
+    return () => { document.body.style.overflow = prev; };
+  }, []);
 
   // The user's own subpage tree — opens in a new tab so they can verify what's
   // stored without losing their workbench session.
@@ -39,10 +35,9 @@ export function Cc0Modal({ username, onAcknowledge, onDismiss }) {
     `https://commons.wikimedia.org/wiki/User:${encodeURIComponent(u)}/IIIFManifestUploadWorkbench/${file}`;
 
   return (
-    <div className="modal-backdrop" onClick={onDismiss}>
+    <div className="modal-backdrop">
       <div
         className="modal cc0-modal"
-        onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
         aria-labelledby="cc0-modal-title"

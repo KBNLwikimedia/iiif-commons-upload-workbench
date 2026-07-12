@@ -2453,7 +2453,6 @@ function App({ tweaks, setTweak, user, onLogout, initialItems, initialPrefs, loa
         <Cc0Modal
           username={user?.username}
           onAcknowledge={closeCc0}
-          onDismiss={closeCc0}
         />
       )}
 
