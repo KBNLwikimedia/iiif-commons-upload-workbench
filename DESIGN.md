@@ -60,7 +60,7 @@ doc.wikimedia.org/codex/latest/design-tokens/color.html.
 | Accent (--accent) | #3366CC | color-progressive | Progressive blue — links, primary CTAs. |
 | Accent hover | #3056A9 | color-progressive--hover | Hover state — darker, not lighter. |
 | Accent active | #233566 | color-progressive--active | Active / depressed state. |
-| Visited | #6A60B0 | color-visited | Visited links only. |
+| Visited | #6B4BA1 | color-visited | Visited links only. |
 | Success | #177860 | color-success | State, ≤5% of surface. |
 | Warn | #886425 | color-warning | Warning text & icons. |
 | Danger | #BF3C2C | color-destructive | Destructive actions only. |
@@ -69,10 +69,10 @@ State background tints (for Message component and inline highlights):
 
 | Role | Hex | Codex token |
 | --- | --- | --- |
-| Progressive subtle | #E8EEFF | background-color-progressive-subtle |
+| Progressive subtle | #F1F4FA | background-color-progressive-subtle |
 | Warning subtle | #FDF2D5 | background-color-warning-subtle |
 | Destructive subtle | #FFE9E5 | background-color-destructive-subtle |
-| Success subtle | #DFF2EB | background-color-success-subtle |
+| Success subtle | #DFF1E6 | background-color-success-subtle |
 
 Never invent secondary brand colours. If a panel needs separation,
 reach for --bg-base--hover (#F8F9FA) or a hairline --border-soft
@@ -142,7 +142,7 @@ Anchored on doc.wikimedia.org/codex/latest/components/.
   Reserve filled pills for state (--bg-warning-subtle,
   --bg-progressive-subtle); outlined pills for non-state metadata.
 - Links. --accent colour, no underline by default, underline on
-  hover. Visited links shift to --color-visited (#6A60B0) —
+  hover. Visited links shift to --color-visited (#6B4BA1) —
   never disable this; the visited contract is part of Wikipedia
   navigation literacy.
 
