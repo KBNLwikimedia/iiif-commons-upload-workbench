@@ -2244,6 +2244,7 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
             manuscript={mapping?.manuscript}
             sourceUrl={activeManifestUrl || manifest.sourceUrl || manifest.id}
             recordedIssues={activeRecentEntry?.issues || []}
+            allRecordedIssueNumbers={recent.flatMap((r) => (r.issues || []).map((i) => i.number))}
             onRecordIssue={handleRecordIssue}
             onRemoveIssue={handleRemoveIssue}
           />

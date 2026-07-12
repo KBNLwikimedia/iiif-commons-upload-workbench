@@ -19,7 +19,8 @@ import { findManifestDuplicates } from '../api/iiif.js';
 const Icon = window.Icon;
 const { useState, useMemo, useEffect, useRef } = React;
 
-const GITHUB_ISSUES_NEW_URL = 'https://github.com/KBNLwikimedia/iiif-manifest-upload-workbench/issues/new';
+const REPO_SLUG = 'KBNLwikimedia/iiif-manifest-upload-workbench';
+const GITHUB_ISSUES_NEW_URL = `https://github.com/${REPO_SLUG}/issues/new`;
 const REPORT_LABEL = 'manifest-needs-checking';
 
 // Turn "https://github.com/owner/repo/issues/123" or "#123" or "123" into the
@@ -81,7 +82,7 @@ function buildReportBody({ manuscript, sourceUrl, dup, canvases, note }) {
   return lines.join('\n');
 }
 
-export default function ReportManifestModal({ onClose, manifest, manuscript, sourceUrl, recordedIssues = [], onRecordIssue, onRemoveIssue }) {
+export default function ReportManifestModal({ onClose, manifest, manuscript, sourceUrl, recordedIssues = [], allRecordedIssueNumbers = [], onRecordIssue, onRemoveIssue }) {
   const canvases = manifest?.canvases || [];
   const dup = useMemo(() => findManifestDuplicates(canvases), [canvases]);
   const ms = manuscript || {};
@@ -92,6 +93,43 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
   const [copyState, setCopyState] = useState('idle');
   const [opened, setOpened] = useState(false);
   const bodyRef = useRef(null);
+
+  // Input guards on the issue number:
+  //   1. no duplicates — a GitHub issue number can only be linked once (to any
+  //      manifest), so reject one already recorded.
+  //   2. must be a *new* issue — a freshly-created issue always gets a number
+  //      higher than everything that existed when the report was started, so
+  //      reject a number that isn't above the repo's highest issue at open.
+  //      A number confirmed by "Find my issue" is a verified existing issue and
+  //      bypasses this guard.
+  const [baseline, setBaseline] = useState(null); // highest issue# at open, or null if unknown
+  const [verifiedNumber, setVerifiedNumber] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    (async () => {
+      try {
+        const res = await fetch(
+          `https://api.github.com/repos/${REPO_SLUG}/issues?state=all&per_page=1&sort=created&direction=desc`,
+          { headers: { Accept: 'application/vnd.github+json' } },
+        );
+        if (!res.ok) return; // rate-limited/offline → guard 2 simply doesn't apply
+        const arr = await res.json();
+        const top = Array.isArray(arr) && arr[0] ? Number(arr[0].number) : null;
+        if (alive && top) setBaseline(top);
+      } catch { /* ignore — soft guard */ }
+    })();
+    return () => { alive = false; };
+  }, []);
+  const alreadyRecorded = new Set([...allRecordedIssueNumbers, ...saved]);
+  const inputNum = parseIssueNumber(issueInput);
+  const inputError = (() => {
+    if (!inputNum) return null;
+    if (alreadyRecorded.has(inputNum)) return `#${inputNum} is already recorded — an issue can only be linked once.`;
+    if (inputNum === verifiedNumber) return null; // confirmed by "Find my issue"
+    if (baseline != null && inputNum <= baseline) return `#${inputNum} isn't a newly-created issue — the latest issue in the repo is #${baseline}, and a new one always gets a higher number. Check the number, or use “Find my issue”.`;
+    return null;
+  })();
+  const canSave = !!inputNum && !inputError;
 
   const title = useMemo(() => {
     const idLine = [ms.signature, ms.title].filter(Boolean).join(' — ') || 'manifest';
@@ -139,11 +177,12 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
   };
 
   const saveIssue = () => {
-    const num = parseIssueNumber(issueInput);
-    if (!num) return;
+    if (!canSave) return; // guards: valid number, not a duplicate, is a new issue
+    const num = inputNum;
     onRecordIssue?.(num, issueInput.trim());
     setSaved((prev) => (prev.includes(num) ? prev : [...prev, num]));
     setIssueInput('');
+    setVerifiedNumber(null);
   };
 
   // Undo a wrong paste/lookup: drop the number here and from Preferences, and
@@ -181,6 +220,7 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
       }
       const top = items[0];
       setIssueInput(String(top.number));
+      setVerifiedNumber(top.number); // a real labelled issue matching this manifest — bypasses the "new issue" guard
       setFindMsg({ kind: 'found', text: `#${top.number}: ${top.title}`, url: top.html_url, number: top.number, multiple: items.length > 1 });
     } catch (e) {
       console.warn('Find-my-issue search failed:', e);
@@ -285,11 +325,12 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
               <input
                 id="report-issue"
                 type="text"
-                className="report-modal__issue-input"
+                className={'report-modal__issue-input' + (inputError ? ' report-modal__issue-input--invalid' : '')}
                 value={issueInput}
                 onChange={(e) => setIssueInput(e.target.value)}
                 onKeyDown={(e) => { if (e.key === 'Enter') saveIssue(); }}
                 placeholder="e.g. 42, #42, or https://github.com/…/issues/42"
+                aria-invalid={!!inputError}
               />
               <button
                 className={'btn' + (findMsg && findMsg.kind !== 'found' ? ' report-modal__findbtn--notfound' : '')}
@@ -299,8 +340,9 @@ export default function ReportManifestModal({ onClose, manifest, manuscript, sou
               >
                 {finding ? 'Searching…' : 'Find my issue'}
               </button>
-              <button className="btn btn--progressive" onClick={saveIssue} disabled={!parseIssueNumber(issueInput)}>Save issue #</button>
+              <button className="btn btn--progressive" onClick={saveIssue} disabled={!canSave}>Save issue #</button>
             </div>
+            {inputError && <p className="report-modal__inputerr">⚠️ {inputError}</p>}
             {findMsg && (
               <p className={'report-modal__find report-modal__find--' + findMsg.kind}>
                 {findMsg.kind === 'found' ? (
