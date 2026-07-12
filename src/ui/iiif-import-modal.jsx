@@ -2032,12 +2032,16 @@ export function IiifImportModal({ onClose, onAddItems, onUpdateItem, onReplaceIt
                       and the user hasn't edited it do we cap it (with an
                       ellipsis + full-text tooltip) so the caption isn't a
                       paragraph. */}
-                  {title.trim() && (() => {
+                  {(title.trim() || (mapping?.manuscript?.signature || '').trim()) && (() => {
                     const t = title.trim();
                     const isFallback = mapping?.manuscript?.titleFromSummaryFallback
                       && t === (mapping?.manuscript?.title || '').trim();
                     const short = (isFallback && t.length > 50) ? t.slice(0, 50).replace(/\s+\S*$/, '') + '…' : t;
-                    return <span className="iiif-lightbox__title" title={t !== short ? t : undefined}>{short}</span>;
+                    // Append the shelfmark/signature (e.g. "— KW 70 H 36") so the
+                    // lightbox caption matches the wizard header identity.
+                    const sig = (mapping?.manuscript?.signature || '').trim();
+                    const line = short && sig ? `${short} — ${sig}` : (short || sig);
+                    return <span className="iiif-lightbox__title" title={t !== short ? t : undefined}>{line}</span>;
                   })()}
                   <span className="iiif-lightbox__meta">
                     Image {pos + 1} of {canv.length}
