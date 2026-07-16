@@ -2898,63 +2898,6 @@ function Card({ item, selected, onToggleSelect, onOpen, showFilename, duplicateO
 
 }
 
-// ===== List view =====
-function ListView({ items, selected, onToggleSelect, onSelectAll, onClearAll, onOpen, showThumbs }) {
-  const allSelected = items.length > 0 && items.every((i) => selected.has(i.id));
-  const someSelected = items.some((i) => selected.has(i.id)) && !allSelected;
-  return (
-    <div className="list">
-      <div className="list__row list__row--head">
-        <div
-          className={"cbox" + (allSelected ? " cbox--checked" : someSelected ? " cbox--mixed" : "")}
-          onClick={() => allSelected ? onClearAll() : onSelectAll()}>
-          
-          {allSelected && <Icon name="check" size={12} />}
-        </div>
-        <div></div>
-        <div>Title / filename</div>
-        <div>Categories</div>
-        <div>License</div>
-        <div className="list__cell--num">Size</div>
-        <div className="list__cell--num">Date taken</div>
-      </div>
-      {items.map((item) =>
-      <div
-        key={item.id}
-        className={"list__row" + (selected.has(item.id) ? " list__row--selected" : "")}
-        onClick={() => onOpen(item.id)}>
-        
-          <div
-          className={"cbox" + (selected.has(item.id) ? " cbox--checked" : "")}
-          onClick={(e) => {e.stopPropagation();onToggleSelect(item.id);}}>
-          
-            {selected.has(item.id) && <Icon name="check" size={12} />}
-          </div>
-          {showThumbs ?
-        <div className="list__thumb"><Thumb item={item} ratio={item.width / item.height} /></div> :
-        <div />}
-          <div className="list__title">
-            <span className="list__title-main">{item.title || <em style={{ color: "var(--color-placeholder)" }}>{item.filename}</em>}</span>
-            {item.title && <span className="list__title-sub">{item.filename}</span>}
-          </div>
-          <div className="list__cell">
-            {/* Display with "Category:" prefix to match Commons convention (T425912). */}
-            {(item.categories || []).slice(0, 2).map((c) => `Category:${c}`).join(", ") || <span className="muted">—</span>}
-            {(item.categories || []).length > 2 && <span className="muted"> +{item.categories.length - 2}</span>}
-          </div>
-          <div className="list__cell">
-            {item.license
-              ? <span title={window.licenseTitle?.(item.license) || item.license}>{window.licenseShortLabel?.(item.license) || item.license}</span>
-              : <span style={{ color: "var(--color-destructive)" }}>missing</span>}
-          </div>
-          <div className="list__cell list__cell--num">{formatBytes(item.bytes)}</div>
-          <div className="list__cell list__cell--num">{item.dateTaken ? formatRelative(item.dateTaken) : <span className="muted">—</span>}</div>
-        </div>
-      )}
-    </div>);
-
-}
-
 // ===== Sortable column header for the read-only history list =====
 // A button so the whole header is keyboard-activatable; the arrow reflects the
 // active sort direction. `numeric` right-aligns the label (size/date/counts).

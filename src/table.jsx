@@ -2477,7 +2477,6 @@ function CellView({ col, item, isMissing, hasTitleWarning, onCopy, setPillInfo, 
       return <span>—</span>;
   }
 }
-function scalarOrDash(v) { return v ? <span>{v}</span> : dash(); }
 function dash() { return <span className="tbl__td-placeholder">—</span>; }
 
 // Fixed-EXIF chip (T426450).
@@ -4189,32 +4188,6 @@ function TitleEditor({
   );
 }
 
-// ===== Select editor (generic) =====
-// Currently unused — the licence cell uses LicenseEditor below. Kept around
-// as a small generic dropdown editor for future single-select fields.
-function SelectEditor({ initial, options, onCommit, onCancel }) {
-  const [v, setV] = useStateT(initial);
-  const ref = useRefT(null);
-  useEffectT(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.focus();
-    try { if (typeof el.showPicker === "function") el.showPicker(); } catch (e) {}
-  }, []);
-  return (
-    <select
-      ref={ref}
-      className="tbl__edit-input tbl__edit-select"
-      value={v}
-      onChange={e => { setV(e.target.value); onCommit(e.target.value); }}
-      onBlur={() => onCommit(v)}
-      onKeyDown={(e) => { if (e.key === "Escape") onCancel(); }}
-    >
-      {options.map(([val, label]) => <option key={val} value={val}>{label}</option>)}
-    </select>
-  );
-}
-
 // ===== License editor (in-cell) =====
 //
 // Spreadsheet-cell variant of the licence selector. Compact: a <select> with
@@ -4257,8 +4230,8 @@ function LicenseEditor({ initial, onCommit, onCancel }) {
   const onChangeSelect = (e) => {
     const v = e.target.value;
     setSel(v);
-    // Auto-commit on plain id picks (matches old SelectEditor UX); the
-    // custom branch waits for the user to fill in / confirm the input.
+    // Auto-commit on plain id picks; the custom branch waits for the
+    // user to fill in / confirm the input.
     if (v && v !== window.CUSTOM_LICENSE_ID) onCommit(v);
     else if (!v) onCommit("");
   };
@@ -6012,7 +5985,7 @@ function DepictsPopover({ value, popRef, pos }) {
 // quick-add list, plus an inline Wikidata-property search, plus entry-points
 // to the custom-template form and the full Templates-and-columns modal.
 //
-// Sits separate from ColumnMenu (dead code) and ColumnsModal (the full
+// Sits separate from ColumnsModal (the full
 // surface) — this is the discoverable "I just want to add a column"
 // affordance, intentionally short.
 //
@@ -6103,8 +6076,8 @@ function AddColumnPopover({
     return out;
   }, [allColumns, visibleKeys]);
 
-  // Wikidata property search — same filter as ColumnMenu (excludes already-
-  // taken pids and P180/depicts which has its own first-class column).
+  // Wikidata property search — excludes already-taken pids and P180/depicts
+  // (which has its own first-class column).
   const propMatches = useMemoT(() => {
     const taken = new Set((customProps || []).map(p => p.pid));
     const pool = (window.KNOWN_PROPERTIES || []).filter(p => !taken.has(p.pid) && p.pid !== "P180");
@@ -6298,112 +6271,6 @@ const SELF_EXIF_NAMES = {
   aperture: ["FNumber"],
   shutter:  ["ExposureTime"],
 };
-
-// ===== Column menu (sectioned + property search) =====
-function ColumnMenu({ allColumns, visibleKeys, onToggle, onReset, onAddCustomProp, onRemoveCustomProp, customProps }) {
-  const [propQuery, setPropQuery] = useStateT("");
-  const [propActive, setPropActive] = useStateT(0);
-
-  const propMatches = useMemoT(() => {
-    const taken = new Set((customProps || []).map(p => p.pid));
-    const pool = window.KNOWN_PROPERTIES.filter(p => !taken.has(p.pid) && p.pid !== "P180");
-    return window.matchVocab(pool, propQuery, t => `${t.label} ${t.pid}`, 8);
-  }, [propQuery, customProps]);
-
-  const groups = [
-    { id: "standard",   label: "Columns" },
-    { id: "structured", label: "Structured data" },
-    { id: "exif",       label: "EXIF / camera metadata" },
-    { id: "custom",     label: "Custom properties" }
-  ];
-
-  return (
-    <div className="tbl-colmenu__pop">
-      <div className="tbl-colmenu__head">
-        <span>Columns</span>
-        <button className="btn btn--quiet btn--small" onClick={onReset}>Reset</button>
-      </div>
-
-      {groups.map(g => {
-        const cols = allColumns.filter(c => c.group === g.id);
-        if (!cols.length) return null;
-        return (
-          <div key={g.id} className="tbl-colmenu__section">
-            <div className="tbl-colmenu__sechead">{g.label}</div>
-            {cols.map(c => {
-              const on = visibleKeys.includes(c.key);
-              return (
-                <label key={c.key} className="tbl-colmenu__row">
-                  <span className={"cbox" + (on ? " cbox--checked" : "")}>
-                    {on && <Icon name="check" size={10} />}
-                  </span>
-                  <span className={"tbl-colmenu__name" + (c.tone === "exif" ? " tbl-colmenu__name--exif" : "")} style={{ flex: 1 }}>
-                    {c.label}
-                  </span>
-                  <button
-                    className="btn btn--quiet btn--small"
-                    onClick={(e) => { e.preventDefault(); onToggle(c.key); }}
-                  >{on ? "Hide" : "Show"}</button>
-                  {c.customProp && (
-                    <button
-                      className="btn btn--quiet btn--icon-only btn--small"
-                      onClick={(e) => { e.preventDefault(); onRemoveCustomProp(c.customProp.pid); }}
-                      title="Remove custom column"
-                    ><Icon name="close" size={11} /></button>
-                  )}
-                </label>
-              );
-            })}
-          </div>
-        );
-      })}
-
-      <div className="tbl-colmenu__section">
-        <div className="tbl-colmenu__sechead">Add Wikidata property as column</div>
-        <div className="autocomplete autocomplete--inline" style={{ padding: "0 10px 8px" }}>
-          <input
-            className="tbl__edit-input"
-            placeholder="Search property (e.g. creator, P170)"
-            value={propQuery}
-            onChange={(e) => { setPropQuery(e.target.value); setPropActive(0); }}
-            onKeyDown={(e) => {
-              if (e.key === "ArrowDown" && propMatches.length) { e.preventDefault(); setPropActive(a => Math.min(a + 1, propMatches.length - 1)); }
-              else if (e.key === "ArrowUp" && propMatches.length) { e.preventDefault(); setPropActive(a => Math.max(a - 1, 0)); }
-              else if (e.key === "Enter" && propMatches[propActive]) { e.preventDefault(); onAddCustomProp(propMatches[propActive]); setPropQuery(""); }
-            }}
-          />
-          {propQuery && propMatches.length > 0 && (
-            <AutocompletePop scroll inline>
-              {propMatches.map((p, i) => (
-                <div
-                  key={p.pid}
-                  className={"autocomplete__item" + (i === propActive ? " autocomplete__item--active" : "")}
-                  onMouseDown={(e) => { e.preventDefault(); onAddCustomProp(p); setPropQuery(""); }}
-                  onMouseEnter={() => setPropActive(i)}
-                >
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div className="autocomplete__primary">
-                      <span>{p.label}</span>
-                      <span className="autocomplete__qid">{p.pid}</span>
-                    </div>
-                    {p.desc && <div className="autocomplete__secondary">{p.desc}</div>}
-                  </div>
-                  <AutocompleteLinkButton
-                    href={`https://www.wikidata.org/wiki/Property:${encodeURIComponent(p.pid)}`}
-                    title={`Open Property:${p.pid} on Wikidata (new tab)`}
-                  />
-                </div>
-              ))}
-            </AutocompletePop>
-          )}
-          {propQuery && propMatches.length === 0 && (
-            <div className="autocomplete__empty">No properties match.</div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ===== Middle truncation (used only for filename now) =====
 function MiddleTruncate({ text }) {
