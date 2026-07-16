@@ -10,6 +10,7 @@ All notable changes. Format follows [Keep a Changelog](https://keepachangelog.co
 
 - **KB/eCodices provider tiles compacted on the import-wizard Collection picker** — the stacked-vertical tile (logo above name, ~92px min-height) took too much vertical space for a simple collection selector. Switched to a horizontal row layout (logo · name · badge right-aligned), cutting the tile height to ~42px.
 - **Removed unused local variables & dead imports (`js/unused-local-variable`, part of OI-86)** — cleared the genuine code-quality findings: dead imports (`deleteDraft`, `extractSequenceBasename` in `app.jsx`), an unused `useState` setter and a write-only state value, an unused React-hook alias and arrow fn in `table.jsx`, an unused computation in `thumb.jsx`, and two dead `import React` lines (`icons.jsx`, `empty-hero.jsx` — the automatic JSX runtime needs React in scope only for explicit `React.*` refs). No behaviour change; build + tests + live render verified.
+- **Removed a dead store (`js/useless-assignment-to-local`, part of OI-86)** — in `fetchWithAuth`'s 401-refresh path (`utils.js`), `token = fresh;` assigned a value that was never read again (the retry uses `fresh` directly). Dropped the assignment; no behaviour change.
 
 ## [0.42.0] — 2026-07-12
 

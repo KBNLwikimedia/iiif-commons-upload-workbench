@@ -76,7 +76,6 @@ export async function fetchWithAuth(url, tokenOrOptions, maybeOptions) {
     // once and retry the request before giving up.
     const fresh = await refreshAccessToken();
     if (fresh) {
-      token = fresh;
       response = await send(fresh);
     }
     if (response.status === 401) {
